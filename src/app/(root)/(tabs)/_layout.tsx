@@ -1,4 +1,4 @@
-import CustomTabBar from "@/src/components/CustomTabBar";
+import CustomTabBar from "@/components/CustomTabBar";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { StatusBar } from "react-native";
 import Toast from "react-native-toast-message";

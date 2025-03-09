@@ -1,5 +1,5 @@
-import CustomButton from "@/src/components/customButton";
-import { useAuthProvider } from "@/src/providers/auth";
+import CustomButton from "@/components/customButton";
+import { useAuthProvider } from "@/providers/auth";
 import React from "react";
 import { View } from "react-native";
 import Fields from "./Fields";

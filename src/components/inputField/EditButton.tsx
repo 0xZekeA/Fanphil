@@ -1,4 +1,4 @@
-import { COLORS } from "@/src/utils/colors";
+import { COLORS } from "@/utils/colors";
 import React, { Dispatch, SetStateAction } from "react";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";

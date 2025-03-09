@@ -11,9 +11,10 @@
     "baseUrl": "./",
     "strict": true,
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["src/*"],
       "~/*": ["src/*"],
-      "app/*": ["src/app/*"]
+      "app/*": ["src/app/*"],
+      "$root/*": ["./*"]
     },
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true

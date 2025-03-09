@@ -1,5 +1,5 @@
-import { COLORS } from "@/src/utils/colors";
-import { Scale } from "@/src/utils/scaling";
+import { COLORS } from "@/utils/colors";
+import { Scale } from "@/utils/scaling";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Scale.moderate(16),
     backgroundColor: COLORS.white,
+  },
+  icons: {
+    width: Scale.moderate(24),
+    height: Scale.moderate(24),
+    tintColor: COLORS.gray800,
   },
   text: {
     fontSize: Scale.font(14),

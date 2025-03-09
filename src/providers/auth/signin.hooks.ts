@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
-import { showToast } from "@/src/utils/notification";
+import { supabase } from "$root/lib/supabase";
+import { showToast } from "@/utils/notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";

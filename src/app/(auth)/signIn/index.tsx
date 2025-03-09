@@ -1,7 +1,7 @@
-import LoadingComponent from "@/src/components/Loading";
-import { useAuthProvider } from "@/src/providers/auth";
-import { COLORS } from "@/src/utils/colors";
-import { Scale } from "@/src/utils/scaling";
+import LoadingComponent from "@/components/Loading";
+import { useAuthProvider } from "@/providers/auth";
+import { COLORS } from "@/utils/colors";
+import { Scale } from "@/utils/scaling";
 import React from "react";
 import {
   Keyboard,

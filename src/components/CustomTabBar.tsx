@@ -1,6 +1,6 @@
-import { icons } from "@/constants/assets";
-import { COLORS } from "@/src/utils/colors";
-import { Scale } from "@/src/utils/scaling";
+import { icons } from "$root/constants/assets";
+import { COLORS } from "@/utils/colors";
+import { Scale } from "@/utils/scaling";
 import { MaterialTopTabNavigationEventMap } from "@react-navigation/material-top-tabs";
 import { MaterialTopTabDescriptorMap } from "@react-navigation/material-top-tabs/lib/typescript/commonjs/src/types";
 import {
@@ -40,6 +40,8 @@ const getIconByRoute = (routeName: string, isFocused: boolean) => {
       return getImage(icons.person, isFocused);
     case "Inventory":
       return getImage(icons.list, isFocused);
+    case "Sales":
+      return getImage(icons.trend, isFocused);
     default:
       return getImage(icons.home, isFocused);
   }

@@ -1,5 +1,5 @@
-import { supabase } from "@/lib/supabase";
-import { showToast } from "@/src/utils/notification";
+import { supabase } from "$root/lib/supabase";
+import { showToast } from "@/utils/notification";
 import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import { Dispatch, SetStateAction } from "react";

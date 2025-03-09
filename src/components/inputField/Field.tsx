@@ -1,6 +1,6 @@
-import { icons } from "@/constants/assets";
-import { COLORS } from "@/src/utils/colors";
-import { Scale } from "@/src/utils/scaling";
+import { icons } from "$root/constants/assets";
+import { COLORS } from "@/utils/colors";
+import { Scale } from "@/utils/scaling";
 import { useState } from "react";
 import {
   Image,

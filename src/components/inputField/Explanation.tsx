@@ -1,4 +1,4 @@
-import { Scale } from "@/src/utils/scaling";
+import { Scale } from "@/utils/scaling";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "./styles";
 

@@ -1,7 +1,7 @@
-import { icons } from "@/constants/assets";
-import InputField from "@/src/components/inputField";
-import { LoginFormData } from "@/src/types/auth.type";
-import { Scale } from "@/src/utils/scaling";
+import { icons } from "$root/constants/assets";
+import InputField from "@/components/inputField";
+import { LoginFormData } from "@/types/auth.type";
+import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
