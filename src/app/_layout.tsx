@@ -5,11 +5,13 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
+import AuthProvider from "../providers/auth";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  const [loaded] = useFonts({
     "Jakarta-Bold": require("@/src/assets/fonts/PlusJakartaSans-Bold.ttf"),
     "Jakarta-ExtraBold": require("@/src/assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
     "Jakarta-ExtraLight": require("@/src/assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
@@ -31,7 +33,7 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <StatusBar
         translucent
         backgroundColor={"transparent"}
@@ -39,9 +41,11 @@ export default function RootLayout() {
       />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(root)" options={{ gestureEnabled: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
-    </>
+      <Toast />
+    </AuthProvider>
   );
 }

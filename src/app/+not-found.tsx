@@ -8,7 +8,7 @@ const NotFound = () => {
       <Text className="font-Jakarta text-lg">This page doesn't exist</Text>
       <TouchableOpacity
         onPress={() => {
-          router.push("./");
+          router.push("/");
         }}
       >
         <Text className="text-blue-600">Back Home</Text>
