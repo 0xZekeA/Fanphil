@@ -1,0 +1,47 @@
+import "@/global.css";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import { StatusBar } from "react-native";
+import "react-native-reanimated";
+
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    "Jakarta-Bold": require("@/src/assets/fonts/PlusJakartaSans-Bold.ttf"),
+    "Jakarta-ExtraBold": require("@/src/assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
+    "Jakarta-ExtraLight": require("@/src/assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
+    "Jakarta-Light": require("@/src/assets/fonts/PlusJakartaSans-Light.ttf"),
+    "Jakarta-Medium": require("@/src/assets/fonts/PlusJakartaSans-Medium.ttf"),
+    "Jakarta-Regular": require("@/src/assets/fonts/PlusJakartaSans-Regular.ttf"),
+    "Jakarta-SemiBold": require("@/src/assets/fonts/PlusJakartaSans-SemiBold.ttf"),
+    "Poppins-Regular": require("@/src/assets/fonts/Poppins-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
+
+  return (
+    <>
+      <StatusBar
+        translucent
+        backgroundColor={"transparent"}
+        barStyle={"dark-content"}
+      />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+
+        <Stack.Screen name="+not-found" />
+      </Stack>
+    </>
+  );
+}

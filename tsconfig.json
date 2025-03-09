@@ -1,17 +1,29 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "jsx": "react-native",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
-    }
+      "@/*": ["./*"],
+      "~/*": ["src/*"],
+      "app/*": ["src/app/*"]
+    },
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
+    "expo-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "src/app",
+    "nativewind-env.d.ts"
   ]
 }
