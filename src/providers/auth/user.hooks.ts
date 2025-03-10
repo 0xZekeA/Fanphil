@@ -1,5 +1,8 @@
 import { supabase } from "$root/lib/supabase";
+import { getDb } from "@/database/database";
 import { showToast } from "@/utils/notification";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 const useUserRealtimeData = (
@@ -9,54 +12,83 @@ const useUserRealtimeData = (
 ) => {
   const [data, setData] = useState<User | null>(null);
 
+  const updateUser = async (
+    full_name: string,
+    email: string,
+    phone_number: string,
+    role: string,
+    pfp: string,
+    address: string,
+    user_id: string,
+  ) => {
+    const db = await getDb();
+    const now = new Date().toISOString();
+
+    await db.runAsync(
+      "UPDATE users SET full_name = ?, email = ?, phone_number = ?, role = ?, pfp = ?, address = ?, updated_at = ?, synced_at = NULL WHERE id = ?",
+      [full_name, email, phone_number, role, pfp, address, now, user_id],
+    );
+
+    const updatedUser: User | null = await db.getFirstAsync(
+      "SELECT * FROM users WHERE id = ?",
+      [user_id],
+    );
+
+    setData(updatedUser);
+  };
+
+  const clearSessionFromSecureStore = async () => {
+    await SecureStore.deleteItemAsync("session_token");
+    await AsyncStorage.removeItem("user_id");
+  };
+
   useEffect(() => {
     if (!session && loaded) {
       setLoading(false);
+      clearSessionFromSecureStore();
     }
-    if (!session) return;
 
-    const table = "users";
-
-    const fetchData = async () => {
-      const { data, error } = await supabase
-        .from(table)
-        .select("*")
-        .eq("id", session?.user.id)
-        .single();
-      if (error) {
-        showToast("error", "User data fetch failed", error.message);
+    const getUser = async () => {
+      const db = await getDb();
+      const userId = await AsyncStorage.getItem("user_id");
+      if (!userId) {
+        setData(null);
         return;
       }
-      setData(data);
-      setLoading(false);
+      const user: User | null = await db.getFirstAsync(
+        "SELECT * FROM users WHERE id = ?",
+        [userId],
+      );
+
+      if (!user) {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", userId)
+          .single();
+        if (error) {
+          console.log(error);
+          showToast(
+            "error",
+            "Can not get you data",
+            `Error details: ${error.message}`,
+          );
+          setLoading(false);
+          return;
+        }
+        setData(data);
+        setLoading(false);
+        return;
+      }
+
+      setData(user);
     };
 
-    fetchData();
-
-    const subscription = supabase
-      .channel(`realtime:${table}:${session.user.id}`)
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table },
-        (payload) => {
-          if (
-            payload.eventType === "UPDATE" ||
-            payload.eventType === "INSERT"
-          ) {
-            setData(payload.new as User);
-          } else if (payload.eventType === "DELETE") {
-            setData(null);
-          }
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(subscription);
-    };
+    getUser();
   }, [session, loaded]);
 
-  return { data };
+  return { data, updateUser };
 };
 
 export default useUserRealtimeData;

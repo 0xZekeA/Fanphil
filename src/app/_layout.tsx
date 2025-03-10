@@ -1,8 +1,13 @@
 import "$root/global.css";
+import { setupDatabase } from "@/database/schema";
+import { syncWithSupabase } from "@/database/sync";
+import FinanceProvider from "@/providers/finances/FinanceProvider";
+import SalesProvider from "@/providers/sales/SalesProvider";
+import NetInfo from "@react-native-community/netinfo";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StatusBar } from "react-native";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
@@ -11,6 +16,9 @@ import AuthProvider from "../providers/auth";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [dbReady, setDbReady] = useState(false);
+  const isSyncing = useRef(false);
+
   const [loaded] = useFonts({
     "Jakarta-Bold": require("@/assets/fonts/PlusJakartaSans-Bold.ttf"),
     "Jakarta-ExtraBold": require("@/assets/fonts/PlusJakartaSans-ExtraBold.ttf"),
@@ -28,24 +36,49 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
-  if (!loaded) {
+  useEffect(() => {
+    const initializeDatabase = async () => {
+      await setupDatabase();
+      setDbReady(true);
+    };
+    initializeDatabase();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (state.isConnected && dbReady && !isSyncing.current) {
+        isSyncing.current = true;
+        syncWithSupabase().finally(() => {
+          isSyncing.current = false;
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [dbReady]);
+
+  if (!loaded || !dbReady) {
     return null;
   }
 
   return (
     <AuthProvider>
-      <StatusBar
-        translucent
-        backgroundColor={"transparent"}
-        barStyle={"dark-content"}
-      />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(root)" options={{ gestureEnabled: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <Toast />
+      <SalesProvider>
+        <FinanceProvider>
+          <StatusBar
+            translucent
+            backgroundColor={"transparent"}
+            barStyle={"dark-content"}
+          />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(root)" options={{ gestureEnabled: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <Toast />
+        </FinanceProvider>
+      </SalesProvider>
     </AuthProvider>
   );
 }

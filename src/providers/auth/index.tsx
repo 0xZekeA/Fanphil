@@ -1,5 +1,8 @@
 import { supabase } from "$root/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo";
 import { Session } from "@supabase/supabase-js";
+import * as SecureStore from "expo-secure-store";
 import {
   createContext,
   PropsWithChildren,
@@ -19,10 +22,14 @@ const AuthProviderContext = createContext<AuthProviderContextTypes | undefined>(
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loaded, setLoaded] = useState(false);
-
-  const { data: user } = useUserRealtimeData(session, setLoading, loaded);
+  const { data: user, updateUser } = useUserRealtimeData(
+    session,
+    setLoading,
+    loaded,
+  );
   const { signOut } = useSignoutHooks(setSession);
   const { resetPassword } = useResetPasswordHooks(user);
   const { control, onSubmit, errors, isSubmitting } =
@@ -32,6 +39,12 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       setSession(data?.session || null);
+      if (session?.access_token) {
+        setSessionToken(session.access_token);
+        SecureStore.setItemAsync("session_token", session.access_token);
+      }
+      const isConnected = (await NetInfo.fetch()).isConnected;
+      if (!isConnected) return;
       setLoaded(true);
     };
 
@@ -48,6 +61,23 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     };
   }, []);
 
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const storedToken = await SecureStore.getItemAsync("session_token");
+        if (storedToken) setSessionToken(storedToken);
+      } catch (error) {
+        console.error("Error retrieving session token:", error);
+      }
+    };
+    getToken();
+  }, []);
+
+  const getUserId = async () => {
+    const userId = await AsyncStorage.getItem("user_id");
+    return userId || null;
+  };
+
   return (
     <AuthProviderContext.Provider
       value={{
@@ -61,6 +91,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         loading,
         signOut,
         resetPassword,
+        getUserId,
+        updateUser,
+        sessionToken,
       }}
     >
       {children}

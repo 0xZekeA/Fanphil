@@ -1,0 +1,3 @@
+interface FinanceProviderContextTypes {
+  expenses: Expense[];
+}

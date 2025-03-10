@@ -4,17 +4,17 @@ import LoadingComponent from "../components/Loading";
 import { useAuthProvider } from "../providers/auth";
 
 export default function Index() {
-  const { session, loading } = useAuthProvider();
+  const { sessionToken, loading } = useAuthProvider();
 
   useEffect(() => {
     const redirect = () => {
-      if (session) {
+      if (sessionToken) {
         router.push("/(root)/(tabs)/home");
       } else router.push("/(auth)/signIn");
     };
 
     if (!loading) redirect();
-  }, [loading, session]);
+  }, [loading, sessionToken]);
 
   return <LoadingComponent loading={loading} />;
 }

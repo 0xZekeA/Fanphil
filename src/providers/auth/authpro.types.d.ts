@@ -18,4 +18,15 @@ interface AuthProviderContextTypes {
   loading: boolean;
   signOut: () => Promise<void>;
   resetPassword: () => Promise<void>;
+  getUserId: () => Promise<string | null>;
+  updateUser: (
+    full_name: string,
+    email: string,
+    phone_number: string,
+    role: string,
+    pfp: string,
+    address: string,
+    user_id: string,
+  ) => Promise<void>;
+  sessionToken: string | null;
 }

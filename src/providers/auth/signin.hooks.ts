@@ -1,8 +1,10 @@
 import { supabase } from "$root/lib/supabase";
 import { showToast } from "@/utils/notification";
 import { zodResolver } from "@hookform/resolvers/zod";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -47,13 +49,16 @@ const useSigninHooks = (
       if (error) throw error;
 
       if (session) {
+        await SecureStore.setItemAsync("session_token", session.access_token);
+        await AsyncStorage.setItem("user_id", session.user.id);
+
         setSession(session);
 
         router.push("/");
 
         showToast(
           "success",
-          `Welcome ${(session?.user.email || "").split("@")[0]}`,
+          `Welcome ${(session.user.email || "").split("@")[0]}`,
           "We've logged you in successfully",
         );
       }

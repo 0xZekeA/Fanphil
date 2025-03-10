@@ -1,20 +1,15 @@
 import React from "react";
-import { Text } from "react-native";
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Greetings from "./greetings";
 import styles from "./styles/styles";
 
 const Home = () => {
   const insets = useSafeAreaInsets();
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
-        <Text>Home</Text>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <Greetings />
+    </View>
   );
 };
 

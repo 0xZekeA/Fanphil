@@ -1,7 +1,9 @@
 import { supabase } from "$root/lib/supabase";
 import { showToast } from "@/utils/notification";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { Dispatch, SetStateAction } from "react";
 
 const useSignoutHooks = (
@@ -12,6 +14,9 @@ const useSignoutHooks = (
       const { error } = await supabase.auth.signOut();
 
       if (error) throw error;
+
+      await SecureStore.deleteItemAsync("session_token");
+      await AsyncStorage.removeItem("user_id");
 
       router.push("/");
 
