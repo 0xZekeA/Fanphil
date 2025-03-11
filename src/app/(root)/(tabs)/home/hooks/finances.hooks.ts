@@ -23,7 +23,7 @@ const useFinancesHooks = () => {
   const total = (transactions30Days ?? 0) + (expenses30Days ?? 0);
 
   const calculation = useCallback((amount: number) => {
-    return (amount / total) * 100;
+    return (amount / total) * 100 || 1;
   }, []);
 
   const expensePercentage = calculation(expenses30Days);

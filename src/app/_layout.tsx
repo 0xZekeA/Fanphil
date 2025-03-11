@@ -3,6 +3,7 @@ import { setupDatabase } from "@/database/schema";
 import { syncWithSupabase } from "@/database/sync";
 import FinanceProvider from "@/providers/finances/FinanceProvider";
 import SalesProvider from "@/providers/sales/SalesProvider";
+import SellerDetsProvider from "@/providers/seller/SellerDetsProvider";
 import NetInfo from "@react-native-community/netinfo";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -65,18 +66,20 @@ export default function RootLayout() {
     <AuthProvider>
       <SalesProvider>
         <FinanceProvider>
-          <StatusBar
-            translucent
-            backgroundColor={"transparent"}
-            barStyle={"dark-content"}
-          />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="(root)" options={{ gestureEnabled: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <Toast />
+          <SellerDetsProvider>
+            <StatusBar
+              translucent
+              backgroundColor={"transparent"}
+              barStyle={"dark-content"}
+            />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(root)" options={{ gestureEnabled: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <Toast />
+          </SellerDetsProvider>
         </FinanceProvider>
       </SalesProvider>
     </AuthProvider>

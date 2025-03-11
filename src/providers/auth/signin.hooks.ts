@@ -12,6 +12,7 @@ import { LoginFormData } from "./authpro.types";
 
 const useSigninHooks = (
   setSession: Dispatch<SetStateAction<Session | null>>,
+  setSessionToken: Dispatch<SetStateAction<string | null>>,
 ) => {
   const loginSchema = z.object({
     email: z
@@ -53,6 +54,7 @@ const useSigninHooks = (
         await AsyncStorage.setItem("user_id", session.user.id);
 
         setSession(session);
+        setSessionToken(session.access_token);
 
         router.push("/");
 

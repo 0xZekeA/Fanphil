@@ -32,8 +32,10 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   );
   const { signOut } = useSignoutHooks(setSession);
   const { resetPassword } = useResetPasswordHooks(user);
-  const { control, onSubmit, errors, isSubmitting } =
-    useSigninHooks(setSession);
+  const { control, onSubmit, errors, isSubmitting } = useSigninHooks(
+    setSession,
+    setSessionToken,
+  );
 
   useEffect(() => {
     const checkSession = async () => {

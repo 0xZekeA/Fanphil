@@ -1,7 +1,10 @@
-export const getLast30DaysData = (data: Sale[] | Expense[]) => {
+export const getLast30DaysData = (
+  data: Sale[] | Expense[] | SellersInventory[] | TransferItem[],
+) => {
   if (!data || data.length < 1) {
     return [];
   }
+  data.filter((d) => !d.deleted);
 
   const now = new Date();
   const dateLast30Days = new Date(now);
