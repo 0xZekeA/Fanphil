@@ -19,6 +19,8 @@ type Inventory = {
   cost_price: number;
   original_selling_price: number;
   selling_price: number;
+  size: number;
+  unit: string;
   increment: number;
   is_active: boolean;
   last_edited_by: UUID;

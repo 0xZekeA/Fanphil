@@ -1,10 +1,12 @@
+import { showToast } from "@/utils/notification";
 import { getDb } from "./database";
 
 export const setupDatabase = async () => {
   console.log("setting up..");
   const db = await getDb();
 
-  await db.execAsync(`
+  try {
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       full_name TEXT NOT NULL,
@@ -23,27 +25,46 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS customers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      phone TEXT UNIQUE,
+      address TEXT,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      deleted INTEGER NOT NULL DEFAULT 0,
+      synced_at TEXT DEFAULT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS sales (
       id TEXT PRIMARY KEY,
       quantity INTEGER NOT NULL,
+      customer_id UUID NOT NULL,
       sold_by TEXT NOT NULL,
       total_price REAL NOT NULL,
+      deposit REAL NOT NULL,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       last_edited_by TEXT NOT NULL,
       deleted INTEGER NOT NULL DEFAULT 0,
       synced_at TEXT DEFAULT NULL,
       FOREIGN KEY (sold_by) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE,
       FOREIGN KEY (last_edited_by) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS inventory (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       quantity INTEGER NOT NULL,
+      size INTEGER NOT NULL DEFAULT 24,
+      unit TEXT NOT NULL DEFAULT pcs,
       cost_price REAL NOT NULL,
       original_selling_price REAL NOT NULL,
       selling_price REAL NOT NULL,
@@ -60,7 +81,7 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS sellers_inventory (
       id TEXT PRIMARY KEY,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -74,7 +95,7 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS expenses (
       id TEXT PRIMARY KEY,
       reason TEXT NOT NULL,
@@ -90,7 +111,7 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS inventory_transfers (
       id TEXT PRIMARY KEY,
       transferred_by TEXT NOT NULL,
@@ -103,7 +124,7 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS sold_items (
       id TEXT PRIMARY KEY,
       sales_id TEXT NOT NULL,
@@ -121,7 +142,7 @@ export const setupDatabase = async () => {
     );
   `);
 
-  await db.execAsync(`
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS transfer_items (
       id TEXT PRIMARY KEY,
       inventory_id TEXT NOT NULL,
@@ -136,4 +157,14 @@ export const setupDatabase = async () => {
       FOREIGN KEY (transfer_id) REFERENCES inventory_transfers(id) ON DELETE CASCADE
     );
   `);
+
+    console.log("Tables created successfully");
+  } catch (error: any) {
+    console.error("Error creating customer table:", error);
+    showToast(
+      "error",
+      "Error creating and storing tables",
+      `Error details: ${error.message}`,
+    );
+  }
 };

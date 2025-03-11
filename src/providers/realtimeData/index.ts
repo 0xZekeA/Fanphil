@@ -68,38 +68,30 @@ const useRealtimeData = (table: string) => {
       .channel(`realtime:${table}`)
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table },
-        async (payload) => {
-          if (!isMounted) return;
-
-          try {
-            const db = await getDb();
-            if (
-              payload.eventType === "INSERT" ||
-              payload.eventType === "UPDATE"
-            ) {
-              if (payload.new) {
-                await updateLocalDatabase(table, [payload.new]);
-              }
-            } else if (payload.eventType === "DELETE") {
-              if (payload.old?.id) {
-                await db.runAsync(`DELETE FROM ${table} WHERE id = ?`, [
-                  payload.old.id,
-                ]);
-                setData((prevData) =>
-                  prevData.filter((item) => item.id !== payload.old.id),
-                );
-              }
-            }
-          } catch (error) {
-            console.error(
-              `Error handling real-time update for ${table}:`,
-              error,
-            );
-          }
+        { event: "INSERT", schema: "public", table },
+        (payload) => {
+          console.log("INSERT event received", payload);
+          updateLocalDatabase(table, [payload.new]);
         },
       )
-      .subscribe();
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table },
+        (payload) => {
+          console.log("UPDATE event received", payload);
+          updateLocalDatabase(table, [payload.new]);
+        },
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table },
+        (payload) => {
+          console.log("DELETE event received", payload);
+        },
+      )
+      .subscribe((status) => {
+        console.log("Subscription status:", status);
+      });
 
     return () => {
       isMounted = false;

@@ -17,3 +17,16 @@ export const getLast30DaysData = (
 
   return filteredData;
 };
+
+export const formatToKAndM = (num: number) => {
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return num.toString();
+};
+
+export const formatToLocaleString = (num: number) => {
+  return num.toLocaleString();
+};

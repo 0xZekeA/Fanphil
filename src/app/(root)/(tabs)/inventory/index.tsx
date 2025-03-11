@@ -1,14 +1,18 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import styles from "./styles/styles";
+import InventoryListProvider from "./hooks/InventoryListProvider";
+import InventorySearchProvider from "./hooks/InventorySearchProvider";
+import MenuProvider from "./hooks/MenuProvider";
+import MainScreen from "./mainScreen";
 
 const Inventory = () => {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>Inventory</Text>
-    </View>
+    <InventoryListProvider>
+      <InventorySearchProvider>
+        <MenuProvider>
+          <MainScreen />
+        </MenuProvider>
+      </InventorySearchProvider>
+    </InventoryListProvider>
   );
 };
 

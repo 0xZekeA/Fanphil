@@ -54,6 +54,7 @@ export const syncWithSupabase = async () => {
   const tables = [
     "sales",
     "expenses",
+    "customers",
     "inventory",
     "inventory_transfers",
     "sellers_inventory",
