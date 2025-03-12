@@ -33,7 +33,7 @@ const getMenuItems = (
     menuItems.push(
       {
         name: "Inactive Items",
-        onPress: () => router.push("/(root)/inventoryItem"),
+        onPress: () => router.push("/(root)/inactiveItems"),
       },
       {
         name: "Add Items",

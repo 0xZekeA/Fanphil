@@ -113,12 +113,32 @@ export const getInventory = async (): Promise<Inventory[]> => {
   }
 };
 
-export const deleteInventory = async (id: string) => {
+export const deleteInventoryItem = async (id: string) => {
   try {
     const db = await getDb();
 
     await db.runAsync(
       "UPDATE inventory SET is_active = 0, synced_at = NULL WHERE id = ?",
+      [id],
+    );
+
+    return id;
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Failed to delete inventory",
+      `Error details: ${error.message}`,
+    );
+    throw error;
+  }
+};
+
+export const reactivateInventoryItem = async (id: string) => {
+  try {
+    const db = await getDb();
+
+    await db.runAsync(
+      "UPDATE inventory SET is_active = 1, synced_at = NULL WHERE id = ?",
       [id],
     );
 

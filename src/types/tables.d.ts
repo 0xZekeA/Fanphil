@@ -23,13 +23,13 @@ type Inventory = {
   size: number;
   unit: string;
   increment: number;
-  is_active: boolean;
+  is_active: 0 | 1;
   last_edited_by: UUID;
   created_by: UUID;
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 0 | 1;
 };
 
 type InventoryTransfer = {

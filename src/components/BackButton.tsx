@@ -32,7 +32,7 @@ const BackButton = ({
       </HapticButton>
       <Text
         style={[styles.textHeader, { marginLeft: Scale.moderate(16) }]}
-        className="font-JakartaSemiBold"
+        className="font-JakartaMedium"
       >
         {title}
       </Text>

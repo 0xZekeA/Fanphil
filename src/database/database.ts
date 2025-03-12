@@ -1,5 +1,10 @@
 import * as SQLite from "expo-sqlite";
 
+let db: SQLite.SQLiteDatabase | null = null;
+
 export const getDb = async () => {
-  return await SQLite.openDatabaseAsync("fanphil_pos_database.db");
+  if (!db) {
+    db = await SQLite.openDatabaseAsync("fanphil_pos_database.db");
+  }
+  return db;
 };

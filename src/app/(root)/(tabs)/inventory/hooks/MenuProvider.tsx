@@ -1,4 +1,4 @@
-import { deleteInventory } from "@/database/inventory";
+import { deleteInventoryItem } from "@/database/inventory";
 import { useAuthProvider } from "@/providers/auth";
 import {
   ContextMenuTypes,
@@ -65,7 +65,7 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
     }
 
     try {
-      await deleteInventory(contextMenu.selectedItem);
+      await deleteInventoryItem(contextMenu.selectedItem.id);
       showToast("success", "Item deactivated successfully");
     } catch (error: any) {
       showToast(

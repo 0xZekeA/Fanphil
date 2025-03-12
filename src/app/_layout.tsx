@@ -1,11 +1,10 @@
 import "$root/global.css";
 import { setupDatabase } from "@/database/schema";
-import { syncWithSupabase } from "@/database/sync";
 import FinanceProvider from "@/providers/finances/FinanceProvider";
 import InventoryProvider from "@/providers/inventory/InventoryProvider";
+import { initializeSync } from "@/providers/realtimeData/sync";
 import SalesProvider from "@/providers/sales/SalesProvider";
 import SellerDetsProvider from "@/providers/seller/SellerDetsProvider";
-import NetInfo from "@react-native-community/netinfo";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -19,7 +18,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [dbReady, setDbReady] = useState(false);
-  const isSyncing = useRef(false);
+  const isInitialized = useRef(false);
 
   const [loaded] = useFonts({
     "Jakarta-Bold": require("@/assets/fonts/PlusJakartaSans-Bold.ttf"),
@@ -39,25 +38,21 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
-    const initializeDatabase = async () => {
-      await setupDatabase();
-      setDbReady(true);
-    };
-    initializeDatabase();
-  }, []);
+    if (isInitialized.current) return;
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      if (state.isConnected && dbReady && !isSyncing.current) {
-        isSyncing.current = true;
-        syncWithSupabase().finally(() => {
-          isSyncing.current = false;
-        });
+    const initialize = async () => {
+      try {
+        await setupDatabase();
+        initializeSync();
+        isInitialized.current = true;
+        setDbReady(true);
+      } catch (error) {
+        console.error("Failed to initialize:", error);
       }
-    });
+    };
 
-    return () => unsubscribe();
-  }, [dbReady]);
+    initialize();
+  }, []);
 
   if (!loaded || !dbReady) {
     return null;

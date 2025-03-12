@@ -1,13 +1,16 @@
 import React from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Modal, View } from "react-native";
 import { COLORS } from "../utils/colors";
-import Modal from "./Modal";
 
-const LoadingComponent = ({ loading }: { loading: boolean }) => {
+const LoadingComponent = ({ loading }: { loading?: boolean }) => {
   return (
-    <Modal isOpen={loading} onClose={() => null}>
-      <ActivityIndicator size="small" color={COLORS.white} />
-    </Modal>
+    loading && (
+      <Modal transparent={true} animationType="fade">
+        <View className="flex-1 bg-black/5 justify-center items-center">
+          <ActivityIndicator size="small" color={COLORS.black} />
+        </View>
+      </Modal>
+    )
   );
 };
 

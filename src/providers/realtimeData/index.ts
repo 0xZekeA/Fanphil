@@ -1,8 +1,9 @@
 import { supabase } from "$root/lib/supabase";
 import { getDb } from "@/database/database";
 import { useEffect, useState } from "react";
+import { syncWithSupabase } from "./sync";
 
-const useRealtimeData = (table: string) => {
+const useRealtimeData = (table: string, pollInterval = 3000) => {
   const [data, setData] = useState<any[]>([]);
 
   const fetchLocalData = async () => {
@@ -17,84 +18,31 @@ const useRealtimeData = (table: string) => {
     }
   };
 
-  const updateLocalDatabase = async (tableName: string, records: any[]) => {
-    try {
-      const db = await getDb();
-      for (const record of records) {
-        if (!record.id) return;
-        const keys = Object.keys(record);
-        const placeholders = keys.map(() => "?").join(", ");
-        const updatePlaceholders = keys
-          .filter((key) => key !== "id")
-          .map((key) => `${key} = excluded.${key}`)
-          .join(", ");
-        const values = keys.map((key) => record[key]);
-
-        await db.runAsync(
-          `INSERT INTO ${tableName} (${keys.join(", ")}) 
-           VALUES (${placeholders}) 
-           ON CONFLICT(id) DO UPDATE SET ${updatePlaceholders}`,
-          values,
-        );
-      }
-
-      setData((prevData) => {
-        const updatedData = [...prevData];
-        records.forEach((record) => {
-          const index = updatedData.findIndex((item) => item.id === record.id);
-          if (index !== -1) {
-            updatedData[index] = record;
-          } else {
-            updatedData.push(record);
-          }
-        });
-        return updatedData;
-      });
-    } catch (error) {
-      console.error("Error updating local database:", error);
-    }
-  };
-
   useEffect(() => {
-    let isMounted = true;
+    fetchLocalData();
 
-    const fetchData = async () => {
-      await fetchLocalData();
-    };
-
-    fetchData();
+    const interval = setInterval(fetchLocalData, pollInterval);
 
     const subscription = supabase
       .channel(`realtime:${table}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table },
-        (payload) => {
-          console.log("INSERT event received", payload);
-          updateLocalDatabase(table, [payload.new]);
+        { event: "*", schema: "public", table },
+        async (payload) => {
+          console.log(
+            `Realtime event received for ${table}:`,
+            payload.eventType,
+          );
+
+          syncWithSupabase();
+
+          fetchLocalData();
         },
       )
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table },
-        (payload) => {
-          console.log("UPDATE event received", payload);
-          updateLocalDatabase(table, [payload.new]);
-        },
-      )
-      .on(
-        "postgres_changes",
-        { event: "DELETE", schema: "public", table },
-        (payload) => {
-          console.log("DELETE event received", payload);
-        },
-      )
-      .subscribe((status) => {
-        console.log("Subscription status:", status);
-      });
+      .subscribe();
 
     return () => {
-      isMounted = false;
+      clearInterval(interval);
       supabase.removeChannel(subscription);
     };
   }, [table]);

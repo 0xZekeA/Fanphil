@@ -1,15 +1,17 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import styles from "./styles/styles";
+import Toast from "react-native-toast-message";
+import InactiveHooksProvider from "./hooks/InactiveHooksProvider";
+import PopUpsProvider from "./hooks/PopUpsProvider";
+import MainScreen from "./mainScreen";
 
 const InactiveItems = () => {
-  const insets = useSafeAreaInsets();
-
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>InactiveItems</Text>
-    </View>
+    <InactiveHooksProvider>
+      <PopUpsProvider>
+        <MainScreen />
+        <Toast />
+      </PopUpsProvider>
+    </InactiveHooksProvider>
   );
 };
 

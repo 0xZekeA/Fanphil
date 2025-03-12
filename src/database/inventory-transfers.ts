@@ -35,7 +35,7 @@ export const getInventoryTransfers = async (): Promise<InventoryTransfer[]> => {
   }
 };
 
-export const deleteInventoryTransfer = async (id: string) => {
+export const deleteInventoryItemTransfer = async (id: string) => {
   try {
     const db = await getDb();
 
