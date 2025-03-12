@@ -7,14 +7,16 @@ import HapticButton from "./HapticsButton";
 const IconButton = ({
   icon,
   onPress,
+  color,
 }: {
   icon: any;
   onPress: (...args: any[]) => void;
+  color?: string;
 }) => {
   return (
     <HapticButton onPress={onPress}>
       <View style={styles.btnContainer} className="items-center justify-center">
-        <Image source={icon} style={styles.iconStyle} />
+        <Image source={icon} style={[styles.iconStyle, { tintColor: color }]} />
       </View>
     </HapticButton>
   );

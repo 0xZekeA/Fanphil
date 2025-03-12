@@ -8,10 +8,13 @@ const SellerDetsProviderContext = createContext<
 const SellerDetsProvider = ({ children }: PropsWithChildren) => {
   const sellersInventory = useRealtimeData("sellers_inventory");
   const transferItems = useRealtimeData("transfer_items");
+  const sellers: User[] = useRealtimeData("users").filter(
+    (user) => user.role === "Driver",
+  );
 
   return (
     <SellerDetsProviderContext.Provider
-      value={{ sellersInventory, transferItems }}
+      value={{ sellersInventory, transferItems, sellers }}
     >
       {children}
     </SellerDetsProviderContext.Provider>

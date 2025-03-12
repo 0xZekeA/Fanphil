@@ -8,6 +8,7 @@ import { useInventoryListProvider } from "../hooks/InventoryListProvider";
 import { useMenuProvider } from "../hooks/MenuProvider";
 import ListItem from "../inventoryList/listItem";
 import ShowAll from "../inventoryList/ShowAll";
+import ModalForm from "../modals";
 import Header from "../pageHeader/Header";
 import SearchComponent from "../search";
 import styles from "../styles/styles";
@@ -53,6 +54,7 @@ const MainScreen = () => {
           }))
         }
       />
+      <ModalForm />
     </View>
   );
 };

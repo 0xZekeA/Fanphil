@@ -1,15 +1,18 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import styles from "./styles/styles";
+import MenuProvider from "./hooks/MenuProvider";
+import TransferFormProvider from "./hooks/TransferFormProvider";
+import TransferProvider from "./hooks/TransferProvider";
+import MainScreen from "./mainScreen";
 
 const TransferItems = () => {
-  const insets = useSafeAreaInsets();
-
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>TransferItems</Text>
-    </View>
+    <TransferProvider>
+      <TransferFormProvider>
+        <MenuProvider>
+          <MainScreen />
+        </MenuProvider>
+      </TransferFormProvider>
+    </TransferProvider>
   );
 };
 

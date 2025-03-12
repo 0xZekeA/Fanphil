@@ -10,6 +10,7 @@ import chat from "@/assets/icons/chat.png";
 import checkGreen from "@/assets/icons/check.png";
 import backChevron from "@/assets/icons/chevron-back.png";
 import wrong from "@/assets/icons/circle-xmark.png";
+import edit from "@/assets/icons/edit.png";
 import email from "@/assets/icons/email.png";
 import eyecross from "@/assets/icons/eye-slash.png";
 import eye from "@/assets/icons/eye.png";
@@ -47,6 +48,7 @@ export const icons = {
   callWhite,
   chat,
   checkGreen,
+  edit,
   email,
   eye,
   eyecross,

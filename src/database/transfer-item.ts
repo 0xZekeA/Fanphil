@@ -23,6 +23,12 @@ export const addTransferItem = async (
 
     if (!inventoryItem) throw new Error("Inventory item not found");
 
+    if (quantity_moved > inventoryItem.quantity) {
+      throw new Error(
+        `Not enough stock! Trying to move ${quantity_moved}, but only ${inventoryItem.quantity} available.`,
+      );
+    }
+
     const newInventoryQuantity = inventoryItem.quantity - quantity_moved;
 
     await db.runAsync(

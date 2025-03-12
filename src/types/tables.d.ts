@@ -16,6 +16,7 @@ type Inventory = {
   id: UUID;
   name: string;
   quantity: number;
+  stock?: number;
   cost_price: number;
   original_selling_price: number;
   selling_price: number;
