@@ -1,15 +1,16 @@
+import { capitalizeItem } from "@/utils/capitalize";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
 
 export const addInventory = async (
   name: string,
-  quantity: number,
-  cost_price: number,
-  original_selling_price: number,
-  selling_price: number,
+  quantity: string,
+  cost_price: string,
+  original_selling_price: string,
+  selling_price: string,
   increment: number,
-  size: number,
+  size: string,
   unit: string,
   last_edited_by: string,
   created_by: string,
@@ -25,14 +26,14 @@ export const addInventory = async (
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
-        name,
-        quantity,
-        cost_price,
-        original_selling_price,
-        selling_price,
-        increment,
-        size,
-        unit,
+        capitalizeItem(name),
+        Number(quantity),
+        Number(cost_price),
+        Number(original_selling_price),
+        Number(selling_price),
+        Number(increment),
+        Number(size),
+        unit.toLowerCase(),
         last_edited_by,
         created_by,
         now,
@@ -44,7 +45,7 @@ export const addInventory = async (
   } catch (error: any) {
     showToast(
       "error",
-      "Failed to add inventory",
+      "Failed to add inventory item",
       `Error details: ${error.message}`,
     );
     throw error;
@@ -72,14 +73,14 @@ export const updateInventory = async (
       SET name = ?, quantity = ?, cost_price = ?, original_selling_price = ?, selling_price = ?, increment = ?, size = ?, unit = ?, last_edited_by = ?, updated_at = ?, synced_at = NULL
       WHERE id = ?`,
       [
-        name,
-        quantity,
-        cost_price,
-        original_selling_price,
-        selling_price,
-        increment,
-        size,
-        unit,
+        capitalizeItem(name),
+        Number(quantity),
+        Number(cost_price),
+        Number(original_selling_price),
+        Number(selling_price),
+        Number(increment),
+        Number(size),
+        unit.toLowerCase(),
         last_edited_by,
         now,
         id,
