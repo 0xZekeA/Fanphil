@@ -1,8 +1,8 @@
 import { showToast } from "@/utils/notification";
-import uuid from "react-native-uuid";
 import { getDb } from "./database";
 
 export const addUser = async (
+  id: string,
   full_name: string,
   email: string,
   phone_number: string,
@@ -13,7 +13,6 @@ export const addUser = async (
 ) => {
   try {
     const db = await getDb();
-    const id = uuid.v4() as string;
     const now = new Date().toISOString();
 
     await db.runAsync(
@@ -100,6 +99,25 @@ export const deleteUser = async (user_id: string) => {
       `Error details: ${error.message}`,
     );
     console.error("Error in deleteUser:", error);
+    throw error;
+  }
+};
+
+export const reinstateUser = async (user_id: string) => {
+  try {
+    const db = await getDb();
+    await db.runAsync(
+      "UPDATE users SET is_active = 1, synced_at = NULL WHERE id = ?",
+      [user_id],
+    );
+    return user_id;
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Failed to reinstate user",
+      `Error details: ${error.message}`,
+    );
+    console.error("Error in reinstate:", error);
     throw error;
   }
 };

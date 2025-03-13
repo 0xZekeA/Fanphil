@@ -2,7 +2,7 @@ import { addInventoryTransfer } from "@/database/inventory-transfers";
 import { addTransferItem } from "@/database/transfer-item";
 import { useAuthProvider } from "@/providers/auth";
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
-import { useSellerDetsProvider } from "@/providers/seller/SellerDetsProvider";
+import { useUsersProvider } from "@/providers/users/UsersProvider";
 import {
   Action,
   Item,
@@ -28,7 +28,7 @@ const TransferFormProviderContext = createContext<
 const TransferFormProvider = ({ children }: PropsWithChildren) => {
   const { filteredInventory } = useInventoryProvider();
   const { user } = useAuthProvider();
-  const { sellers } = useSellerDetsProvider();
+  const { sellers } = useUsersProvider();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -122,7 +122,9 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
       const id = await Promise.all(
         selectedItems
           .filter((item) => item.quantity > 0)
-          .map((item) => addTransferItem(item.id, transferId, item.quantity)),
+          .map((item) =>
+            addTransferItem(item.id, transferId, item.quantity, user.id),
+          ),
       );
 
       if (id.length < 1) {
@@ -133,6 +135,7 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
         return;
       }
       showToast("success", "Transfer completed successfully");
+      dispatch({ type: "CLEAR_ITEMS" });
     } catch (error: any) {
       console.error(error);
       showToast(

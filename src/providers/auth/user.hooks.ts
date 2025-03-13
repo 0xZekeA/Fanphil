@@ -1,5 +1,6 @@
 import { supabase } from "$root/lib/supabase";
 import { getDb } from "@/database/database";
+import { addUser } from "@/database/users";
 import { showToast } from "@/utils/notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
@@ -46,9 +47,11 @@ const useUserRealtimeData = (
     if (!session && loaded) {
       setLoading(false);
       clearSessionFromSecureStore();
+      return;
     }
 
     const getUser = async () => {
+      console.log("fetching locally..");
       const db = await getDb();
       const userId = await AsyncStorage.getItem("user_id");
       if (!userId) {
@@ -60,29 +63,52 @@ const useUserRealtimeData = (
         [userId],
       );
 
-      if (!user) {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", userId)
-          .single();
-        if (error) {
-          console.log(error);
-          showToast(
-            "error",
-            "Can not get you data",
-            `Error details: ${error.message}`,
-          );
-          setLoading(false);
-          return;
-        }
-        setData(data);
+      if (user) {
+        setData(user);
         setLoading(false);
         return;
       }
 
-      setData(user);
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      if (error) {
+        console.log(error);
+        showToast(
+          "error",
+          "Can not get you data",
+          `Error details: ${error.message}`,
+        );
+        setLoading(false);
+        return;
+      }
+
+      console.log("Adding user to local database...");
+
+      const id = await addUser(
+        userId,
+        data.full_name,
+        data.email,
+        data.phone_number,
+        data.role,
+        data.pfp,
+        data.address,
+        data.created_by,
+      );
+
+      if (!id) {
+        showToast(
+          "error",
+          "Failed to store your details locally",
+          "Contact developer",
+        );
+      }
+      setData(data);
+      setLoading(false);
+      return;
     };
 
     getUser();

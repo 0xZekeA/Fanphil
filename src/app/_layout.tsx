@@ -4,7 +4,7 @@ import FinanceProvider from "@/providers/finances/FinanceProvider";
 import InventoryProvider from "@/providers/inventory/InventoryProvider";
 import { initializeSync } from "@/providers/realtimeData/sync";
 import SalesProvider from "@/providers/sales/SalesProvider";
-import SellerDetsProvider from "@/providers/seller/SellerDetsProvider";
+import UsersProvider from "@/providers/users/UsersProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -63,7 +63,7 @@ export default function RootLayout() {
       <InventoryProvider>
         <SalesProvider>
           <FinanceProvider>
-            <SellerDetsProvider>
+            <UsersProvider>
               <StatusBar
                 translucent
                 backgroundColor={"transparent"}
@@ -79,7 +79,7 @@ export default function RootLayout() {
                 <Stack.Screen name="+not-found" />
               </Stack>
               <Toast />
-            </SellerDetsProvider>
+            </UsersProvider>
           </FinanceProvider>
         </SalesProvider>
       </InventoryProvider>

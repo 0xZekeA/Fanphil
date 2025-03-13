@@ -1,0 +1,55 @@
+import ContextMenu from "@/components/ContextMenu";
+import ListEmptyComp from "@/components/ListEmptyComp";
+import NameCard from "@/components/nameCard";
+import React from "react";
+import { FlatList, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
+import Header from "../header/Header";
+import { useMenuOptions } from "../hooks/MenuOptionsProvider";
+import { useStaffProviders } from "../hooks/StaffProviders";
+import ModalForm from "../modals";
+import styles from "../styles/styles";
+
+const MainScreen = () => {
+  const insets = useSafeAreaInsets();
+  const { filteredUsers, handleOnPress } = useStaffProviders();
+  const { handleLongPress, contextMenu, menuItems, setContextMenu } =
+    useMenuOptions();
+
+  return (
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <FlatList
+        data={filteredUsers}
+        renderItem={({ item }) => (
+          <NameCard
+            user={item}
+            onPress={handleOnPress}
+            onLongPress={handleLongPress}
+          />
+        )}
+        keyExtractor={(_, index) => index.toString()}
+        ListHeaderComponent={<Header />}
+        ListEmptyComponent={
+          <ListEmptyComp message="You can try adding a user" />
+        }
+        ListFooterComponent={<View style={{ paddingBottom: 80 }} />}
+      />
+      <ContextMenu
+        visible={contextMenu.visible}
+        position={contextMenu.position}
+        items={menuItems}
+        onClose={() =>
+          setContextMenu((prev: any) => ({
+            ...prev,
+            visible: false,
+          }))
+        }
+      />
+      <ModalForm />
+      <Toast />
+    </View>
+  );
+};
+
+export default MainScreen;

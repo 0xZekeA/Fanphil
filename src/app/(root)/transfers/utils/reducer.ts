@@ -33,6 +33,9 @@ const reducer = (state: Item[], action: Action): Item[] => {
     case "REMOVE_ITEM":
       return state.filter((item) => item.id !== action.id);
 
+    case "CLEAR_ITEMS":
+      return [];
+
     default:
       return state;
   }

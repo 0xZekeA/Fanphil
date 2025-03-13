@@ -8,6 +8,7 @@ interface LoginFormData {
 }
 
 interface AuthProviderContextTypes {
+  isAdmin: boolean;
   session: Session | null;
   setSession: Dispatch<SetStateAction<Session | null>>;
   user: User | null;

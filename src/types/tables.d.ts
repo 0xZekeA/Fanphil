@@ -9,7 +9,7 @@ type Expense = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type Inventory = {
@@ -38,7 +38,7 @@ type InventoryTransfer = {
   received_by: UUID;
   created_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type Sale = {
@@ -50,7 +50,7 @@ type Sale = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type SoldItem = {
@@ -63,7 +63,7 @@ type SoldItem = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type SellersInventory = {
@@ -74,7 +74,7 @@ type SellersInventory = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type TransferItem = {
@@ -86,7 +86,7 @@ type TransferItem = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };
 
 type User = {
@@ -95,12 +95,12 @@ type User = {
   email: string;
   phone_number: string;
   role: "Creator" | "Manager" | "Driver" | "Owner";
-  is_active: boolean;
+  is_active: 1 | 0;
   pfp: string;
   address: string;
   created_at: string;
   created_by: UUID;
   updated_at: string;
   synced_at: string | null;
-  deleted: boolean;
+  deleted: 1 | 0;
 };

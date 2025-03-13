@@ -37,6 +37,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     setSessionToken,
   );
 
+  const isAdmin = user?.role === "Creator" || user?.role === "Owner";
+
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -83,6 +85,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   return (
     <AuthProviderContext.Provider
       value={{
+        isAdmin,
         session,
         setSession,
         user,
@@ -107,9 +110,7 @@ export default AuthProvider;
 export const useAuthProvider = () => {
   const context = useContext(AuthProviderContext);
   if (!context) {
-    throw new Error(
-      "useAuthProvider must be used within a AuthProviderProvider",
-    );
+    throw new Error("useAuthProvider must be used within a AuthProvider");
   }
   return context;
 };

@@ -6,14 +6,15 @@ export const addTransferItem = async (
   inventory_id: string,
   transfer_id: string,
   quantity_moved: number,
+  last_edited_by: string,
 ) => {
   try {
     const db = await getDb();
     const id = uuid.v4() as string;
 
     await db.runAsync(
-      "INSERT INTO transfer_items (id, inventory_id, transfer_id, quantity_moved) VALUES (?, ?, ?, ?)",
-      [id, inventory_id, transfer_id, quantity_moved],
+      "INSERT INTO transfer_items (id, inventory_id, transfer_id, quantity_moved, last_edited_by) VALUES (?, ?, ?, ?, ?)",
+      [id, inventory_id, transfer_id, quantity_moved, last_edited_by],
     );
 
     const inventoryItem: Inventory | null = await db.getFirstAsync(
@@ -54,12 +55,12 @@ export const addTransferItem = async (
       const newSellerQuantity =
         sellerInventoryItem.quantity_at_hand + quantity_moved;
       await db.runAsync(
-        "UPDATE sellers_inventory SET quantity = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
+        "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
         [newSellerQuantity, inventory_id, sellerId],
       );
     } else {
       await db.runAsync(
-        "INSERT INTO sellers_inventory (id, item_id, seller, quantity) VALUES (?, ?, ?, ?)",
+        "INSERT INTO sellers_inventory (id, item_id, seller, quantity_at_hand) VALUES (?, ?, ?, ?)",
         [uuid.v4(), inventory_id, sellerId, quantity_moved],
       );
     }

@@ -2,15 +2,16 @@ import { icons } from "$root/constants/assets";
 import BackButton from "@/components/BackButton";
 import HapticButton from "@/components/HapticsButton";
 import IconButton from "@/components/IconButton";
-import { useSellerDetsProvider } from "@/providers/seller/SellerDetsProvider";
+import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
+import { router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const TopSection = () => {
-  const { sellers } = useSellerDetsProvider();
+  const { sellers } = useUsersProvider();
 
   return (
     <View
@@ -33,7 +34,7 @@ const TopSection = () => {
 
         {!sellers ||
           ((sellers || []).length === 0 && (
-            <HapticButton onPress={() => {}}>
+            <HapticButton onPress={() => router.push("/(root)/staff")}>
               <Icon
                 name="person-add-outline"
                 size={20}

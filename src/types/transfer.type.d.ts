@@ -8,7 +8,8 @@ type Action =
   | { type: "ADD_ITEM"; item: Item }
   | { type: "INCREASE"; id: string; amount?: number }
   | { type: "DECREASE"; id: string; amount?: number }
-  | { type: "REMOVE_ITEM"; id: string };
+  | { type: "REMOVE_ITEM"; id: string }
+  | { type: "CLEAR_ITEMS" };
 
 interface MenuProviderContextTypes {
   contextMenu: ContextMenuTypes;

@@ -80,6 +80,7 @@ export const setupDatabase = async () => {
       FOREIGN KEY (last_edited_by) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
+    // await db.execAsync(`DROP TABLE IF EXISTS sellers_inventory;`);
 
     await db.execAsync(`
   CREATE TABLE IF NOT EXISTS sellers_inventory (
@@ -95,6 +96,9 @@ export const setupDatabase = async () => {
     FOREIGN KEY (seller) REFERENCES users(id) ON DELETE CASCADE
   );
 `);
+
+    // await db.execAsync(`DROP TABLE IF EXISTS inventory_transfers;`);
+    // await db.execAsync(`DROP TABLE IF EXISTS transfer_items;`);
 
     await db.execAsync(`
   CREATE TABLE IF NOT EXISTS inventory_transfers (

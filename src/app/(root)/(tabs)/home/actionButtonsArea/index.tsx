@@ -1,5 +1,6 @@
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
+import { router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import Btn from "./Btn";
@@ -12,7 +13,11 @@ const ActionBtnArea = () => {
         style={{ columnGap: Scale.moderate(4) }}
         className="flex-row justify-between"
       >
-        <Btn bgColor={COLORS.sky600} onPress={() => {}} title="Staff" />
+        <Btn
+          bgColor={COLORS.sky600}
+          onPress={() => router.push("/(root)/staff")}
+          title="Staff"
+        />
         <Btn bgColor={COLORS.sky400} onPress={() => {}} title="Finances" />
       </View>
       <SellersUpdateBar />

@@ -61,7 +61,7 @@ const PopUpsProvider = ({ children }: PropsWithChildren) => {
     try {
       setLoading(true);
       await reactivateInventoryItem(contextMenu.selectedItem.id);
-      showToast("success", "Item deactivated successfully");
+      showToast("success", "Item reactivated successfully");
     } catch (error: any) {
       showToast(
         "error",

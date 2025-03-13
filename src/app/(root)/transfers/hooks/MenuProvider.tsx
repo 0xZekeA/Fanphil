@@ -1,4 +1,4 @@
-import { useSellerDetsProvider } from "@/providers/seller/SellerDetsProvider";
+import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { ContextMenuTypes } from "@/types/inventory.type";
 import { MenuProviderContextTypes } from "@/types/transfer.type";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
@@ -17,7 +17,7 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
     selectedItem: null,
   });
 
-  const { sellers } = useSellerDetsProvider();
+  const { sellers } = useUsersProvider();
 
   const menuItems =
     contextMenu.selectedItem && getMenuItems(sellers, setSelectedDriver);

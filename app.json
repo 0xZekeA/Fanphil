@@ -51,6 +51,13 @@
           }
         }
       ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow FanphilPOS to access your photos",
+          "cameraPermission": "Allow FanphilPOS to access your camera"
+        }
+      ],
       "expo-secure-store"
     ],
     "experiments": {
