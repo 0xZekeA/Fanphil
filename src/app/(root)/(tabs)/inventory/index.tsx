@@ -1,5 +1,4 @@
 import React from "react";
-import Toast from "react-native-toast-message";
 import InventoryListProvider from "./hooks/InventoryListProvider";
 import InventorySearchProvider from "./hooks/InventorySearchProvider";
 import MenuProvider from "./hooks/MenuProvider";
@@ -11,7 +10,6 @@ const Inventory = () => {
       <InventorySearchProvider>
         <MenuProvider>
           <MainScreen />
-          <Toast />
         </MenuProvider>
       </InventorySearchProvider>
     </InventoryListProvider>

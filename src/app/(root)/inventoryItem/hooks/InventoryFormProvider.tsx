@@ -76,11 +76,7 @@ const InventoryFormProvider = ({ children }: PropsWithChildren) => {
         user.id,
       );
       if (id) {
-        showToast(
-          "success",
-          `${form.name.split(" ")[0]} created and stored successfully`,
-        );
-        reset();
+        showToast("success", `${form.name.split(" ")[0]} updated successfully`);
       }
     } catch (error: any) {
       console.error("Error creating agent: ", error);

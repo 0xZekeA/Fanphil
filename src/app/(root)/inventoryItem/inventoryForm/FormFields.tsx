@@ -23,7 +23,7 @@ const FormFields = () => {
         }}
       >
         {inventoryForm.map((details, index) => (
-          <View>
+          <View key={index}>
             <Text
               style={[styles.textBase, { paddingLeft: Scale.moderate(8) }]}
               className="font-JakartaSemiBold"
@@ -31,7 +31,6 @@ const FormFields = () => {
               {details.label}
             </Text>
             <InputField
-              key={index}
               name={details.id}
               label={details.label}
               labelStyle={{ color: COLORS.gray500 }}

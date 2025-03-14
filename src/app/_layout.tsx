@@ -59,30 +59,32 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <InventoryProvider>
-        <SalesProvider>
-          <FinanceProvider>
-            <UsersProvider>
-              <StatusBar
-                translucent
-                backgroundColor={"transparent"}
-                barStyle={"dark-content"}
-              />
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" />
-                <Stack.Screen name="(auth)" />
-                <Stack.Screen
-                  name="(root)"
-                  options={{ gestureEnabled: false }}
+    <>
+      <AuthProvider>
+        <InventoryProvider>
+          <SalesProvider>
+            <FinanceProvider>
+              <UsersProvider>
+                <StatusBar
+                  translucent
+                  backgroundColor={"transparent"}
+                  barStyle={"dark-content"}
                 />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-              <Toast />
-            </UsersProvider>
-          </FinanceProvider>
-        </SalesProvider>
-      </InventoryProvider>
-    </AuthProvider>
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="(auth)" />
+                  <Stack.Screen
+                    name="(root)"
+                    options={{ gestureEnabled: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+              </UsersProvider>
+            </FinanceProvider>
+          </SalesProvider>
+        </InventoryProvider>
+      </AuthProvider>
+      <Toast />
+    </>
   );
 }

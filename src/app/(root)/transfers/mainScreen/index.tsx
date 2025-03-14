@@ -5,7 +5,6 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { useMenuProvider } from "../hooks/MenuProvider";
 import { useTransferFormProvider } from "../hooks/TransferFormProvider";
 import BottomSheet from "../inventoryBottomSheet";
@@ -53,7 +52,6 @@ const MainScreen = () => {
         />
       </View>
       {isSheetOpen && <BottomSheet />}
-      <Toast />
     </GestureHandlerRootView>
   );
 };

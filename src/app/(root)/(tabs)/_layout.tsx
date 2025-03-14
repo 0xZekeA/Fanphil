@@ -1,7 +1,6 @@
 import CustomTabBar from "@/components/CustomTabBar";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { StatusBar } from "react-native";
-import Toast from "react-native-toast-message";
 import Home from "./home";
 import Inventory from "./inventory";
 import Profile from "./profile";
@@ -30,7 +29,6 @@ const AdminTabsLayout = () => {
         <Tab.Screen name="Sales" component={Sales} />
         <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
-      <Toast />
     </>
   );
 };

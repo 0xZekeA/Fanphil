@@ -67,6 +67,7 @@ export const updateInventory = async (
   try {
     const db = await getDb();
     const now = new Date().toISOString();
+    console.log("started....");
 
     await db.runAsync(
       `UPDATE inventory 
@@ -87,6 +88,7 @@ export const updateInventory = async (
       ],
     );
 
+    console.log(id);
     return id;
   } catch (error: any) {
     showToast(

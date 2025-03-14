@@ -3,7 +3,6 @@ import ListEmptyComp from "@/components/ListEmptyComp";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { useMenuProvider } from "../hooks/MenuProvider";
 import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
 import Header from "../inventoryList/Header";
@@ -39,7 +38,6 @@ const MainScreen = () => {
         }
       />
       <ModalForm />
-      <Toast />
     </View>
   );
 };

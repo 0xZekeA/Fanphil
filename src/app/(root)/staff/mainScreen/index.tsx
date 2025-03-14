@@ -4,7 +4,6 @@ import NameCard from "@/components/nameCard";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import Header from "../header/Header";
 import { useMenuOptions } from "../hooks/MenuOptionsProvider";
 import { useStaffProviders } from "../hooks/StaffProviders";
@@ -47,7 +46,6 @@ const MainScreen = () => {
         }
       />
       <ModalForm />
-      <Toast />
     </View>
   );
 };
