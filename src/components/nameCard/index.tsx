@@ -14,7 +14,6 @@ const NameCard = ({
   onPress: (staff: User) => void;
   onLongPress?: (staff: User, e: any) => void;
 }) => {
-  console.log(user);
   return (
     user && (
       <TouchableOpacity

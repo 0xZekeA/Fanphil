@@ -55,12 +55,12 @@ export const addInventory = async (
 export const updateInventory = async (
   id: string,
   name: string,
-  quantity: number,
-  cost_price: number,
-  original_selling_price: number,
-  selling_price: number,
-  increment: number,
-  size: number,
+  quantity: string,
+  cost_price: string,
+  original_selling_price: string,
+  selling_price: string,
+  increment: string,
+  size: string,
   unit: string,
   last_edited_by: string,
 ) => {
