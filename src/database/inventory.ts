@@ -88,7 +88,6 @@ export const updateInventory = async (
       ],
     );
 
-    console.log(id);
     return id;
   } catch (error: any) {
     showToast(

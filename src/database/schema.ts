@@ -39,9 +39,6 @@ export const setupDatabase = async () => {
     );
   `);
 
-    await db.execAsync(`DROP TABLE IF EXISTS sold_items;`);
-    await db.execAsync(`DROP TABLE IF EXISTS sales;`);
-
     await db.execAsync(`
     CREATE TABLE IF NOT EXISTS sales (
       id TEXT PRIMARY KEY,

@@ -102,10 +102,15 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     dispatch({ type: "REMOVE_ITEM", id });
   };
 
-  const handleChange = (value: string, isAddDeposit?: boolean) => {
+  const handleChange = (value: string, isAddDeposit?: boolean, item?: Sale) => {
     if (/^\d*$/.test(value)) {
-      if (isAddDeposit) setAddedDeposit(value);
-      else setDepositedAmount(value);
+      if (isAddDeposit && item) {
+        if (item.total_price - item.deposit < Number(value)) {
+          setError("Deposit is higher than the difference");
+          return;
+        }
+        setAddedDeposit(value);
+      } else setDepositedAmount(value);
       setError("");
     } else {
       setError("Amount must contain only digits");

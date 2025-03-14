@@ -30,7 +30,7 @@ interface SellItemFormProviderContextTypes {
   isSheetOpen: boolean;
   submitSale: () => void;
   depositedAmount: string;
-  handleChange: (value: string, isAddDeposit?: boolean) => void;
+  handleChange: (value: string, isAddDeposit?: boolean, item?: Sale) => void;
   total: number;
 }
 

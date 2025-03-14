@@ -11,7 +11,12 @@ const AddDeposit = ({ item }: { item: Sale }) => {
   const { handleChange, error } = useSellItemFormProvider();
 
   return (
-    <View style={{ rowGap: Scale.moderate(16) }}>
+    <View
+      style={{
+        rowGap: Scale.moderate(16),
+        paddingVertical: Scale.moderate(24),
+      }}
+    >
       <View className="flex-row justify-between items-center">
         <Text style={styles.textBase} className="font-JakartaMedium">
           Total:
@@ -28,8 +33,8 @@ const AddDeposit = ({ item }: { item: Sale }) => {
         <View style={{ width: "60%" }}>
           <Field
             value={addedDeposit}
-            onChangeText={handleChange}
-            error={error ?? ""}
+            onChangeText={(value: string) => handleChange(value, true, item)}
+            error={error || ""}
             placeholder="100000"
             keyboardType="number-pad"
           />

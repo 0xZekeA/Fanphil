@@ -1,14 +1,15 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import styles from "./styles/styles";
+import PfpProvider from "./hooks/PfpProvider";
+import ProfileScreenProvider from "./hooks/ProfileScreenProvider";
+import MainScreen from "./mainScreen";
 
 const Profile = () => {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>Profile</Text>
-    </View>
+    <ProfileScreenProvider>
+      <PfpProvider>
+        <MainScreen />
+      </PfpProvider>
+    </ProfileScreenProvider>
   );
 };
 

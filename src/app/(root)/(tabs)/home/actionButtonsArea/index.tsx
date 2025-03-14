@@ -18,7 +18,11 @@ const ActionBtnArea = () => {
           onPress={() => router.push("/(root)/staff")}
           title="Staff"
         />
-        <Btn bgColor={COLORS.sky400} onPress={() => {}} title="Finances" />
+        <Btn
+          bgColor={COLORS.sky400}
+          onPress={() => router.push("/(root)/finance")}
+          title="Finances"
+        />
       </View>
       <SellersUpdateBar />
     </View>

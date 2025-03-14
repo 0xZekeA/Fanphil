@@ -18,15 +18,34 @@ export const getLast30DaysData = (
   return filteredData;
 };
 
-export const formatToKAndM = (num: number) => {
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
-  } else if (num >= 1_000) {
-    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
-  }
-  return num.toString();
+export const getDaysLeftInAMonth = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  const monthEnd = new Date(year, month + 1, 0);
+  const daysInTheMonth = monthEnd.getDate();
+  const currentDay = now.getDate();
+
+  return daysInTheMonth - currentDay;
 };
 
-export const formatToLocaleString = (num: number) => {
-  return num.toLocaleString();
+export const getDataFromStartOfMonth = (data: Sale[] | Expense[]) => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  const startOfMonth = new Date(currentYear, currentMonth, 1);
+
+  const filteredData = data?.filter((d) => {
+    const createdDate = new Date(d.created_at);
+    return createdDate >= startOfMonth;
+  });
+
+  return filteredData;
+};
+
+export const calculatePercentage = (part: number, total: number): number => {
+  if (total === 0) return 0;
+  return (part / total) * 100;
 };

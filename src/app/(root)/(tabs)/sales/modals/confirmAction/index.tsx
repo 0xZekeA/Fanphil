@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useSalesDataProvider } from "../../hooks/SalesDataProvider";
 import styles from "../../styles/styles";
+import AddDeposit from "./AddDeposit";
+import CloseButton from "./CloseButton";
 import SoldListItems from "./SoldListItem";
 
 const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
@@ -23,61 +25,75 @@ const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
     if (!items) soldItems();
   }, [items, soldItems]);
 
+  if (!selectedItem) return null;
+
   return (
-    selectedItem && (
-      <View>
-        <TouchableOpacity onPress={() => setIsViewItems(!isViewItems)}>
+    <View style={{ width: "100%" }}>
+      {/* Header  */}
+      <View
+        style={{ paddingVertical: Scale.moderate(16) }}
+        className="flex-row justify-between items-center"
+      >
+        {isViewItems && <CloseButton onClose={onClose} title="Close" />}
+        <TouchableOpacity
+          className="items-end"
+          onPress={() => setIsViewItems(!isViewItems)}
+        >
           <Text style={[styles.textMed, { color: COLORS.indigo900 }]}>
-            {isViewItems ? "Add Deposit" : "View Sold Items"}
+            {isViewItems ? "Add Deposit" : "Sold Items"}
           </Text>
         </TouchableOpacity>
-        <View
-          style={styles.confirmActionHeader}
-          className="flex-col items-center"
+      </View>
+
+      {/* Section title */}
+      <View
+        style={styles.confirmActionHeader}
+        className="flex-col items-center"
+      >
+        <Text
+          style={styles.textBase}
+          className="font-JakartaMedium text-center"
         >
-          <Text
-            style={styles.textBase}
-            className="font-JakartaMedium text-center"
-          >
-            {isViewItems ? "Sold Items" : "Add Deposit"}
-          </Text>
-        </View>
-        <View style={{ rowGap: Scale.moderate(16) }}>
-          {isViewItems &&
-            (items ? (
-              items?.map((item, index) => (
-                <SoldListItems key={index} item={item} />
-              ))
-            ) : (
-              <Text>Can't find any items. Try again later</Text>
-            ))}
-        </View>
+          {isViewItems ? "Sold Items" : "Add Deposit"}
+        </Text>
+      </View>
+
+      {/* Content section - conditionally rendered based on view mode */}
+      {isViewItems ? (
         <View
-          style={{ width: "100%", paddingHorizontal: Scale.moderate(24) }}
-          className="flex-row items-center justify-between"
+          style={{
+            rowGap: Scale.moderate(16),
+            paddingBottom: Scale.moderate(24),
+          }}
         >
-          <TouchableOpacity
-            style={{ paddingLeft: Scale.moderate(20) }}
-            onPress={onClose}
-          >
-            <Text
-              style={[styles.textMed, { color: COLORS.gray400 }]}
-              className={`font-Jakarta`}
-            >
-              {isViewItems ? "Close" : "Cancel"}
-            </Text>
-          </TouchableOpacity>
-          {!isViewItems && (
-            <LongPressButton
-              closeModal={onClose}
-              onLongPressComplete={addNewDeposit}
-              text="Confirm"
-              destructive
-            />
+          {items ? (
+            items.map((item, index) => (
+              <SoldListItems key={index} item={item} />
+            ))
+          ) : (
+            <Text>Can't find any items. Try again later</Text>
           )}
         </View>
+      ) : (
+        <AddDeposit item={selectedItem} />
+      )}
+
+      {/* Action buttons */}
+      <View
+        style={{ width: "100%", paddingHorizontal: Scale.moderate(24) }}
+        className="flex-row items-center justify-between"
+      >
+        {!isViewItems && <CloseButton onClose={onClose} title="Cancel" />}
+        {!isViewItems && (
+          <LongPressButton
+            closeModal={onClose}
+            onLongPressComplete={addNewDeposit}
+            text="Confirm"
+            destructive
+          />
+        )}
       </View>
-    )
+    </View>
   );
 };
 

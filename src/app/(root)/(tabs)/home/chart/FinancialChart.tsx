@@ -3,7 +3,7 @@ import { useAuthProvider } from "@/providers/auth";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import useFinancesHooks from "../hooks/finances.hooks";
 
 const FinancialChart = () => {
@@ -13,7 +13,9 @@ const FinancialChart = () => {
 
   const isAdmin = user?.role === "Creator" || user?.role === "Owner";
 
-  if (isNaN(incomePercentage) || isNaN(expensePercentage)) return;
+  if (isNaN(incomePercentage) || isNaN(expensePercentage)) {
+    return <ActivityIndicator size="small" color={COLORS.black} />;
+  }
 
   return (
     <>
