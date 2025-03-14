@@ -22,7 +22,7 @@ const SalesInfo = () => {
     >
       <Image source={icons.trendLean} style={styles.icons} />
       <Text style={styles.textSmall} className="font-Jakarta">
-        {salesTotal} sales, today
+        {salesTotal} {salesTotal === 1 ? "sale" : "sales"}, today
       </Text>
     </HapticButton>
   );

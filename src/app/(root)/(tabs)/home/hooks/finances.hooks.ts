@@ -15,7 +15,7 @@ const useFinancesHooks = () => {
   }, 0);
   const transactions30Days = getLast30DaysData(sales ?? [])?.reduce((a, t) => {
     if ("total_price" in t) {
-      return a + t.total_price;
+      return a + t.profit;
     }
     return a;
   }, 0);
@@ -23,11 +23,13 @@ const useFinancesHooks = () => {
   const total = (transactions30Days ?? 0) + (expenses30Days ?? 0);
 
   const calculation = useCallback((amount: number) => {
-    return (amount / total) * 100 || 1;
+    return (amount / total) * 100 || 0;
   }, []);
 
   const expensePercentage = calculation(expenses30Days);
   const incomePercentage = calculation(transactions30Days);
+
+  console.log(expensePercentage);
 
   return { expensePercentage, incomePercentage };
 };

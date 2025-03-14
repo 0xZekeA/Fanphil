@@ -27,7 +27,7 @@ export const setupDatabase = async () => {
 
     await db.execAsync(`
     CREATE TABLE IF NOT EXISTS customers (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       phone TEXT UNIQUE,
       address TEXT,
@@ -39,6 +39,9 @@ export const setupDatabase = async () => {
     );
   `);
 
+    await db.execAsync(`DROP TABLE IF EXISTS sold_items;`);
+    await db.execAsync(`DROP TABLE IF EXISTS sales;`);
+
     await db.execAsync(`
     CREATE TABLE IF NOT EXISTS sales (
       id TEXT PRIMARY KEY,
@@ -47,6 +50,7 @@ export const setupDatabase = async () => {
       sold_by TEXT NOT NULL,
       total_price REAL NOT NULL,
       deposit REAL NOT NULL,
+      profit REAL NOT NULL,
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
       last_edited_by TEXT NOT NULL,
@@ -80,7 +84,6 @@ export const setupDatabase = async () => {
       FOREIGN KEY (last_edited_by) REFERENCES users(id) ON DELETE CASCADE
     );
   `);
-    // await db.execAsync(`DROP TABLE IF EXISTS sellers_inventory;`);
 
     await db.execAsync(`
   CREATE TABLE IF NOT EXISTS sellers_inventory (

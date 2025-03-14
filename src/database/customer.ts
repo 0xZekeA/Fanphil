@@ -1,4 +1,5 @@
 import { showToast } from "@/utils/notification";
+import uuid from "react-native-uuid";
 import { getDb } from "./database";
 
 export const addCustomer = async (
@@ -9,15 +10,16 @@ export const addCustomer = async (
   try {
     const db = await getDb();
     const now = new Date().toISOString();
+    const id = uuid.v4() as string;
 
     await db.runAsync(
       `INSERT INTO customers 
-      (name, phone, address, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?)`,
-      [name, phone, address, now, now],
+      (id, name, phone, address, created_at, updated_at) 
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [id, name, phone, address, now, now],
     );
 
-    return phone;
+    return id;
   } catch (error: any) {
     showToast(
       "error",
@@ -29,7 +31,7 @@ export const addCustomer = async (
 };
 
 export const updateCustomer = async (
-  id: number,
+  id: string,
   name: string,
   phone: string,
   address: string,
@@ -72,7 +74,7 @@ export const getCustomers = async () => {
   }
 };
 
-export const deleteCustomer = async (id: number) => {
+export const deleteCustomer = async (id: string) => {
   try {
     const db = await getDb();
 

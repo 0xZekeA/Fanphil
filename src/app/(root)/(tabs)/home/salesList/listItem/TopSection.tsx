@@ -10,6 +10,7 @@ const TopSection = ({ sale }: { sale: Sale }) => {
   return (
     <View className="flex-row justify-between items-center">
       <Text style={styles.textMed} className="font-JakartaLight">
+        x
         {sale.quantity ||
           1 +
             `${

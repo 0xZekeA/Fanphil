@@ -8,6 +8,7 @@ export const addSale = async (
   customer: string,
   total_price: number,
   deposit: number,
+  profit: number,
 ) => {
   try {
     const db = await getDb();
@@ -15,7 +16,7 @@ export const addSale = async (
     const now = new Date().toISOString();
 
     await db.runAsync(
-      "INSERT INTO sales (id, quantity, sold_by, customer_id, total_price, deposit, created_at, updated_at, last_edited_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO sales (id, quantity, sold_by, customer_id, total_price, deposit, profit, created_at, updated_at, last_edited_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         id,
         quantity,
@@ -23,6 +24,7 @@ export const addSale = async (
         customer,
         total_price,
         deposit,
+        profit,
         now,
         now,
         sold_by,
@@ -41,6 +43,7 @@ export const updateSale = async (
   sold_by: string,
   total_price: number,
   deposit: number,
+  profit: number,
   id: string,
   user_id: string,
 ) => {
@@ -49,8 +52,8 @@ export const updateSale = async (
     const now = new Date().toISOString();
 
     await db.runAsync(
-      "UPDATE sales SET quantity = ?, sold_by = ?, total_price = ?, deposit = ?, updated_at = ?, last_edited_by = ?, synced_at = NULL WHERE id = ?",
-      [quantity, sold_by, total_price, deposit, now, user_id, id],
+      "UPDATE sales SET quantity = ?, sold_by = ?, total_price = ?, deposit = ?, profit = ?, updated_at = ?, last_edited_by = ?, synced_at = NULL WHERE id = ?",
+      [quantity, sold_by, total_price, deposit, profit, now, user_id, id],
     );
 
     return id;
@@ -116,6 +119,31 @@ export const deleteSale = async (id: string) => {
     showToast(
       "error",
       "Failed to delete this sale",
+      `Error details: ${error.message}`,
+    );
+    throw error;
+  }
+};
+
+export const addDeposit = async (
+  deposit: number,
+  id: string,
+  user_id: string,
+) => {
+  try {
+    const db = await getDb();
+    const now = new Date().toISOString();
+
+    await db.runAsync(
+      "UPDATE sales SET deposit = ?, updated_at = ?, last_edited_by = ?, synced_at = NULL WHERE id = ?",
+      [deposit, now, user_id, id],
+    );
+
+    return id;
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Failed to update sale",
       `Error details: ${error.message}`,
     );
     throw error;

@@ -61,7 +61,7 @@ export const deleteInventoryItemTransfer = async (id: string) => {
         const sellerId = transfer.received_by;
 
         await db.runAsync(
-          "UPDATE sellers_inventory SET quantity = quantity - ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
+          "UPDATE sellers_inventory SET quantity_at_hand = quantity_at_hand - ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
           [quantity_moved, inventory_id, sellerId],
         );
       }

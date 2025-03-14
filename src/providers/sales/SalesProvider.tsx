@@ -8,9 +8,10 @@ const SalesProviderContext = createContext<
 const SalesProvider = ({ children }: PropsWithChildren) => {
   const sales = useRealtimeData("sales");
   const soldItems = useRealtimeData("sold_items");
+  const customers = useRealtimeData("customers");
 
   return (
-    <SalesProviderContext.Provider value={{ sales, soldItems }}>
+    <SalesProviderContext.Provider value={{ sales, soldItems, customers }}>
       {children}
     </SalesProviderContext.Provider>
   );

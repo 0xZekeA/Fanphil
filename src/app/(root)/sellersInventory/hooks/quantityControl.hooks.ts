@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 type HoldActionType = "INCREASE" | "DECREASE";
 
-export const useQuantityControl = (
+const useQuantityControl = (
   item: FilteredInventory,
   initialQuantity: number | null,
   setQuantity: (value: number) => void,
@@ -55,3 +55,5 @@ export const useQuantityControl = (
     handleReset,
   };
 };
+
+export default useQuantityControl;

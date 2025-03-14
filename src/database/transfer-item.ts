@@ -135,12 +135,12 @@ export const updateTransferItem = async (
       const newSellerQuantity =
         sellerInventoryItem.quantity_at_hand + quantity_difference;
       await db.runAsync(
-        "UPDATE sellers_inventory SET quantity = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
+        "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
         [newSellerQuantity, inventory_id, sellerId],
       );
     } else if (quantity_difference > 0) {
       await db.runAsync(
-        "INSERT INTO sellers_inventory (id, item_id, seller, quantity) VALUES (?, ?, ?, ?)",
+        "INSERT INTO sellers_inventory (id, item_id, seller, quantity_at_hand) VALUES (?, ?, ?, ?)",
         [uuid.v4(), inventory_id, sellerId, new_quantity_moved],
       );
     }
@@ -229,7 +229,7 @@ export const deleteTransferItem = async (id: string) => {
       sellersInventoryItemQuantity - itemQuantity;
 
     await db.runAsync(
-      "UPDATE sellers_inventory SET quantity = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
+      "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
       [newSellersInventoryItemQuantity, inventoryId, sellerId],
     );
   } catch (error: any) {

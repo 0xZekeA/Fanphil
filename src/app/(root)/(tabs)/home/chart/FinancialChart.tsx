@@ -13,6 +13,8 @@ const FinancialChart = () => {
 
   const isAdmin = user?.role === "Creator" || user?.role === "Owner";
 
+  if (isNaN(incomePercentage) || isNaN(expensePercentage)) return;
+
   return (
     <>
       {isAdmin ? (

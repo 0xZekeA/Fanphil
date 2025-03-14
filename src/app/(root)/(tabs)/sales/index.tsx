@@ -1,14 +1,21 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import styles from "./styles/styles";
+import MenuProvider from "./hooks/MenuProvider";
+import SalesDataProvider from "./hooks/SalesDataProvider";
+import SellItemFormProvider from "./hooks/SellItemFormProvider";
+import SellItemProvider from "./hooks/SellItemProvider";
+import MainScreen from "./mainScreen";
 
 const Sales = () => {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>Sales</Text>
-    </View>
+    <SalesDataProvider>
+      <SellItemProvider>
+        <SellItemFormProvider>
+          <MenuProvider>
+            <MainScreen />
+          </MenuProvider>
+        </SellItemFormProvider>
+      </SellItemProvider>
+    </SalesDataProvider>
   );
 };
 

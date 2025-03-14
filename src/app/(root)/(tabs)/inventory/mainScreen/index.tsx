@@ -17,6 +17,7 @@ const MainScreen = () => {
   const insets = useSafeAreaInsets();
   const { inventoryData } = useInventoryListProvider();
   const { menuItems, setContextMenu, contextMenu } = useMenuProvider();
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <FlatList

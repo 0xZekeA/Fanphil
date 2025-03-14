@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Dispatch, SetStateAction } from "react";
 
 const getMenuItems = (
@@ -8,7 +9,7 @@ const getMenuItems = (
     return [
       {
         name: "Add a driver",
-        onPress: () => () => {},
+        onPress: () => router.push("/(root)/staff"),
       },
     ];
 

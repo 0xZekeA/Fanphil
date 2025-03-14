@@ -44,6 +44,9 @@ type InventoryTransfer = {
 type Sale = {
   id: UUID;
   quantity: number;
+  profit: number;
+  customer_id: UUID;
+  deposit: number;
   sold_by: UUID;
   total_price: number;
   last_edited_by: UUID;
@@ -113,4 +116,16 @@ type Return = {
   item_id: UUID;
   quantity: number;
   returned_by: UUID;
+};
+
+type Customer = {
+  id: UUID;
+  name: string;
+  phone: string | null;
+  address: string | null;
+  created_at: string;
+  updated_at: string;
+  is_active: 1 | 0;
+  synced_at: string | null;
+  deleted: 1 | 0;
 };
