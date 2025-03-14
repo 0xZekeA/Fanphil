@@ -1,9 +1,9 @@
-import { useUsersProvider } from "@/providers/users/UsersProvider";
+import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { getLast30DaysData } from "@/utils/financialHelpers";
 import { DimensionValue } from "react-native";
 
 const useProgressbarHooks = () => {
-  const { sellersInventory, transferItems } = useUsersProvider();
+  const { sellersInventory, transferItems } = useInventoryProvider();
 
   const thirtyDaysTransferredItems = getLast30DaysData(transferItems || []);
 

@@ -1,0 +1,38 @@
+import { FilteredInventory } from "@/types/sellersInventory";
+
+const getFilteredSellersInventory = (
+  sellersInventory: SellersInventory[],
+  inventory: Inventory[],
+  selectedSellerId: UUID | null,
+): FilteredInventory[] => {
+  if (!selectedSellerId) return [];
+
+  return sellersInventory
+    .filter((item) => item.seller === selectedSellerId && item.deleted === 0)
+    .map((sellerItem) => {
+      const inventoryItem = inventory.find(
+        (inv) => inv.id === sellerItem.item_id,
+      );
+
+      if (!inventoryItem) return null;
+
+      return {
+        id: inventoryItem.id,
+        name: inventoryItem.name,
+        size: inventoryItem.size,
+        unit: inventoryItem.unit,
+        synced_at: sellerItem.synced_at,
+        quantity_at_hand: sellerItem.quantity_at_hand,
+        selling_price: inventoryItem.selling_price,
+        cost_price: inventoryItem.cost_price,
+        last_edited_by: inventoryItem.last_edited_by,
+        created_by: inventoryItem.created_by,
+        created_at: inventoryItem.created_at,
+        updated_at: inventoryItem.updated_at,
+        deleted: inventoryItem.deleted,
+      };
+    })
+    .filter((item): item is FilteredInventory => item !== null);
+};
+
+export default getFilteredSellersInventory;

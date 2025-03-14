@@ -115,6 +115,23 @@ export const setupDatabase = async () => {
 `);
 
     await db.execAsync(`
+  CREATE TABLE IF NOT EXISTS returns (
+    id TEXT PRIMARY KEY,
+    returned_by TEXT NOT NULL,
+    seller TEXT NOT NULL,
+    item_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted INTEGER NOT NULL DEFAULT 0,
+    synced_at TEXT DEFAULT NULL,
+    FOREIGN KEY (returned_by) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (seller) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES inventory(id) ON DELETE CASCADE
+  );
+`);
+
+    await db.execAsync(`
     CREATE TABLE IF NOT EXISTS expenses (
       id TEXT PRIMARY KEY,
       reason TEXT NOT NULL,

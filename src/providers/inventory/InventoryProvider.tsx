@@ -7,12 +7,23 @@ const InventoryProviderContext = createContext<
 
 const InventoryProvider = ({ children }: PropsWithChildren) => {
   const inventory = useRealtimeData("inventory");
+  const returns = useRealtimeData("returns");
+  const sellersInventory = useRealtimeData("sellers_inventory");
+  const transferItems = useRealtimeData("transfer_items");
   const filteredInventory = inventory.filter(
     (i) => i.deleted !== 1 && i.is_active !== 0,
   );
 
   return (
-    <InventoryProviderContext.Provider value={{ inventory, filteredInventory }}>
+    <InventoryProviderContext.Provider
+      value={{
+        inventory,
+        filteredInventory,
+        returns,
+        sellersInventory,
+        transferItems,
+      }}
+    >
       {children}
     </InventoryProviderContext.Provider>
   );

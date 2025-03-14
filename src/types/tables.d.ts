@@ -68,7 +68,7 @@ type SoldItem = {
 
 type SellersInventory = {
   id: UUID;
-  inventory_id: UUID;
+  item_id: UUID;
   seller: UUID;
   quantity_at_hand: number;
   created_at: string;
@@ -103,4 +103,14 @@ type User = {
   updated_at: string;
   synced_at: string | null;
   deleted: 1 | 0;
+};
+
+type Return = {
+  id: UUID;
+  created_at: string;
+  updated_at: string;
+  seller: UUID;
+  item_id: UUID;
+  quantity: number;
+  returned_by: UUID;
 };

@@ -1,7 +1,5 @@
 interface UsersProviderContextTypes {
   users: User[];
-  sellersInventory: SellersInventory[];
-  transferItems: TransferItem[];
   sellers: User[];
   createAgent: (
     form: UserFormType,

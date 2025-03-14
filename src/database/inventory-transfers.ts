@@ -82,3 +82,54 @@ export const deleteInventoryItemTransfer = async (id: string) => {
     throw error;
   }
 };
+
+export const updateSellersInventory = async (
+  seller_id: string,
+  inventory_id: string,
+  new_quantity: number,
+  returned_by: string,
+) => {
+  try {
+    const db = await getDb();
+    const now = new Date().toISOString();
+    const returnId = uuid.v4() as string;
+
+    // Get current quantity_at_hand
+    const sellerInventory: SellersInventory | null = await db.getFirstAsync(
+      "SELECT quantity_at_hand FROM sellers_inventory WHERE seller = ? AND item_id = ?",
+      [seller_id, inventory_id],
+    );
+
+    if (!sellerInventory) {
+      throw new Error("Seller inventory not found");
+    }
+
+    const old_quantity = sellerInventory.quantity_at_hand;
+    const difference = old_quantity - new_quantity;
+
+    // Update seller's inventory
+    await db.runAsync(
+      "UPDATE sellers_inventory SET quantity_at_hand = ?, updated_at = ?, synced_at = NULL WHERE seller = ? AND item_id = ?",
+      [new_quantity, now, seller_id, inventory_id],
+    );
+
+    // Add difference to inventory
+    await db.runAsync(
+      "UPDATE inventory SET quantity = quantity + ?, updated_at = ?, synced_at = NULL WHERE id = ?",
+      [difference, now, inventory_id],
+    );
+
+    // Add to returns table
+    if (difference > 0) {
+      await db.runAsync(
+        "INSERT INTO returns (id, seller, item_id, quantity, returned_by) VALUES (?, ?, ?, ?, ?)",
+        [returnId, seller_id, inventory_id, difference, returned_by],
+      );
+    }
+
+    return { success: true, message: "Inventory updated successfully" };
+  } catch (error: any) {
+    showToast("error", "Something went wrong", `Error: ${error.message}`);
+    throw error;
+  }
+};

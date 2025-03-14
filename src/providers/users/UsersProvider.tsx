@@ -11,16 +11,13 @@ const UsersProvider = ({ children }: PropsWithChildren) => {
   const users = useRealtimeData("users");
   const { user } = useAuthProvider();
   const { createAgent } = useCreateUserHooks(user);
-  const sellersInventory = useRealtimeData("sellers_inventory");
-  const transferItems = useRealtimeData("transfer_items");
+
   const sellers: User[] = useRealtimeData("users").filter(
     (user) => user.role === "Driver",
   );
 
   return (
-    <UsersProviderContext.Provider
-      value={{ users, sellersInventory, transferItems, sellers, createAgent }}
-    >
+    <UsersProviderContext.Provider value={{ users, sellers, createAgent }}>
       {children}
     </UsersProviderContext.Provider>
   );
