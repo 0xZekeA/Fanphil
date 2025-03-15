@@ -25,16 +25,17 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loaded, setLoaded] = useState(false);
-  const { data: user, updateUser } = useUserRealtimeData(
-    session,
-    setLoading,
-    loaded,
-  );
+  const {
+    data: user,
+    updateUser,
+    getUser,
+  } = useUserRealtimeData(session, setLoading, loaded);
   const { signOut } = useSignoutHooks(setSession);
   const { resetPassword } = useResetPasswordHooks(user);
   const { control, onSubmit, errors, isSubmitting } = useSigninHooks(
     setSession,
     setSessionToken,
+    getUser,
   );
 
   const isAdmin = user?.role === "Creator" || user?.role === "Owner";

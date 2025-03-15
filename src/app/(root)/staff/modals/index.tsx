@@ -3,7 +3,6 @@ import Modal from "@/components/Modal";
 import ViewMore from "@/components/viewMore";
 import React from "react";
 import { View } from "react-native";
-import Toast from "react-native-toast-message";
 import { useMenuOptions } from "../hooks/MenuOptionsProvider";
 import { useStaffForms } from "../hooks/StaffFormProvider";
 import { useStaffProviders } from "../hooks/StaffProviders";
@@ -42,7 +41,6 @@ const ModalForm = () => {
         )}
       </View>
       <CopyPopup />
-      <Toast />
     </Modal>
   );
 };

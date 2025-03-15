@@ -10,7 +10,7 @@ const MenuProviderContext = createContext<MenuProviderContextTypes | undefined>(
 );
 
 const MenuProvider = ({ children }: PropsWithChildren) => {
-  const { setSelectedCustomer } = useSellItemFormProvider();
+  const { setSelectedCustomer, openSheet } = useSellItemFormProvider();
   const { customers } = useSalesProvider();
 
   const [isSalesInterface, setIsSalesInterface] = useState(false);
@@ -27,6 +27,7 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
       setIsSalesInterface,
       isSalesInterface,
       setSelectedCustomer,
+      openSheet,
     );
 
   const onOpenMenuOptions = (event: any) => {

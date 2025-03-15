@@ -36,7 +36,7 @@ const AddDeposit = ({ item }: { item: Sale }) => {
             onChangeText={(value: string) => handleChange(value, true, item)}
             error={error || ""}
             placeholder="100000"
-            keyboardType="number-pad"
+            keyboardType="numbers-and-punctuation"
           />
         </View>
       </View>

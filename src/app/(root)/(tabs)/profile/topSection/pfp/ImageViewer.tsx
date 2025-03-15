@@ -37,6 +37,11 @@ const Viewer = () => {
             </TouchableOpacity>
           </View>
         )}
+        loadingRender={() => (
+          <View style={styles.imgActivityIndicator}>
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          </View>
+        )}
         renderIndicator={() =>
           loading ? (
             <View style={styles.imgActivityIndicator}>

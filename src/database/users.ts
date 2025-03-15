@@ -15,6 +15,12 @@ export const addUser = async (
     const db = await getDb();
     const now = new Date().toISOString();
 
+    const data = await db.getFirstAsync("SELECT * FROM users WHERE id = ?", [
+      id,
+    ]);
+
+    if (data) return;
+
     await db.runAsync(
       "INSERT INTO users (id, full_name, email, phone_number, role, pfp, address, created_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [

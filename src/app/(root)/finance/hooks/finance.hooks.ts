@@ -26,24 +26,18 @@ const useFinanceHooks = () => {
   // 30 day expenses
   const expenses30Days = (
     getLast30DaysData(expenses ?? []) as Expense[]
-  )?.reduce((a, e) => {
-    if ("amount" in e) {
-      return a + e.cost;
-    }
-    return a;
-  }, 0);
+  ).reduce((a, e) => a + e.cost, 0);
 
   const transactions30Days = (getLast30DaysData(sales ?? []) as Sale[])?.reduce(
-    (a, t) => {
-      if ("amount" in t) {
-        return a + t.total_price;
-      }
-      return a;
-    },
+    (a, t) => a + t.deposit,
     0,
   );
 
-  const allTimeProfit = sales?.reduce((a, t) => a + t.profit, 0) ?? 0;
+  const allTimeProfit =
+    ((sales || [])?.reduce((a, t) => a + t.profit, 0) || 0) -
+    ((expenses || []).reduce((a, b) => a + b.cost, 0) || 0);
+
+  const isInProfit = !(allTimeProfit || 0).toString().startsWith("-");
 
   // Breakdown/expenses data
   const expenseData: FinancialDataTypes[] | null = expensesData30Days.filter(
@@ -51,8 +45,6 @@ const useFinanceHooks = () => {
   );
 
   const breakDown = isExpanded ? expenseData : expenseData.slice(0, 6);
-
-  //Manager's financial data
 
   // Investor's financials
   const financialData: FinancialDataTypes[] = [
@@ -67,15 +59,14 @@ const useFinanceHooks = () => {
     },
     {
       initial: "All time profit:",
-      later: allTimeProfit.toString().startsWith("-") ? 0 : allTimeProfit ?? 0,
-      profit: true,
+      later: Math.abs(allTimeProfit),
+      profit: isInProfit,
     },
     {
       initial: "Sales completed(30 days):",
-      later: sales30Days.length ?? 0,
+      later: (sales30Days || []).length,
       notCash: true,
     },
-    { initial: "Pending Share:", later: 1220000, profit: true },
   ];
 
   return {

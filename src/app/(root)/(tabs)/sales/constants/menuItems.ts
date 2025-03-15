@@ -6,6 +6,7 @@ const getMenuItems = (
   setIsSalesInterface: Dispatch<SetStateAction<boolean>>,
   isSalesInterface: boolean,
   setSelectedCustomer: Dispatch<SetStateAction<Customer>>,
+  openSheet: () => void,
 ) => {
   if (isSalesInterface) {
     if (!customers)
@@ -25,7 +26,10 @@ const getMenuItems = (
   const menuItems = [
     {
       name: "Make sale",
-      onPress: () => setIsSalesInterface(true),
+      onPress: () => {
+        setIsSalesInterface(true);
+        openSheet();
+      },
     },
     {
       name: "Customers",

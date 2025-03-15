@@ -1,7 +1,8 @@
 import OnpressMessage from "@/components/onPressMessage";
 import { Scale } from "@/utils/scaling";
 import React from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
+import { FlatList, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useProfileScreenContext } from "../hooks/ProfileScreenProvider";
 import useRefreshHook from "../hooks/refresh.hooks";
 import Settings from "../list/settings";
@@ -20,9 +21,10 @@ const MainScreen = () => {
     isUserDetailsShown,
   } = useProfileScreenContext();
   const { refreshing, onRefresh } = useRefreshHook();
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <ProfileBackButton />
 
       <FlatList
@@ -48,7 +50,7 @@ const MainScreen = () => {
         text={message}
         width={Scale.moderate(120)}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

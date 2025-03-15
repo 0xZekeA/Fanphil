@@ -1,4 +1,5 @@
 import { supabase } from "$root/lib/supabase";
+import { wipeTablesOnSignOut } from "@/database/wipeData";
 import { showToast } from "@/utils/notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session } from "@supabase/supabase-js";
@@ -17,16 +18,10 @@ const useSignoutHooks = (
 
       await SecureStore.deleteItemAsync("session_token");
       await AsyncStorage.removeItem("user_id");
-
-      router.push("/");
-
-      showToast(
-        "success",
-        "You signed out successfully",
-        "Hope to have you back soon!",
-      );
+      await wipeTablesOnSignOut();
 
       setSession(null);
+      router.push("/(auth)/signIn");
     } catch (error: any) {
       showToast(
         "error",

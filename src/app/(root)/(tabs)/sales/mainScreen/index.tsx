@@ -73,7 +73,7 @@ const MainScreen = () => {
           }))
         }
       />
-      {isSheetOpen && <BottomSheet />}
+      {isSheetOpen && isSalesInterface && <BottomSheet />}
       <ModalForm />
     </GestureHandlerRootView>
   );

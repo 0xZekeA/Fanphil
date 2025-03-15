@@ -6,7 +6,6 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { useInactiveHooksProvider } from "../hooks/InactiveHooksProvider";
 import { usePopUpsProvider } from "../hooks/PopUpsProvider";
 import ListItem from "../listItem";
@@ -67,7 +66,6 @@ const MainScreen = () => {
         width={Scale.moderate(120)}
       />
       <ModalForm />
-      <Toast />
     </View>
   );
 };

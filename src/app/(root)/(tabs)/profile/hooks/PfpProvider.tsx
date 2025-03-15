@@ -26,19 +26,19 @@ const PfpProvider = ({ children }: PropsWithChildren) => {
 
   const cloudinaryUrl = useMemo(() => {
     const cloudName = env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${pubId}`;
+    return `https://res.cloudinary.com/${cloudName}/image/upload/w_600/${pubId}`;
   }, [pubId]);
 
-  const image: CloudinaryImage = cld.image(user?.pfp!);
+  const image: CloudinaryImage = cld.image(pubId);
   image.resize(
     thumbnail().width(300).height(300).gravity(focusOn(FocusOn.face())),
   );
   const imagePubID = pubId;
 
-  const editPfp = useCallback(
-    async () => editImage(user, setLoading, setPubId),
-    [user],
-  );
+  const editPfp = useCallback(async () => {
+    if (!user) return;
+    editImage(user, setLoading, setPubId);
+  }, [user]);
 
   return (
     <PfpProviderContext.Provider

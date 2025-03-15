@@ -2,6 +2,7 @@ import DoughnutChart from "@/components/doughnutPieChart";
 import { useAuthProvider } from "@/providers/auth";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
+import { router } from "expo-router";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import useFinancesHooks from "../hooks/finances.hooks";
@@ -29,7 +30,7 @@ const FinancialChart = () => {
               color: COLORS.softCoral700,
             },
           ]}
-          onPress={() => {}}
+          onPress={() => router.push("/(root)/finance")}
         />
       ) : (
         <View style={{ marginTop: Scale.moderate(24) }} />

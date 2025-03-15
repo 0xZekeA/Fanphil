@@ -2,7 +2,8 @@ import BackButton from "@/components/BackButton";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
+import { FlatList, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BreakdownList from "./breakdown/BreakdownList";
 import FinancialChart from "./chart";
 import ModalForm from "./expenseForm/ModalForm";
@@ -15,8 +16,13 @@ const Finances = () => {
   const { refresh, isRefreshing } = useFinanceRefresh();
   const { financialData } = useFinanceHooks();
 
+  const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaView style={{ backgroundColor: COLORS.white }} className="flex-1">
+    <View
+      style={{ backgroundColor: COLORS.white, paddingTop: insets.top }}
+      className="flex-1"
+    >
       <FlatList
         data={financialData}
         renderItem={({ item }) => <FinancesData item={item} />}
@@ -42,7 +48,7 @@ const Finances = () => {
           </ExpenseProviders>
         }
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

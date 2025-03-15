@@ -8,7 +8,6 @@ import {
   Modal as RNModal,
   StyleSheet,
 } from "react-native";
-import Toast from "react-native-toast-message";
 
 type CustomModalProps = ModalProps & {
   isOpen: boolean;
@@ -55,7 +54,6 @@ const Modal = ({
       {...rest}
     >
       {content}
-      <Toast />
     </RNModal>
   );
 };

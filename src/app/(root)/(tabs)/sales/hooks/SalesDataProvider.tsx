@@ -25,11 +25,13 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   const { sales, customers } = useSalesProvider();
   const { isAdmin, user } = useAuthProvider();
 
+  // Sort sales according to most recent
   sales.sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 
+  // Filter todays sales
   const todaysSales = sales.filter(
     (s) => new Date(s.created_at).getDate() === new Date().getDate(),
   );
@@ -45,6 +47,7 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     [],
   );
 
+  // Sale overview calculations
   const dayDeposits =
     todaysSales?.reduce((a, b) => a + (b.deposit || 0), 0) ?? 0;
   const loans =
@@ -58,7 +61,7 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     loans,
     assumedProfit,
   };
-
+  // Format Customer name
   const formatName = useCallback((item: Sale) => {
     const name =
       customers.find((c) => item.customer_id === c.id)?.name ?? "Customer461";
@@ -67,7 +70,13 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
 
   const salesData = isEightShown ? filteredSales.slice(0, 8) : filteredSales;
 
-  const onPress = (item: Sale) => setSelectedItem(item);
+  const onPress = (item: Sale) => {
+    if (!isAdmin || item.sold_by !== user?.id) {
+      showToast("error", "Only the creator or an admin can edit this sale");
+      return;
+    }
+    setSelectedItem(item);
+  };
 
   const isLongerThanEight = (filteredSales || []).length > 8;
 
@@ -78,17 +87,21 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     if (!selectedItem || !user) return;
     try {
       const id = await addDeposit(
-        Number(addedDeposit),
+        Number(addedDeposit) + selectedItem.deposit,
         selectedItem.id,
         user.id,
       );
+
+      const message = addedDeposit.startsWith("-")
+        ? "₦" +
+          Number(addedDeposit.split("-")[1]) +
+          " was subtracted from the sale successfully"
+        : "₦" +
+          Number(addedDeposit).toLocaleString() +
+          " was added to the sale successfully";
+
       if (id) {
-        showToast(
-          "success",
-          `₦${Number(
-            addDeposit,
-          ).toLocaleString()} was added to the sale successfully`,
-        );
+        showToast("success", message);
       }
     } catch (error) {
       console.error(error);

@@ -103,17 +103,19 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
   };
 
   const handleChange = (value: string, isAddDeposit?: boolean, item?: Sale) => {
-    if (/^\d*$/.test(value)) {
+    if (/^-?\d*$/.test(value)) {
       if (isAddDeposit && item) {
         if (item.total_price - item.deposit < Number(value)) {
           setError("Deposit is higher than the difference");
           return;
         }
         setAddedDeposit(value);
-      } else setDepositedAmount(value);
+      } else {
+        setDepositedAmount(value);
+      }
       setError("");
     } else {
-      setError("Amount must contain only digits");
+      setError("Amount must contain only digits and an optional '-' sign");
     }
   };
 
@@ -187,7 +189,10 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
         showToast("error", "Operation failed", "Contact admin");
         return;
       }
-      showToast("success", "Transfer completed successfully");
+      showToast(
+        "success",
+        `Sale to ${selectedCustomer.name} completed successfully`,
+      );
       dispatch({ type: "CLEAR_ITEMS" });
     } catch (error: any) {
       console.error(error);

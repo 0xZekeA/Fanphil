@@ -27,12 +27,12 @@ export const editImage = async (
     }
 
     setPubId(uploadResponse);
-    const now = new Date();
 
     const db = await getDb();
+    const now = new Date().toISOString();
 
     await db.runAsync(
-      "UPDATE users SET pfp = ?, updated_at = ?, synced_at = 0 WHERE id = ?",
+      "UPDATE users SET pfp = ?, updated_at = ?, synced_at = NULL WHERE id = ?",
       [uploadResponse, now, user.id],
     );
 

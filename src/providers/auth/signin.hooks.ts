@@ -1,4 +1,5 @@
 import { supabase } from "$root/lib/supabase";
+import { downloadDataFromSupabase } from "@/database/loadDataFromSupabase";
 import { showToast } from "@/utils/notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +14,7 @@ import { LoginFormData } from "./authpro.types";
 const useSigninHooks = (
   setSession: Dispatch<SetStateAction<Session | null>>,
   setSessionToken: Dispatch<SetStateAction<string | null>>,
+  getUser: () => Promise<void>,
 ) => {
   const loginSchema = z.object({
     email: z
@@ -52,6 +54,8 @@ const useSigninHooks = (
       if (session) {
         await SecureStore.setItemAsync("session_token", session.access_token);
         await AsyncStorage.setItem("user_id", session.user.id);
+        await downloadDataFromSupabase();
+        await getUser();
 
         setSession(session);
         setSessionToken(session.access_token);
