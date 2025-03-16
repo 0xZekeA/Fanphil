@@ -1,14 +1,33 @@
+import BackButton from "@/components/BackButton";
+import ListEmptyComp from "@/components/ListEmptyComp";
+import { Scale } from "@/utils/scaling";
 import React from "react";
-import { Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useHistoryListProvider } from "../hooks/HistoryListProvider";
+import ListItem from "../listItem";
+import TransferItems from "../modals";
 import styles from "../styles/styles";
 
 const MainScreen = () => {
   const insets = useSafeAreaInsets();
+  const { data } = useHistoryListProvider();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text>MainScreen</Text>
+      <FlatList
+        data={data}
+        renderItem={({ item }) => <ListItem item={item} />}
+        ListEmptyComponent={
+          <ListEmptyComp message="There is no recent transfer or return" />
+        }
+        ListHeaderComponent={
+          <View style={{ paddingBottom: Scale.moderate(32) }}>
+            <BackButton title="Transfer History" />
+          </View>
+        }
+      />
+      <TransferItems />
     </View>
   );
 };

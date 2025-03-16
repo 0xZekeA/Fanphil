@@ -29,7 +29,7 @@ const TopSection = () => {
         <IconButton
           color={COLORS.gray600}
           icon={icons.list}
-          onPress={() => {}}
+          onPress={() => router.push("/(root)/transferHistory")}
         />
 
         {!sellers ||

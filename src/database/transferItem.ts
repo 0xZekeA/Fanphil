@@ -241,3 +241,22 @@ export const deleteTransferItem = async (id: string) => {
     throw error;
   }
 };
+
+export const getSpecificTransferItems = async (
+  id: string,
+): Promise<TransferItem[]> => {
+  try {
+    const db = await getDb();
+    return await db.getAllAsync(
+      "SELECT * FROM transfer_items WHERE transfer_id = ? ",
+      [id],
+    );
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Error fetching transfer items",
+      `Error details: ${error.message}`,
+    );
+    throw error;
+  }
+};

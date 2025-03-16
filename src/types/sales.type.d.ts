@@ -47,6 +47,8 @@ interface SalesDataProviderContextTypes {
   };
   formatName: (item: Sale) => string;
   salesData: Sale[];
+  isOwingFiltered: boolean;
+  setIsOwingFiltered: Dispatch<SetStateAction<boolean>>;
   setIsEightShown: Dispatch<SetStateAction<boolean>>;
   isEightShown: boolean;
   isLongerThanEight: boolean;

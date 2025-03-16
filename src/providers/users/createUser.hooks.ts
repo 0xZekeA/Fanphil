@@ -10,7 +10,7 @@ const useCreateUserHooks = (user: User | null) => {
       user?.role === "Manager" ||
       user?.role === "Owner");
 
-  const createAgent = async (
+  const createUser = async (
     { email, name, role, phoneNumber, address }: UserFormType,
     image: string | null,
   ): Promise<{ success?: boolean } | undefined> => {
@@ -38,6 +38,7 @@ const useCreateUserHooks = (user: User | null) => {
         email: email,
         password: phoneNumber,
         user_metadata: { role: role, phone: phoneNumber },
+        email_confirm: true,
       });
 
       if (error) throw error;
@@ -84,7 +85,7 @@ const useCreateUserHooks = (user: User | null) => {
     }
   };
 
-  return { createAgent };
+  return { createUser };
 };
 
 export default useCreateUserHooks;

@@ -9,8 +9,9 @@ const TABLES_TO_SYNC = [
   "sales",
   "inventory",
   "sellers_inventory",
-  "expenses",
   "inventory_transfers",
+  "returns",
+  "expenses",
   "sold_items",
   "transfer_items",
 ];

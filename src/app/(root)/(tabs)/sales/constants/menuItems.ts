@@ -7,6 +7,8 @@ const getMenuItems = (
   isSalesInterface: boolean,
   setSelectedCustomer: Dispatch<SetStateAction<Customer>>,
   openSheet: () => void,
+  setIsOwingFiltered: Dispatch<SetStateAction<boolean>>,
+  isOwingFiltered: boolean,
 ) => {
   if (isSalesInterface) {
     if (!customers)
@@ -34,6 +36,10 @@ const getMenuItems = (
     {
       name: "Customers",
       onPress: () => router.push("/(root)/customers"),
+    },
+    {
+      name: isOwingFiltered ? "Back to Sales" : "Owing Customers",
+      onPress: () => setIsOwingFiltered(!isOwingFiltered),
     },
   ];
 

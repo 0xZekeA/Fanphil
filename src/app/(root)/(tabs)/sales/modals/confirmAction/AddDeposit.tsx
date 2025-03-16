@@ -9,20 +9,29 @@ import styles from "../../styles/styles";
 const AddDeposit = ({ item }: { item: Sale }) => {
   const { addedDeposit } = useSalesDataProvider();
   const { handleChange, error } = useSellItemFormProvider();
+  const difference = item.total_price - item.deposit;
 
   return (
     <View
       style={{
         rowGap: Scale.moderate(16),
-        paddingVertical: Scale.moderate(24),
+        paddingBottom: Scale.moderate(24),
       }}
     >
       <View className="flex-row justify-between items-center">
         <Text style={styles.textBase} className="font-JakartaMedium">
-          Total:
+          Paid amount:
         </Text>
         <Text style={styles.textBase} className="font-JakartaSemiBold">
           ₦ {item.deposit.toLocaleString()}
+        </Text>
+      </View>
+      <View className="flex-row justify-between items-center">
+        <Text style={styles.textBase} className="font-JakartaMedium">
+          Amount Left:
+        </Text>
+        <Text style={styles.textBase} className="font-JakartaSemiBold">
+          ₦ {difference.toLocaleString()}
         </Text>
       </View>
       <View className="flex-row justify-between items-start">

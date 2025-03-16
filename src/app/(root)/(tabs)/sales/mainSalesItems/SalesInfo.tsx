@@ -7,12 +7,14 @@ import { Dimensions, FlatList, Text, View } from "react-native";
 import getCardData from "../constants/salesInfo";
 import { useSalesDataProvider } from "../hooks/SalesDataProvider";
 import styles from "../styles/styles";
+import BackToSalesBtn from "./BackToSalesBtn";
 
 const { width } = Dimensions.get("window");
 const cardWidth = width * 0.8;
 
 const SalesInfo = () => {
-  const { salesInfo } = useSalesDataProvider();
+  const { salesInfo, isOwingFiltered, setIsOwingFiltered } =
+    useSalesDataProvider();
   const { isAdmin } = useAuthProvider();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
@@ -101,6 +103,7 @@ const SalesInfo = () => {
       />
 
       {renderPaginationDots()}
+      <BackToSalesBtn />
     </View>
   );
 };

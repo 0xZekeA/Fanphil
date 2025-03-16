@@ -3,6 +3,7 @@ import { ContextMenuTypes } from "@/types/inventory.type";
 import { MenuProviderContextTypes } from "@/types/sales.type";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import getMenuItems from "../constants/menuItems";
+import { useSalesDataProvider } from "./SalesDataProvider";
 import { useSellItemFormProvider } from "./SellItemFormProvider";
 
 const MenuProviderContext = createContext<MenuProviderContextTypes | undefined>(
@@ -11,6 +12,7 @@ const MenuProviderContext = createContext<MenuProviderContextTypes | undefined>(
 
 const MenuProvider = ({ children }: PropsWithChildren) => {
   const { setSelectedCustomer, openSheet } = useSellItemFormProvider();
+  const { setIsOwingFiltered, isOwingFiltered } = useSalesDataProvider();
   const { customers } = useSalesProvider();
 
   const [isSalesInterface, setIsSalesInterface] = useState(false);
@@ -28,6 +30,8 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
       isSalesInterface,
       setSelectedCustomer,
       openSheet,
+      setIsOwingFiltered,
+      isOwingFiltered,
     );
 
   const onOpenMenuOptions = (event: any) => {

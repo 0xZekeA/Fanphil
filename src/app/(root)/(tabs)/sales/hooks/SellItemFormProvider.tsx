@@ -1,5 +1,5 @@
 import { addSale } from "@/database/sales";
-import { addSoldItem } from "@/database/sold-item";
+import { addSoldItem } from "@/database/soldItem";
 import { useAuthProvider } from "@/providers/auth";
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { useSalesProvider } from "@/providers/sales/SalesProvider";
@@ -102,15 +102,30 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     dispatch({ type: "REMOVE_ITEM", id });
   };
 
+  const total = selectedItems.reduce((a, b) => {
+    const price =
+      filteredInventory?.find((item) => item.id === b.id)?.selling_price ?? 0;
+    return a + b.quantity * price;
+  }, 0);
+
   const handleChange = (value: string, isAddDeposit?: boolean, item?: Sale) => {
     if (/^-?\d*$/.test(value)) {
       if (isAddDeposit && item) {
-        if (item.total_price - item.deposit < Number(value)) {
-          setError("Deposit is higher than the difference");
+        const difference = item.total_price - item.deposit;
+        if (difference < Number(value)) {
+          showToast(
+            "error",
+            "Deposit is higher than the difference",
+            ` Just ₦${difference.toLocaleString()} is left`,
+          );
           return;
         }
         setAddedDeposit(value);
       } else {
+        if (total < Number(value)) {
+          showToast("error", "Deposit is higher than the total");
+          return;
+        }
         setDepositedAmount(value);
       }
       setError("");
@@ -118,12 +133,6 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
       setError("Amount must contain only digits and an optional '-' sign");
     }
   };
-
-  const total = selectedItems.reduce((a, b) => {
-    const price =
-      filteredInventory?.find((item) => item.id === b.id)?.selling_price ?? 0;
-    return a + b.quantity * price;
-  }, 0);
 
   const submitSale = async () => {
     if (!selectedCustomer) {

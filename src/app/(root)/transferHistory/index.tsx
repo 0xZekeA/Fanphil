@@ -1,11 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import HistoryListProvider from "./hooks/HistoryListProvider";
+import MainScreen from "./mainScreen";
 
 const TransferHistory = () => {
   return (
-    <View>
-      <Text>TransferHistory</Text>
-    </View>
+    <HistoryListProvider>
+      <MainScreen />
+    </HistoryListProvider>
   );
 };
 

@@ -12,7 +12,7 @@ const CustomerFormContext = createContext<CustomerFormContextProps | undefined>(
 );
 
 const CustomerFormProvider = ({ children }: PropsWithChildren) => {
-  const { createAgent } = useUsersProvider();
+  const { createUser } = useUsersProvider();
 
   const [isFormDisplayed, setIsFormDisplayed] = useState(false);
 

@@ -21,6 +21,7 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   const [isEightShown, setIsEightShown] = useState(true);
   const [selectedItem, setSelectedItem] = useState<Sale | null>(null);
   const [addedDeposit, setAddedDeposit] = useState("0");
+  const [isOwingFiltered, setIsOwingFiltered] = useState(false);
 
   const { sales, customers } = useSalesProvider();
   const { isAdmin, user } = useAuthProvider();
@@ -33,10 +34,18 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
 
   // Filter todays sales
   const todaysSales = sales.filter(
-    (s) => new Date(s.created_at).getDate() === new Date().getDate(),
+    (s) =>
+      new Date(s.created_at).getDate() === new Date().getDate() ||
+      s.total_price > s.deposit,
   );
 
   const filteredSales = isAdmin ? sales : todaysSales;
+  const owning = sales.filter((s) => s.total_price > s.deposit);
+  const salesData = isOwingFiltered
+    ? owning
+    : isEightShown
+    ? filteredSales.slice(0, 8)
+    : filteredSales;
 
   const getStatus = useCallback(
     (item: Sale) => ({
@@ -67,8 +76,6 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
       customers.find((c) => item.customer_id === c.id)?.name ?? "Customer461";
     return capitalizeItem(name.slice(0, 15)) + (name.length > 15 ? "..." : "");
   }, []);
-
-  const salesData = isEightShown ? filteredSales.slice(0, 8) : filteredSales;
 
   const onPress = (item: Sale) => {
     if (!isAdmin || item.sold_by !== user?.id) {
@@ -125,6 +132,8 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
         addedDeposit,
         setAddedDeposit,
         addNewDeposit,
+        isOwingFiltered,
+        setIsOwingFiltered,
       }}
     >
       {children}

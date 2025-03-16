@@ -14,7 +14,7 @@ const StaffFormsContext = createContext<StaffFormsContextProps | undefined>(
 );
 
 const StaffFormsProvider = ({ children }: PropsWithChildren) => {
-  const { createAgent } = useUsersProvider();
+  const { createUser } = useUsersProvider();
 
   const [isFormDisplayed, setIsFormDisplayed] = useState(false);
   const [image, setImage] = useState<string | null>(null);
@@ -51,7 +51,7 @@ const StaffFormsProvider = ({ children }: PropsWithChildren) => {
   ): Promise<void> => {
     if (!form) return;
     try {
-      const agentCreation = await createAgent(form, image || null);
+      const agentCreation = await createUser(form, image || null);
       if (agentCreation?.success) {
         showToast(
           "success",

@@ -1,5 +1,5 @@
-import { addInventoryTransfer } from "@/database/inventory-transfers";
-import { addTransferItem } from "@/database/transfer-item";
+import { addInventoryTransfer } from "@/database/inventoryTransfers";
+import { addTransferItem } from "@/database/transferItem";
 import { useAuthProvider } from "@/providers/auth";
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { useUsersProvider } from "@/providers/users/UsersProvider";

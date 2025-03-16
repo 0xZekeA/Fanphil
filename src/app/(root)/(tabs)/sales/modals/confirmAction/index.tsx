@@ -1,5 +1,5 @@
 import LongPressButton from "@/components/longPressButton";
-import { fetchSoldItems } from "@/database/sold-item";
+import { fetchSoldItems } from "@/database/soldItem";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { useCallback, useEffect, useState } from "react";
