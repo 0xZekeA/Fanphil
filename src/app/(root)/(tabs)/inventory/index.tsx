@@ -2,6 +2,7 @@ import React from "react";
 import InventoryListProvider from "./hooks/InventoryListProvider";
 import InventorySearchProvider from "./hooks/InventorySearchProvider";
 import MenuProvider from "./hooks/MenuProvider";
+import RemoveItemsProvider from "./hooks/RemoveItemsProvider";
 import MainScreen from "./mainScreen";
 
 const Inventory = () => {
@@ -9,7 +10,9 @@ const Inventory = () => {
     <InventoryListProvider>
       <InventorySearchProvider>
         <MenuProvider>
-          <MainScreen />
+          <RemoveItemsProvider>
+            <MainScreen />
+          </RemoveItemsProvider>
         </MenuProvider>
       </InventorySearchProvider>
     </InventoryListProvider>

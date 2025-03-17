@@ -69,6 +69,11 @@ const styles = StyleSheet.create({
     fontSize: Scale.font(24),
     lineHeight: Scale.lineHeight(24),
   },
+  textLarge: {
+    color: COLORS.gray800,
+    fontSize: Scale.font(20),
+    lineHeight: Scale.lineHeight(20),
+  },
   textBase: {
     color: COLORS.gray800,
     fontSize: Scale.font(16),

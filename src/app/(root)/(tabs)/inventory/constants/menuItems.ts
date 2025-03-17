@@ -6,6 +6,7 @@ const getMenuItems = (
   type: "options" | "item" | null,
   isAdmin: boolean,
   setIsConfirmOption: Dispatch<SetStateAction<boolean>>,
+  setIsRemoveOption: Dispatch<SetStateAction<boolean>>,
 ) => {
   if (!item) return null;
 
@@ -24,6 +25,11 @@ const getMenuItems = (
       {
         name: "Make Inactive",
         onPress: () => setIsConfirmOption(true),
+        hidden: !isAdmin,
+      },
+      {
+        name: "Remove some items",
+        onPress: () => setIsRemoveOption(true),
         hidden: !isAdmin,
       },
     );

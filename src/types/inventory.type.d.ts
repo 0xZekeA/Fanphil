@@ -27,6 +27,8 @@ interface MenuProviderContextTypes {
   onOpenMenuOptions: (event: any) => void;
   isConfirmOption: boolean;
   setIsConfirmOption: Dispatch<SetStateAction<boolean>>;
+  isRemoveOption: boolean;
+  setIsRemoveOption: Dispatch<SetStateAction<boolean>>;
   deactivateItem: () => void;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -41,4 +43,15 @@ interface InventoryListProviderContextTypes {
   isEightShown: boolean;
   isLongerThanEight: boolean;
   onPress: (item: Inventory) => void;
+}
+
+interface RemoveItemsProviderContextTypes {
+  removedQuantity: number;
+  getRemainingQuantity: () => number;
+  handleIncrease: (step?: number) => void;
+  handleDecrease: (step?: number) => void;
+  startHoldAction: (action: "INCREASE" | "DECREASE") => void;
+  stopHoldAction: () => void;
+  resetRemovedQuantity: () => void;
+  handleRemovedItems: () => void;
 }

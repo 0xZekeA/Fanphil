@@ -23,7 +23,7 @@ const FinancialChart = () => {
       {isAdmin ? (
         <DoughnutChart
           data={[
-            { item: "Sales", value: incomePercentage, color: "#39CEF3" },
+            { item: "Sales Profit", value: incomePercentage, color: "#39CEF3" },
             {
               item: "Expenses",
               value: expensePercentage,

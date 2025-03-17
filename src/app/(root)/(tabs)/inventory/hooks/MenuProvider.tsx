@@ -15,6 +15,7 @@ const MenuProviderContext = createContext<MenuProviderContextTypes | undefined>(
 const MenuProvider = ({ children }: PropsWithChildren) => {
   const [menuType, setMenuType] = useState<"options" | "item" | null>(null);
   const [isConfirmOption, setIsConfirmOption] = useState(false);
+  const [isRemoveOption, setIsRemoveOption] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenuTypes>({
     visible: false,
     position: { x: 0, y: 0 },
@@ -32,6 +33,7 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
       menuType,
       isAdmin,
       setIsConfirmOption,
+      setIsRemoveOption,
     );
 
   const onOpenMenuItems = (item: Inventory, event: any) => {
@@ -87,6 +89,8 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
         onOpenMenuOptions,
         isConfirmOption,
         setIsConfirmOption,
+        isRemoveOption,
+        setIsRemoveOption,
         deactivateItem,
         loading,
         setLoading,

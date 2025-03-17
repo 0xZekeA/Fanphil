@@ -41,6 +41,15 @@ export const addInventory = async (
       ],
     );
 
+    const expenseId = uuid.v4() as string;
+    const reason = `Purchase ${name.slice(0, 12)} x${quantity}`;
+    const cost = Number(cost_price) * Number(quantity);
+
+    await db.runAsync(
+      "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [expenseId, reason, cost, created_by, created_by, now, now],
+    );
+
     return id;
   } catch (error: any) {
     showToast(
@@ -149,6 +158,52 @@ export const reactivateInventoryItem = async (id: string) => {
     showToast(
       "error",
       "Failed to delete inventory",
+      `Error details: ${error.message}`,
+    );
+    throw error;
+  }
+};
+
+export const removeItem = async (
+  name: string,
+  cost_price: number,
+  item_id: string,
+  quantity: number,
+  last_edited_by: string,
+) => {
+  try {
+    const db = await getDb();
+    const now = new Date().toISOString();
+    console.log("started....");
+
+    await db.runAsync(
+      `UPDATE inventory 
+      SET quantity = quantity - ?, last_edited_by = ?, updated_at = ?, synced_at = NULL
+      WHERE id = ?`,
+      [Number(quantity), last_edited_by, now, item_id],
+    );
+
+    const expenseId = uuid.v4() as string;
+    const reason = `Removed items ${name.slice(0, 12)} x${quantity}`;
+    const cost = Number(cost_price) * Number(quantity);
+
+    await db.runAsync(
+      "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [expenseId, reason, cost, last_edited_by, last_edited_by, now, now],
+    );
+
+    showToast(
+      "success",
+      `${quantity} ${
+        Number(quantity) === 1 ? "item" : "items"
+      } removed successfully`,
+    );
+
+    return item_id;
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Was unable to remove items",
       `Error details: ${error.message}`,
     );
     throw error;

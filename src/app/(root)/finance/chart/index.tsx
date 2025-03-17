@@ -19,7 +19,7 @@ const FinancialChart = () => {
     <>
       <DoughnutChart
         data={[
-          { item: "Income", value: incomePercentage, color: "#39CEF3" },
+          { item: "Sales Profit", value: incomePercentage, color: "#39CEF3" },
           {
             item: "Expenses",
             value: expensePercentage,

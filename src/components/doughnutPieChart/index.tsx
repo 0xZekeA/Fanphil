@@ -32,7 +32,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
     .value((d) => d.value)
     .padAngle(0.04)(data);
 
-  const svgSize = radius * 3.2;
+  const svgSize = radius * 3.3;
 
   return (
     <View
@@ -42,7 +42,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
         alignItems: "center",
       }}
     >
-      <Svg width={svgSize} height={svgSize - 40}>
+      <Svg width={svgSize} height={svgSize - 45}>
         <G x={svgSize / 2} y={svgSize / 2}>
           {pieData.map((slice, index) => (
             <ChartSegment
