@@ -21,6 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
   updateMode,
   showForgotPassword,
   onForgotPasswordPress,
+  hideEditButton,
   multiline,
   ...inputProps
 }) => {
@@ -59,7 +60,7 @@ const InputField: React.FC<InputFieldProps> = ({
             }
           />
         </View>
-        {updateMode && (
+        {updateMode && !hideEditButton && (
           <EditButton isEditing={isEditing} setIsEditing={setIsEditing} />
         )}
       </View>

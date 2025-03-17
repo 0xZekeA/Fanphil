@@ -33,13 +33,16 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   );
 
   // Filter todays sales
-  const todaysSales = sales.filter(
+  const otherStaffSales = sales.filter(
     (s) =>
       new Date(s.created_at).getDate() === new Date().getDate() ||
       s.total_price > s.deposit,
   );
+  const todaysSales = sales.filter(
+    (s) => new Date(s.created_at).getDate() === new Date().getDate(),
+  );
 
-  const filteredSales = isAdmin ? sales : todaysSales;
+  const filteredSales = isAdmin ? sales : otherStaffSales;
   const owning = sales.filter((s) => s.total_price > s.deposit);
   const salesData = isOwingFiltered
     ? owning

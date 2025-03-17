@@ -39,6 +39,7 @@ const FormFields = () => {
               error={errors[details.id]?.message}
               keyboardType={details.useNumberPad ? "numeric" : "default"}
               updateMode={details.isEditable || isAdmin}
+              hideEditButton={details.isEditable === false}
             />
           </View>
         ))}

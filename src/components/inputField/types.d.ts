@@ -24,4 +24,5 @@ declare interface InputFieldProps extends BaseInputProps, TextInputProps {
   showForgotPassword?: boolean;
   onForgotPasswordPress?: () => void;
   updateMode?: boolean;
+  hideEditButton?: boolean;
 }

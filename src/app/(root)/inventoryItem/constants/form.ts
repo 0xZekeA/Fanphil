@@ -13,6 +13,7 @@ const inventoryForm: ItemFields[] = [
     label: "Stock Quantity",
     placeholder: "120",
     useNumberPad: true,
+    isEditable: false,
   },
   {
     id: "costPrice",
