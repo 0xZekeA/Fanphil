@@ -36,11 +36,11 @@ const MainScreen = () => {
       >
         <FlatList
           data={data}
-          renderItem={({ item }) =>
+          renderItem={({ item, index }) =>
             isSalesInterface ? (
               <ListItemMain item={item} />
             ) : (
-              <ListItem item={item} />
+              <ListItem item={item} index={index} />
             )
           }
           keyExtractor={(_, index) => index.toString()}

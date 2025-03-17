@@ -59,4 +59,5 @@ interface SalesDataProviderContextTypes {
   setAddedDeposit: Dispatch<SetStateAction<string>>;
   addedDeposit: string;
   addNewDeposit: () => void;
+  isNewDate: (index: number, item: Sale) => boolean;
 }

@@ -3,19 +3,24 @@ import { TouchableOpacity } from "react-native";
 import { useSalesDataProvider } from "../../hooks/SalesDataProvider";
 import styles from "../../styles/styles";
 import BottomSection from "./BottomSection";
+import Date from "./Date";
 import TopSection from "./TopSection";
 
-const ListItem = ({ item }: { item: Sale }) => {
-  const { onPress } = useSalesDataProvider();
+const ListItem = ({ item, index }: { item: Sale; index: number }) => {
+  const { onPress, isNewDate } = useSalesDataProvider();
+  const isNewDateItem = isNewDate(index, item);
 
   return (
-    <TouchableOpacity
-      style={styles.salesListItem}
-      onPress={() => onPress(item)}
-    >
-      <TopSection item={item} />
-      <BottomSection item={item} />
-    </TouchableOpacity>
+    <>
+      {isNewDateItem && <Date item={item} />}
+      <TouchableOpacity
+        style={styles.salesListItem}
+        onPress={() => onPress(item)}
+      >
+        <TopSection item={item} />
+        <BottomSection item={item} />
+      </TouchableOpacity>
+    </>
   );
 };
 

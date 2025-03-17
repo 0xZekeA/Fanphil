@@ -124,6 +124,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     opacity: 0.6,
   },
+  dateContainer: {
+    paddingBottom: Scale.moderate(8),
+    paddingTop: Scale.moderate(12),
+    paddingLeft: Scale.moderate(18),
+  },
+  modalActionBtn: {
+    width: "100%",
+    paddingHorizontal: Scale.moderate(24),
+    paddingTop: Scale.moderate(16),
+  },
   textXL: {
     color: COLORS.gray800,
     fontSize: Scale.font(24),
@@ -142,6 +152,11 @@ const styles = StyleSheet.create({
   textMed: {
     fontSize: Scale.font(14),
     lineHeight: Scale.lineHeight(14),
+    color: COLORS.gray800,
+  },
+  textSmall: {
+    fontSize: Scale.font(12),
+    lineHeight: Scale.lineHeight(12),
     color: COLORS.gray800,
   },
   textXS: {

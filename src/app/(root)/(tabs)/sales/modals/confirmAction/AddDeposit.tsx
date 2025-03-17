@@ -1,4 +1,5 @@
 import Field from "@/components/inputField/Field";
+import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
@@ -38,16 +39,24 @@ const AddDeposit = ({ item }: { item: Sale }) => {
         <Text style={[styles.textBase]} className={` font-JakartaMedium`}>
           Add Deposit:
         </Text>
-
-        <View style={{ width: "60%" }}>
-          <Field
-            value={addedDeposit}
-            onChangeText={(value: string) => handleChange(value, true, item)}
-            error={error || ""}
-            placeholder="100000"
-            keyboardType="numbers-and-punctuation"
-          />
-        </View>
+        {difference < 1 ? (
+          <Text
+            style={[styles.textMed, { color: COLORS.gray600 }]}
+            className={` font-JakartaMedium`}
+          >
+            Paid off
+          </Text>
+        ) : (
+          <View style={{ width: "60%" }}>
+            <Field
+              value={addedDeposit}
+              onChangeText={(value: string) => handleChange(value, true, item)}
+              error={error || ""}
+              placeholder="100000"
+              keyboardType="numbers-and-punctuation"
+            />
+          </View>
+        )}
       </View>
     </View>
   );

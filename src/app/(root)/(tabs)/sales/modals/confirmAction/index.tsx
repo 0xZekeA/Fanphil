@@ -1,3 +1,4 @@
+import CustomButton from "@/components/customButton";
 import LongPressButton from "@/components/longPressButton";
 import { fetchSoldItems } from "@/database/soldItem";
 import { COLORS } from "@/utils/colors";
@@ -26,15 +27,16 @@ const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
   }, [items, soldItems]);
 
   if (!selectedItem) return null;
+  const isPaidOff = selectedItem.deposit >= selectedItem.total_price;
+
+  if (isPaidOff && !isViewItems) {
+    setIsViewItems(true);
+  }
 
   return (
     <View style={{ width: "100%" }}>
       {/* Header  */}
-      <View
-        style={{ paddingVertical: Scale.moderate(16) }}
-        className="flex-row justify-between items-center"
-      >
-        {isViewItems && <CloseButton onClose={onClose} title="Close" />}
+      {!isPaidOff && (
         <TouchableOpacity
           className="items-end"
           onPress={() => setIsViewItems(!isViewItems)}
@@ -43,7 +45,7 @@ const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
             {isViewItems ? "Add Deposit" : "Sold Items"}
           </Text>
         </TouchableOpacity>
-      </View>
+      )}
 
       {/* Section title */}
       <View
@@ -80,8 +82,10 @@ const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
 
       {/* Action buttons */}
       <View
-        style={{ width: "100%", paddingHorizontal: Scale.moderate(24) }}
-        className="flex-row items-center justify-between"
+        style={styles.modalActionBtn}
+        className={`flex-row items-center ${
+          isViewItems ? "justify-center" : "justify-between"
+        }`}
       >
         {!isViewItems && <CloseButton onClose={onClose} title="Cancel" />}
         {!isViewItems && (
@@ -89,9 +93,9 @@ const ConfirmAction = ({ onClose }: { onClose: () => void }) => {
             closeModal={onClose}
             onLongPressComplete={addNewDeposit}
             text="Confirm"
-            destructive
           />
         )}
+        {isViewItems && <CustomButton title="Close" onPress={onClose} />}
       </View>
     </View>
   );

@@ -4,6 +4,7 @@ import { useSalesProvider } from "@/providers/sales/SalesProvider";
 import { SalesDataProviderContextTypes } from "@/types/sales.type";
 import { capitalizeItem } from "@/utils/capitalize";
 import { COLORS } from "@/utils/colors";
+import { formatDate } from "@/utils/formatDate";
 import { showToast } from "@/utils/notification";
 import {
   createContext,
@@ -119,6 +120,14 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const isNewDate = (index: number, item: Sale) => {
+    if (index === 0) return true;
+    const prevDate = formatDate(salesData[index - 1].created_at, "short");
+    const itemDate = formatDate(item.created_at, "short");
+    if (prevDate !== itemDate) return true;
+    return false;
+  };
+
   return (
     <SalesDataProviderContext.Provider
       value={{
@@ -137,6 +146,7 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
         addNewDeposit,
         isOwingFiltered,
         setIsOwingFiltered,
+        isNewDate,
       }}
     >
       {children}
