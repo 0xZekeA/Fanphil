@@ -5,4 +5,5 @@ interface InventoryProviderContextTypes {
   returns: Return[];
   sellersInventory: SellersInventory[];
   transferItems: TransferItem[];
+  purchases: Purchase[];
 }

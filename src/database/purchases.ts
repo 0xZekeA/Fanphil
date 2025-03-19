@@ -77,3 +77,22 @@ export const addPurchaseItem = async (
     throw error;
   }
 };
+
+export const getSpecificPurchaseItems = async (
+  id: string,
+): Promise<PurchasedItem[]> => {
+  try {
+    const db = await getDb();
+    return await db.getAllAsync(
+      "SELECT * FROM purchased_items WHERE purchase_id = ? ",
+      [id],
+    );
+  } catch (error: any) {
+    showToast(
+      "error",
+      "Error fetching transfer items",
+      `Error details: ${error.message}`,
+    );
+    throw error;
+  }
+};

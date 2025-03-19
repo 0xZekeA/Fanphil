@@ -21,7 +21,11 @@ const Finances = () => {
 
   return (
     <View
-      style={{ backgroundColor: COLORS.white, paddingTop: insets.top }}
+      style={{
+        backgroundColor: COLORS.white,
+        paddingTop: insets.top,
+        paddingHorizontal: Scale.moderate(8),
+      }}
       className="flex-1"
     >
       <FlatList

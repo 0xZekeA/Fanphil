@@ -4,25 +4,21 @@ import { View } from "react-native";
 
 import { useHistoryListProvider } from "../hooks/HistoryListProvider";
 import styles from "../styles/styles";
-import TrfItems from "./transferItems";
+import PurchasedItems from "./purchasedItems/index";
 
-const TransferItems = () => {
-  const { selectedItem, setSelectedItem } = useHistoryListProvider();
+const PurchasedItemsModal = () => {
+  const { selectedItem, onCloseModal } = useHistoryListProvider();
 
   return (
-    <Modal
-      isOpen={!!selectedItem}
-      onClose={() => setSelectedItem(null)}
-      withInput
-    >
+    <Modal isOpen={!!selectedItem} onClose={onCloseModal} withInput>
       <View
         style={styles.modalContainer}
         className="justify-center items-center"
       >
-        <TrfItems onClose={() => setSelectedItem(null)} />
+        <PurchasedItems onClose={onCloseModal} />
       </View>
     </Modal>
   );
 };
 
-export default TransferItems;
+export default PurchasedItemsModal;

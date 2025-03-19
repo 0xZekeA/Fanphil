@@ -9,7 +9,7 @@ import useItemDetsHooks from "../../hooks/itemDets.hooks";
 import styles from "../../styles/styles";
 import SoldListItems from "./SoldListItem";
 
-const TransferItems = ({ onClose }: { onClose: () => void }) => {
+const TrfItems = ({ onClose }: { onClose: () => void }) => {
   const [items, setItems] = useState<TransferItem[] | ReturnItem[] | null>(
     null,
   );
@@ -82,4 +82,4 @@ const TransferItems = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export default TransferItems;
+export default TrfItems;

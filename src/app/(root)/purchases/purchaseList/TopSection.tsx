@@ -31,7 +31,7 @@ const TopSection = () => {
         <IconButton
           color={COLORS.gray600}
           icon={icons.list}
-          onPress={() => router.push("/(root)/transferHistory")}
+          onPress={() => router.push("/(root)/purchaseHistory")}
         />
       </View>
     </View>
