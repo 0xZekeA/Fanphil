@@ -11,6 +11,7 @@ import FinancesData from "./flatlistItem/ListItem";
 import ExpenseProviders from "./hooks/ExpenseProviders";
 import useFinanceHooks from "./hooks/finance.hooks";
 import useFinanceRefresh from "./hooks/refresh.hooks";
+import SalesInfo from "./salesInfo";
 
 const Finances = () => {
   const { refresh, isRefreshing } = useFinanceRefresh();
@@ -39,6 +40,9 @@ const Finances = () => {
           >
             <BackButton title="Finances" />
             <FinancialChart />
+            <View style={{ paddingHorizontal: Scale.moderate(24) }}>
+              <SalesInfo />
+            </View>
           </View>
         }
         ListFooterComponent={

@@ -1,18 +1,6 @@
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
-import {
-  createContext,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  useContext,
-  useState,
-} from "react";
-
-interface HistoryListProviderContextTypes {
-  data: (InventoryTransfer | Return)[];
-  selectedItem: InventoryTransfer | Return | null;
-  setSelectedItem: Dispatch<SetStateAction<InventoryTransfer | Return | null>>;
-}
+import { HistoryListProviderContextTypes } from "@/types/transferHistory";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 
 const HistoryListProviderContext = createContext<
   HistoryListProviderContextTypes | undefined

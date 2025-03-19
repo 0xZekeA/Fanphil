@@ -6,14 +6,16 @@ import NetInfo from "@react-native-community/netinfo";
 const TABLES_TO_SYNC = [
   "users",
   "customers",
-  "sales",
   "inventory",
+  "sales",
+  "sold_items",
   "sellers_inventory",
   "inventory_transfers",
   "returns",
   "expenses",
-  "sold_items",
   "transfer_items",
+  "purchases",
+  "purchased_items",
 ];
 
 const SYNC_CHECK_INTERVAL = 72 * 1000;

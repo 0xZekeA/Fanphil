@@ -23,6 +23,18 @@ const useFinanceHooks = () => {
 
   const sales30Days = getLast30DaysData(sales ?? []);
 
+  // Sale overview calculations
+  const dayDeposits = sales?.reduce((a, b) => a + (b.deposit || 0), 0) ?? 0;
+  const loans =
+    (sales?.reduce((a, b) => a + (b.total_price || 0), 0) ?? 0) - dayDeposits;
+  const assumedProfit = sales?.reduce((a, b) => a + (b.profit || 0), 0) ?? 0;
+
+  const salesInfo = {
+    dayDeposits,
+    loans,
+    assumedProfit,
+  };
+
   // 30 day expenses
   const expenses30Days = (
     getLast30DaysData(expenses ?? []) as Expense[]
@@ -74,6 +86,7 @@ const useFinanceHooks = () => {
     financialData,
     isExpanded,
     setIsExpanded,
+    salesInfo,
   };
 };
 

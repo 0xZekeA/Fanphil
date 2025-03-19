@@ -1,9 +1,10 @@
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
+import { ReturnItem } from "@/types/transferHistory";
 import React from "react";
 import { Text, View } from "react-native";
 import styles from "../../styles/styles";
 
-const SoldListItems = ({ item }: { item: TransferItem }) => {
+const SoldListItems = ({ item }: { item: TransferItem | ReturnItem }) => {
   const { inventory } = useInventoryProvider();
   const name =
     inventory?.find((i) => i.id === item.inventory_id)?.name || "Item";

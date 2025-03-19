@@ -129,3 +129,24 @@ type Customer = {
   synced_at: string | null;
   deleted: 1 | 0;
 };
+
+type Purchase = {
+  id: string;
+  purchased_by?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+  synced_at: string | null;
+  deleted: 1 | 0;
+};
+
+type PurchasedItem = {
+  id: string;
+  inventory_id?: string | null;
+  purchase_id?: string | null;
+  quantity: number;
+  last_edited_by?: string | null;
+  updated_at?: string | null;
+  created_at: string;
+  synced_at: string | null;
+  deleted: 1 | 0;
+};

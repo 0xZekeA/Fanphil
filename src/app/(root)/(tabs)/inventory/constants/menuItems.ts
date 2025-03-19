@@ -38,6 +38,10 @@ const getMenuItems = (
   if (type === "options") {
     menuItems.push(
       {
+        name: "Make Purchase",
+        onPress: () => router.push("/(root)/purchases"),
+      },
+      {
         name: "Inactive Items",
         onPress: () => router.push("/(root)/inactiveItems"),
       },

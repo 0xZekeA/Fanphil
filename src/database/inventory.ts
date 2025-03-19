@@ -1,7 +1,9 @@
+import { Item } from "@/types/purchases.type";
 import { capitalizeItem } from "@/utils/capitalize";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
+import { addPurchase } from "./purchases";
 
 export const addInventory = async (
   name: string,
@@ -27,13 +29,13 @@ export const addInventory = async (
       [
         id,
         capitalizeItem(name),
-        Number(quantity),
+        0,
         Number(cost_price),
         Number(original_selling_price),
         Number(selling_price),
         Number(increment),
         Number(size),
-        unit.toLowerCase(),
+        unit.toLowerCase() ?? "",
         last_edited_by,
         created_by,
         now,
@@ -41,14 +43,9 @@ export const addInventory = async (
       ],
     );
 
-    const expenseId = uuid.v4() as string;
-    const reason = `Purchase ${name.slice(0, 12)} x${quantity}`;
-    const cost = Number(cost_price) * Number(quantity);
+    const item: Item[] = [{ id, name, quantity: Number(quantity), stock: 0 }];
 
-    await db.runAsync(
-      "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [expenseId, reason, cost, created_by, created_by, now, now],
-    );
+    await addPurchase(created_by, item);
 
     return id;
   } catch (error: any) {

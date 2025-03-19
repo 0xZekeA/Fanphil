@@ -44,9 +44,9 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   );
 
   const filteredSales = isAdmin ? sales : otherStaffSales;
-  const owning = sales.filter((s) => s.total_price > s.deposit);
+  const owing = sales.filter((s) => s.total_price > s.deposit);
   const salesData = isOwingFiltered
-    ? owning
+    ? owing
     : isEightShown
     ? filteredSales.slice(0, 8)
     : filteredSales;

@@ -7,11 +7,10 @@ import BottomSection from "./BottomSection";
 import TopSection from "./TopSection";
 
 const ListItem = ({ item }: { item: InventoryTransfer | Return }) => {
-  const { getColor, isReturn } = useItemDetsHooks();
+  const { getColor } = useItemDetsHooks();
   const { setSelectedItem } = useHistoryListProvider();
 
   const onPress = () => {
-    if (isReturn(item)) return null;
     setSelectedItem(item);
   };
 

@@ -5,15 +5,14 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, Text, View } from "react-native";
 import getCardData from "../constants/salesInfo";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
+import useFinanceHooks from "../hooks/finance.hooks";
 import styles from "../styles/styles";
-import BackToSalesBtn from "./BackToSalesBtn";
 
 const { width } = Dimensions.get("window");
 const cardWidth = width * 0.8;
 
 const SalesInfo = () => {
-  const { salesInfo } = useSalesDataProvider();
+  const { salesInfo } = useFinanceHooks();
   const { isAdmin } = useAuthProvider();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
@@ -82,7 +81,7 @@ const SalesInfo = () => {
         style={styles.headerGradient}
       >
         <Text style={styles.headerText} className="font-JakartaMedium">
-          Today's Sales Overview
+          Sales Overview
         </Text>
       </LinearGradient>
 
@@ -102,7 +101,6 @@ const SalesInfo = () => {
       />
 
       {renderPaginationDots()}
-      <BackToSalesBtn />
     </View>
   );
 };

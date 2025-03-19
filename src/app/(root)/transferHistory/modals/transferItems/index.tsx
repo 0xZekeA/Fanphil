@@ -1,5 +1,6 @@
 import CustomButton from "@/components/customButton";
 import { getSpecificTransferItems } from "@/database/transferItem";
+import { ReturnItem } from "@/types/transferHistory";
 import { Scale } from "@/utils/scaling";
 import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
@@ -9,14 +10,25 @@ import styles from "../../styles/styles";
 import SoldListItems from "./SoldListItem";
 
 const TransferItems = ({ onClose }: { onClose: () => void }) => {
-  const [items, setItems] = useState<TransferItem[] | null>(null);
+  const [items, setItems] = useState<TransferItem[] | ReturnItem[] | null>(
+    null,
+  );
 
   const { selectedItem } = useHistoryListProvider();
   const { isReturn } = useItemDetsHooks();
 
   const transferItems = useCallback(async () => {
     if (!selectedItem) return;
-    if (isReturn(selectedItem)) return;
+    if (isReturn(selectedItem)) {
+      const item = [
+        {
+          inventory_id: selectedItem.item_id,
+          quantity_moved: selectedItem.quantity,
+        },
+      ];
+      setItems(item);
+      return;
+    }
     const trfItems =
       (await getSpecificTransferItems(
         (selectedItem as InventoryTransfer)?.id || "",
