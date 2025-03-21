@@ -3,7 +3,7 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useCustomerForm } from "../hooks/CustomerFormProvider";
+import { useCustomerForm } from "../providers/CustomerFormProvider";
 import styles from "../styles/styles";
 
 const Header = () => {

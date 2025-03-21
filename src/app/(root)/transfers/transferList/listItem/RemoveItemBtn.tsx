@@ -3,7 +3,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useTransferFormProvider } from "../../hooks/TransferFormProvider";
+import { useTransferFormProvider } from "../../providers/TransferFormProvider";
 
 const RemoveItemBtn = ({ item }: { item: Inventory }) => {
   const { handleRemoveItem } = useTransferFormProvider();

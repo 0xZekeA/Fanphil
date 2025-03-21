@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
   salesListItem: {
     rowGap: Scale.moderate(8),
     paddingHorizontal: Scale.moderate(16),
-    paddingVertical: Scale.moderate(12),
+    paddingVertical: Scale.moderate(8),
     borderRadius: Scale.moderate(20),
     backgroundColor: COLORS.white,
-    marginBottom: Scale.moderate(12),
+    marginBottom: Scale.moderate(8),
   },
   modalContainer: {
     width: width * 0.8,
@@ -133,8 +133,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   dateContainer: {
-    paddingBottom: Scale.moderate(8),
-    paddingTop: Scale.moderate(12),
+    paddingTop: Scale.moderate(24),
     paddingLeft: Scale.moderate(18),
   },
   modalActionBtn: {

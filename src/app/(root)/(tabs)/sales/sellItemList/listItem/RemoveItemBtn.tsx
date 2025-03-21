@@ -3,7 +3,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSellItemFormProvider } from "../../hooks/SellItemFormProvider";
+import { useSellItemFormProvider } from "../../providers/sellForm/SellItemFormProvider";
 
 const RemoveItemBtn = ({ item }: { item: Inventory }) => {
   const { handleRemoveItem } = useSellItemFormProvider();

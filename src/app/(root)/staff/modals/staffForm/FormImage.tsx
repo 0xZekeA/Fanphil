@@ -3,7 +3,7 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useStaffForms } from "../../hooks/StaffFormProvider";
+import { useStaffForms } from "../../providers/StaffFormProvider";
 import styles from "../../styles/styles";
 
 const FormImage = () => {

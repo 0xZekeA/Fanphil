@@ -1,6 +1,6 @@
 import React from "react";
-import HistoryListProvider from "./hooks/HistoryListProvider";
 import MainScreen from "./mainScreen";
+import HistoryListProvider from "./providers/HistoryListProvider";
 
 const TransferHistory = () => {
   return (

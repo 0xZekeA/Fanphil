@@ -1,8 +1,8 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { useSellItemProvider } from "../../hooks/SellItemProvider";
 import ItemAddComp from "../../inventoryBottomSheet/listItem/ItemAddComp";
+import { useSellItemProvider } from "../../providers/SellItemProvider";
 import styles from "../../styles/styles";
 import RemoveItemBtn from "./RemoveItemBtn";
 

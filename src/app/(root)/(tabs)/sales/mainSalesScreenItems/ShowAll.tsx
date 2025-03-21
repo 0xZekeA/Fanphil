@@ -1,7 +1,7 @@
 import { COLORS } from "@/utils/colors";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
+import { useSalesDataProvider } from "../providers/SalesDataProvider";
 import styles from "../styles/styles";
 
 const ShowAll = () => {
@@ -15,7 +15,7 @@ const ShowAll = () => {
         onPress={() => setIsEightShown(!isEightShown)}
       >
         <Text
-          style={[styles.textLarge, { color: COLORS.indigo900 }]}
+          style={[styles.textMed, { color: COLORS.indigo900 }]}
           className="font-JakartaLight"
         >
           {isEightShown ? "Show All" : "Show Less"}

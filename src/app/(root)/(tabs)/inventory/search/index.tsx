@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, TouchableWithoutFeedback } from "react-native";
 import Animated from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useInventorySearchProvider } from "../hooks/InventorySearchProvider";
+import { useInventorySearchProvider } from "../providers/InventorySearchProvider";
 import CloseButton from "./CloseButton";
 import SearchBar from "./SearchBar";
 import SearchList from "./SearchList";

@@ -1,7 +1,7 @@
 import { icons } from "$root/constants/assets";
 import React, { useCallback, useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
-import { useHistoryListProvider } from "../hooks/HistoryListProvider";
+import { useHistoryListProvider } from "../providers/HistoryListProvider";
 import styles from "../styles/styles";
 
 const TopSection = ({ item }: { item: Purchase }) => {

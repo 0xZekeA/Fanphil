@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { useCustomersProvider } from "../hooks/CustomersProvider";
+import { useCustomersProvider } from "../providers/CustomersProvider";
 import styles from "../styles/styles";
 
 const ListItem = ({ item }: { item: Customer }) => {

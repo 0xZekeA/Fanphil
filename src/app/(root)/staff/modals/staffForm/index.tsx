@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, ScrollView } from "react-native";
-import { useStaffForms } from "../../hooks/StaffFormProvider";
+import { useStaffForms } from "../../providers/StaffFormProvider";
 import styles from "../../styles/styles";
 import FormFields from "./FormFields";
 import FormHeader from "./FormHeader";

@@ -5,7 +5,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
 import customerForm from "../../constants/form";
-import { useCustomerForm } from "../../hooks/CustomerFormProvider";
+import { useCustomerForm } from "../../providers/CustomerFormProvider";
 import styles from "../../styles/styles";
 
 const FormFields = () => {

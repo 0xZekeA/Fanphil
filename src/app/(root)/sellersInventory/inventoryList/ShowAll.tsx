@@ -1,7 +1,7 @@
 import { COLORS } from "@/utils/colors";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 
 const ShowAll = () => {

@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
-import { usePfpProvider } from "../../hooks/PfpProvider";
+import { usePfpProvider } from "../../providers/PfpProvider";
 import styles from "../../styles/styles";
 
 const Viewer = () => {

@@ -3,11 +3,11 @@ import ListEmptyComp from "@/components/ListEmptyComp";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useMenuProvider } from "../hooks/MenuProvider";
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
 import Header from "../inventoryList/Header";
 import ListItem from "../inventoryList/listItem";
 import ModalForm from "../modals";
+import { useMenuProvider } from "../providers/MenuProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 
 const MainScreen = () => {

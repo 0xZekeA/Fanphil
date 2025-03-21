@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef, useState } from "react";
 import { Dimensions, FlatList, Text, View } from "react-native";
 import getCardData from "../constants/salesInfo";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
+import { useSalesDataProvider } from "../providers/SalesDataProvider";
 import styles from "../styles/styles";
 import BackToSalesBtn from "./BackToSalesBtn";
 

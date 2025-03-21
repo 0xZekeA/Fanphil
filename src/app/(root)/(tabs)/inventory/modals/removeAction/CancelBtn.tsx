@@ -3,7 +3,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useRemoveItemsProvider } from "../../hooks/RemoveItemsProvider";
+import { useRemoveItemsProvider } from "../../providers/RemoveItemsProvider";
 
 const CancelBtn = ({ item }: { item: Inventory }) => {
   const { resetRemovedQuantity } = useRemoveItemsProvider();

@@ -1,7 +1,7 @@
 import React from "react";
-import PfpProvider from "./hooks/PfpProvider";
-import ProfileScreenProvider from "./hooks/ProfileScreenProvider";
 import MainScreen from "./mainScreen";
+import PfpProvider from "./providers/PfpProvider";
+import ProfileScreenProvider from "./providers/ProfileScreenProvider";
 
 const Profile = () => {
   return (

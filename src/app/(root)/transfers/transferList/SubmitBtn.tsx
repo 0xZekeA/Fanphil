@@ -2,7 +2,7 @@ import CustomButton from "@/components/customButton";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
-import { useTransferFormProvider } from "../hooks/TransferFormProvider";
+import { useTransferFormProvider } from "../providers/TransferFormProvider";
 
 const SubmitBtn = () => {
   const { submitTransfer, selectedItems } = useTransferFormProvider();

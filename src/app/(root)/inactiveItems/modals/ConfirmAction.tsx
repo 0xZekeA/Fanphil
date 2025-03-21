@@ -2,7 +2,7 @@ import LongPressButton from "@/components/longPressButton";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { usePopUpsProvider } from "../hooks/PopUpsProvider";
+import { usePopUpsProvider } from "../providers/PopUpsProvider";
 import styles from "../styles/styles";
 
 const ConfirmAction = ({ onClose }: { onClose: () => void }) => {

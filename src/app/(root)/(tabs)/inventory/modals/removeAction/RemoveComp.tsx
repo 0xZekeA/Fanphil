@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { useRemoveItemsProvider } from "../../hooks/RemoveItemsProvider";
+import { useRemoveItemsProvider } from "../../providers/RemoveItemsProvider";
 import styles from "../../styles/styles";
 import CancelBtn from "./CancelBtn";
 import ItemAddComp from "./ItemAddComp";

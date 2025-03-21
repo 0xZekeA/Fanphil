@@ -4,12 +4,12 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useInventoryListProvider } from "../hooks/InventoryListProvider";
-import { useMenuProvider } from "../hooks/MenuProvider";
 import ListItem from "../inventoryList/listItem";
 import ShowAll from "../inventoryList/ShowAll";
 import ModalForm from "../modals";
 import Header from "../pageHeader/Header";
+import { useInventoryListProvider } from "../providers/InventoryListProvider";
+import { useMenuProvider } from "../providers/MenuProvider";
 import SearchComponent from "../search";
 import styles from "../styles/styles";
 
@@ -33,7 +33,7 @@ const MainScreen = () => {
         ListFooterComponent={
           <View
             style={{
-              paddingBottom: insets.bottom * 2,
+              paddingBottom: insets.bottom * 3,
               marginTop: Scale.moderate(20),
             }}
           >

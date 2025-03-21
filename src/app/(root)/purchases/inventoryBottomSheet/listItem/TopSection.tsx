@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { usePurchasesProvider } from "../../hooks/PurchasesProvider";
+import { usePurchasesProvider } from "../../providers/PurchasesProvider";
 import styles from "../../styles/styles";
 import ItemAddComp from "./ItemAddComp";
 

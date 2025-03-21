@@ -2,7 +2,7 @@ import CustomBottomSheet from "@/components/CustomBottomSheet";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
-import { useTransferFormProvider } from "../hooks/TransferFormProvider";
+import { useTransferFormProvider } from "../providers/TransferFormProvider";
 import List from "./List";
 
 const BottomSheet = () => {

@@ -2,7 +2,7 @@ import { images } from "$root/constants/assets";
 import { AdvancedImage } from "cloudinary-react-native";
 import React from "react";
 import { Image, TouchableOpacity } from "react-native";
-import { usePfpProvider } from "../../hooks/PfpProvider";
+import { usePfpProvider } from "../../providers/PfpProvider";
 import styles from "../../styles/styles";
 
 const Pfp = () => {

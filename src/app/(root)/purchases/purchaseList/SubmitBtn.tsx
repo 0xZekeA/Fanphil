@@ -2,7 +2,7 @@ import CustomButton from "@/components/customButton";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
-import { usePurchasesFormProvider } from "../hooks/PurchasesFormProvider";
+import { usePurchasesFormProvider } from "../providers/PurchasesFormProvider";
 
 const SubmitBtn = () => {
   const { submitPurchase, selectedItems } = usePurchasesFormProvider();

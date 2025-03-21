@@ -2,7 +2,7 @@ import { icons } from "$root/constants/assets";
 import Field from "@/components/inputField/Field";
 import React from "react";
 import { View } from "react-native";
-import { useInventorySearchProvider } from "../hooks/InventorySearchProvider";
+import { useInventorySearchProvider } from "../providers/InventorySearchProvider";
 import styles from "../styles/styles";
 
 const SearchBar = () => {

@@ -3,7 +3,7 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Dimensions, View } from "react-native";
-import { useExpenseFormContext } from "../hooks/ExpenseProviders";
+import { useExpenseFormContext } from "../providers/ExpenseProviders";
 
 const { width } = Dimensions.get("screen");
 

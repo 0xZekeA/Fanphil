@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useInventoryListProvider } from "../../hooks/InventoryListProvider";
-import { useMenuProvider } from "../../hooks/MenuProvider";
+import { useInventoryListProvider } from "../../providers/InventoryListProvider";
+import { useMenuProvider } from "../../providers/MenuProvider";
 import styles from "../../styles/styles";
 import BottomSection from "./BottomSection";
 import TopSection from "./TopSection";

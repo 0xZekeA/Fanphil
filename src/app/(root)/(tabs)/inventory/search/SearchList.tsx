@@ -2,7 +2,7 @@ import ListEmptyComp from "@/components/ListEmptyComp";
 import React from "react";
 import { FlatList } from "react-native";
 import Animated from "react-native-reanimated";
-import { useInventorySearchProvider } from "../hooks/InventorySearchProvider";
+import { useInventorySearchProvider } from "../providers/InventorySearchProvider";
 import ListItem from "./ListItem";
 
 const SearchList = () => {

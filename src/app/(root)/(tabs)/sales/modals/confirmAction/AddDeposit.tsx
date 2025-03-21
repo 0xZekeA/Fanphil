@@ -3,8 +3,8 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { useSalesDataProvider } from "../../hooks/SalesDataProvider";
-import { useSellItemFormProvider } from "../../hooks/SellItemFormProvider";
+import { useSalesDataProvider } from "../../providers/SalesDataProvider";
+import { useSellItemFormProvider } from "../../providers/sellForm/SellItemFormProvider";
 import styles from "../../styles/styles";
 
 const AddDeposit = ({ item }: { item: Sale }) => {

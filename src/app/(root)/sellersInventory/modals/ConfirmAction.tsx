@@ -2,7 +2,7 @@ import LongPressButton from "@/components/longPressButton";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 import ItemEditComp from "./ItemEditComp";
 

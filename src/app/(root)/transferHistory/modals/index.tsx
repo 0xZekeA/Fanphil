@@ -2,7 +2,7 @@ import Modal from "@/components/Modal";
 import React from "react";
 import { View } from "react-native";
 
-import { useHistoryListProvider } from "../hooks/HistoryListProvider";
+import { useHistoryListProvider } from "../providers/HistoryListProvider";
 import styles from "../styles/styles";
 import TrfItems from "./transferItems";
 

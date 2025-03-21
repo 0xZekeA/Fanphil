@@ -5,9 +5,9 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Header from "../header/Header";
-import { useMenuOptions } from "../hooks/MenuOptionsProvider";
-import { useStaffProviders } from "../hooks/StaffProviders";
 import ModalForm from "../modals";
+import { useMenuOptions } from "../providers/MenuOptionsProvider";
+import { useStaffProviders } from "../providers/StaffProviders";
 import styles from "../styles/styles";
 
 const MainScreen = () => {

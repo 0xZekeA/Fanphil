@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
-import { useProfileScreenContext } from "../hooks/ProfileScreenProvider";
+import { useProfileScreenContext } from "../providers/ProfileScreenProvider";
 import styles from "../styles/styles";
 import NameArea from "./NameArea";
 import OrderCount from "./OrderCount";

@@ -1,7 +1,7 @@
 import React from "react";
-import InactiveHooksProvider from "./hooks/InactiveHooksProvider";
-import PopUpsProvider from "./hooks/PopUpsProvider";
 import MainScreen from "./mainScreen";
+import InactiveHooksProvider from "./providers/InactiveHooksProvider";
+import PopUpsProvider from "./providers/PopUpsProvider";
 
 const InactiveItems = () => {
   return (

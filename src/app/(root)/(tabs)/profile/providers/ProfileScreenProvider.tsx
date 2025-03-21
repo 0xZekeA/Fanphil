@@ -4,7 +4,7 @@ import * as Haptics from "expo-haptics";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import profileData from "../constants/profileDetails";
 import userInfo from "../constants/userDetails";
-import useMessagePopUpHooks from "./messagePopUp.hooks";
+import useMessagePopUpHooks from "../hooks/messagePopUp.hooks";
 
 const ProfileScreenContext = createContext<
   ProfileScreenContextTypes | undefined

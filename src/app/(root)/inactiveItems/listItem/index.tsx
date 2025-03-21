@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { usePopUpsProvider } from "../hooks/PopUpsProvider";
+import { usePopUpsProvider } from "../providers/PopUpsProvider";
 import styles from "../styles/styles";
 import BottomSection from "./BottomSection";
 import TopSection from "./TopSection";

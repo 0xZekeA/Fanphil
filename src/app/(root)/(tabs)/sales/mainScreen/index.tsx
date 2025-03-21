@@ -5,15 +5,15 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useMenuProvider } from "../hooks/MenuProvider";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
-import { useSellItemFormProvider } from "../hooks/SellItemFormProvider";
 import BottomSheet from "../inventoryBottomSheet";
-import SalesInfo from "../mainSalesItems/SalesInfo";
-import ShowAll from "../mainSalesItems/ShowAll";
-import ListItem from "../mainSalesItems/listItem";
+import SalesInfo from "../mainSalesScreenItems/SalesInfo";
+import ShowAll from "../mainSalesScreenItems/ShowAll";
+import ListItem from "../mainSalesScreenItems/listItem";
 import ModalForm from "../modals";
 import Header from "../pageHeader/Header";
+import { useMenuProvider } from "../providers/MenuProvider";
+import { useSalesDataProvider } from "../providers/SalesDataProvider";
+import { useSellItemFormProvider } from "../providers/sellForm/SellItemFormProvider";
 import SubmitArea from "../sellItemList/SubmitArea";
 import ListItemMain from "../sellItemList/listItem";
 import styles from "../styles/styles";
@@ -59,7 +59,11 @@ const MainScreen = () => {
               {!isSalesInterface && <SalesInfo />}
             </View>
           }
-          ListFooterComponent={isSalesInterface ? <SubmitArea /> : <ShowAll />}
+          ListFooterComponent={
+            <View style={{ paddingBottom: insets.bottom * 3 }}>
+              {isSalesInterface ? <SubmitArea /> : <ShowAll />}
+            </View>
+          }
         />
       </View>
       <ContextMenu

@@ -4,7 +4,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-import { useRemoveItemsProvider } from "../../hooks/RemoveItemsProvider";
+import { useRemoveItemsProvider } from "../../providers/RemoveItemsProvider";
 import styles from "../../styles/styles";
 
 const ItemAddComp = () => {

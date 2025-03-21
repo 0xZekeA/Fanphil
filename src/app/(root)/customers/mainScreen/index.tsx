@@ -3,9 +3,9 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Header from "../header";
-import { useCustomersProvider } from "../hooks/CustomersProvider";
 import ListItem from "../listItem";
 import ModalForm from "../modals";
+import { useCustomersProvider } from "../providers/CustomersProvider";
 import styles from "../styles/styles";
 
 const MainScreen = () => {

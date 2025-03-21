@@ -2,7 +2,7 @@ import Modal from "@/components/Modal";
 import React from "react";
 import { View } from "react-native";
 
-import { useMenuProvider } from "../hooks/MenuProvider";
+import { useMenuProvider } from "../providers/MenuProvider";
 import styles from "../styles/styles";
 import ConfirmAction from "./ConfirmAction";
 import RemoveAction from "./removeAction";

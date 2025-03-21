@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { useSalesDataProvider } from "../../hooks/SalesDataProvider";
+import { useSalesDataProvider } from "../../providers/SalesDataProvider";
 import styles from "../../styles/styles";
 
 const TopSection = ({ item }: { item: Sale }) => {
@@ -11,7 +11,7 @@ const TopSection = ({ item }: { item: Sale }) => {
 
   return (
     <View className="flex-row justify-between items-center">
-      <Text style={styles.textMed} className="font-Jakarta">
+      <Text style={styles.textMed} className="font-JakartaLight">
         {name}
       </Text>
       <Text

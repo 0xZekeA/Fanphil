@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { useTransferProvider } from "../../hooks/TransferProvider";
+import { useTransferProvider } from "../../providers/TransferProvider";
 import styles from "../../styles/styles";
 import ItemAddComp from "./ItemAddComp";
 

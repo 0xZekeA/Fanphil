@@ -1,7 +1,7 @@
 import React from "react";
-import MenuProvider from "./hooks/MenuProvider";
-import SellersInventoryListProvider from "./hooks/SellersInventoryListProvider";
 import MainScreen from "./mainScreen";
+import MenuProvider from "./providers/MenuProvider";
+import SellersInventoryListProvider from "./providers/SellersInventoryListProvider";
 
 const SellersInventory = () => {
   return (

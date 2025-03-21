@@ -1,6 +1,6 @@
 import Modal from "@/components/Modal";
 import React from "react";
-import { useExpenseFormContext } from "../hooks/ExpenseProviders";
+import { useExpenseFormContext } from "../providers/ExpenseProviders";
 import ExpenseCard from "./ExpenseCard";
 
 const ModalForm = () => {

@@ -2,9 +2,9 @@ import Modal from "@/components/Modal";
 import Receipt from "@/components/receipt";
 import React from "react";
 import { View } from "react-native";
-import { useMenuProvider } from "../hooks/MenuProvider";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
-import { useSellItemFormProvider } from "../hooks/SellItemFormProvider";
+import { useMenuProvider } from "../providers/MenuProvider";
+import { useSalesDataProvider } from "../providers/SalesDataProvider";
+import { useSellItemFormProvider } from "../providers/sellForm/SellItemFormProvider";
 import styles from "../styles/styles";
 import ConfirmAction from "./confirmAction/index";
 

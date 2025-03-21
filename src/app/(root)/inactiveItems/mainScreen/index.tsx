@@ -6,10 +6,10 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useInactiveHooksProvider } from "../hooks/InactiveHooksProvider";
-import { usePopUpsProvider } from "../hooks/PopUpsProvider";
 import ListItem from "../listItem";
 import ModalForm from "../modals";
+import { useInactiveHooksProvider } from "../providers/InactiveHooksProvider";
+import { usePopUpsProvider } from "../providers/PopUpsProvider";
 import SearchBar from "../search/SearchBar";
 import styles from "../styles/styles";
 

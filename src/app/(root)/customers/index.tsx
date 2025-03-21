@@ -1,7 +1,7 @@
 import React from "react";
-import CustomerFormProvider from "./hooks/CustomerFormProvider";
-import CustomersProvider from "./hooks/CustomersProvider";
 import MainScreen from "./mainScreen";
+import CustomerFormProvider from "./providers/CustomerFormProvider";
+import CustomersProvider from "./providers/CustomersProvider";
 
 const AddItems = () => {
   return (

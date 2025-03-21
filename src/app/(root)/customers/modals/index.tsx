@@ -1,7 +1,7 @@
 import Modal from "@/components/Modal";
 import React from "react";
 import { View } from "react-native";
-import { useCustomerForm } from "../hooks/CustomerFormProvider";
+import { useCustomerForm } from "../providers/CustomerFormProvider";
 import styles from "../styles/styles";
 import StaffForm from "./customerForm";
 

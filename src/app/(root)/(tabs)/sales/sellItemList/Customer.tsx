@@ -3,8 +3,8 @@ import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useMenuProvider } from "../hooks/MenuProvider";
-import { useSellItemFormProvider } from "../hooks/SellItemFormProvider";
+import { useMenuProvider } from "../providers/MenuProvider";
+import { useSellItemFormProvider } from "../providers/sellForm/SellItemFormProvider";
 import styles from "../styles/styles";
 
 const Customer = () => {

@@ -1,8 +1,8 @@
 import CustomButton from "@/components/customButton";
 import { Scale } from "@/utils/scaling";
 import { Animated } from "react-native";
-import { useSalesDataProvider } from "../hooks/SalesDataProvider";
 import useAnimationsHooks from "../hooks/animations.hooks";
+import { useSalesDataProvider } from "../providers/SalesDataProvider";
 
 const BackToSalesBtn = () => {
   const { isOwingFiltered, setIsOwingFiltered } = useSalesDataProvider();

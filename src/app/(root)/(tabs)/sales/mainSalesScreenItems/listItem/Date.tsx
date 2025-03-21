@@ -1,3 +1,4 @@
+import { COLORS } from "@/utils/colors";
 import { formatDate } from "@/utils/formatDate";
 import React from "react";
 import { Text, View } from "react-native";
@@ -8,7 +9,10 @@ const Date = ({ item }: { item: Sale }) => {
 
   return (
     <View style={styles.dateContainer}>
-      <Text style={styles.textMed} className="font-JakartaSemiBold">
+      <Text
+        style={[styles.textMed, { color: COLORS.gray800 }]}
+        className="font-JakartaSemiBold"
+      >
         {date}
       </Text>
     </View>

@@ -6,7 +6,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
 import inventoryForm from "../constants/form";
-import { useInventoryFormProvider } from "../hooks/InventoryFormProvider";
+import { useInventoryFormProvider } from "../providers/InventoryFormProvider";
 import styles from "../styles/styles";
 
 const FormFields = () => {

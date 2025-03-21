@@ -2,7 +2,7 @@ import CustomBottomSheet from "@/components/CustomBottomSheet";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { View } from "react-native";
-import { useSellItemFormProvider } from "../hooks/SellItemFormProvider";
+import { useSellItemFormProvider } from "../providers/sellForm/SellItemFormProvider";
 import List from "./List";
 
 const BottomSheet = () => {

@@ -1,8 +1,8 @@
 import React from "react";
-import MenuProvider from "./hooks/MenuProvider";
-import TransferFormProvider from "./hooks/TransferFormProvider";
-import TransferProvider from "./hooks/TransferProvider";
 import MainScreen from "./mainScreen";
+import MenuProvider from "./providers/MenuProvider";
+import TransferFormProvider from "./providers/TransferFormProvider";
+import TransferProvider from "./providers/TransferProvider";
 
 const TransferItems = () => {
   return (

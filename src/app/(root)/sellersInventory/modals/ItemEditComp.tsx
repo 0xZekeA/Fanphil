@@ -6,7 +6,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import useQuantityControl from "../hooks/quantityControl.hooks";
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 
 const ItemEditComp = ({ item }: { item: FilteredInventory }) => {

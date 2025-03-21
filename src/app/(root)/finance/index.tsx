@@ -8,9 +8,9 @@ import BreakdownList from "./breakdown/BreakdownList";
 import FinancialChart from "./chart";
 import ModalForm from "./expenseForm/ModalForm";
 import FinancesData from "./flatlistItem/ListItem";
-import ExpenseProviders from "./hooks/ExpenseProviders";
 import useFinanceHooks from "./hooks/finance.hooks";
 import useFinanceRefresh from "./hooks/refresh.hooks";
+import ExpenseProviders from "./providers/ExpenseProviders";
 import SalesInfo from "./salesInfo";
 
 const Finances = () => {

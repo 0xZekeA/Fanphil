@@ -1,7 +1,7 @@
 import { DataItem } from "@/types/profile";
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useProfileScreenContext } from "../../hooks/ProfileScreenProvider";
+import { useProfileScreenContext } from "../../providers/ProfileScreenProvider";
 import styles from "../../styles/styles";
 import Chevron from "./Chevron";
 import TopSection from "./TopSection";

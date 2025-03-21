@@ -2,7 +2,7 @@ import { icons } from "$root/constants/assets";
 import Field from "@/components/inputField/Field";
 import React from "react";
 import { View } from "react-native";
-import { useInactiveHooksProvider } from "../hooks/InactiveHooksProvider";
+import { useInactiveHooksProvider } from "../providers/InactiveHooksProvider";
 import styles from "../styles/styles";
 
 const SearchBar = () => {

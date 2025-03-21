@@ -4,9 +4,9 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useHistoryListProvider } from "../hooks/HistoryListProvider";
 import ListItem from "../listItem";
 import TransferItems from "../modals";
+import { useHistoryListProvider } from "../providers/HistoryListProvider";
 import styles from "../styles/styles";
 
 const MainScreen = () => {

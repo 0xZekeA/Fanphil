@@ -3,8 +3,8 @@ import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import { useMenuProvider } from "../hooks/MenuProvider";
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
+import { useMenuProvider } from "../providers/MenuProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 
 const SellerSelector = () => {

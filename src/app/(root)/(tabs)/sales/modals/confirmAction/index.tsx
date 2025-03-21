@@ -5,7 +5,7 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { useCallback, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useSalesDataProvider } from "../../hooks/SalesDataProvider";
+import { useSalesDataProvider } from "../../providers/SalesDataProvider";
 import styles from "../../styles/styles";
 import AddDeposit from "./AddDeposit";
 import CloseButton from "./CloseButton";

@@ -1,7 +1,7 @@
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
-import { usePurchasesFormProvider } from "../hooks/PurchasesFormProvider";
+import { usePurchasesFormProvider } from "../providers/PurchasesFormProvider";
 import styles from "../styles/styles";
 
 const BottomSheetHeader = () => {

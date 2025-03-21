@@ -1,7 +1,7 @@
 import { FilteredInventory } from "@/types/sellersInventory";
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useSellersInventoryListProvider } from "../../hooks/SellersInventoryListProvider";
+import { useSellersInventoryListProvider } from "../../providers/SellersInventoryListProvider";
 import styles from "../../styles/styles";
 import BottomSection from "./BottomSection";
 import TopSection from "./TopSection";

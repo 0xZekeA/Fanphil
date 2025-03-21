@@ -3,7 +3,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSellItemFormProvider } from "../../hooks/SellItemFormProvider";
+import { useSellItemFormProvider } from "../../providers/sellForm/SellItemFormProvider";
 import styles from "../../styles/styles";
 
 const ItemAddComp = ({ item }: { item: Inventory }) => {

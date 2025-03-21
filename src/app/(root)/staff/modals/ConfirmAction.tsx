@@ -3,7 +3,7 @@ import LongPressButton from "@/components/longPressButton";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { ActivityIndicator, Text, View } from "react-native";
-import { useMenuOptions } from "../hooks/MenuOptionsProvider";
+import { useMenuOptions } from "../providers/MenuOptionsProvider";
 import styles from "../styles/styles";
 
 const ConfirmAction = ({ onClose }: { onClose: () => void }) => {

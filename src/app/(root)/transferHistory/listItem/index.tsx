@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
-import { useHistoryListProvider } from "../hooks/HistoryListProvider";
 import useItemDetsHooks from "../hooks/itemDets.hooks";
+import { useHistoryListProvider } from "../providers/HistoryListProvider";
 import styles from "../styles/styles";
 import BottomSection from "./BottomSection";
 import TopSection from "./TopSection";

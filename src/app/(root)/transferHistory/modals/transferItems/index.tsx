@@ -4,8 +4,8 @@ import { ReturnItem } from "@/types/transferHistory";
 import { Scale } from "@/utils/scaling";
 import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
-import { useHistoryListProvider } from "../../hooks/HistoryListProvider";
 import useItemDetsHooks from "../../hooks/itemDets.hooks";
+import { useHistoryListProvider } from "../../providers/HistoryListProvider";
 import styles from "../../styles/styles";
 import SoldListItems from "./SoldListItem";
 

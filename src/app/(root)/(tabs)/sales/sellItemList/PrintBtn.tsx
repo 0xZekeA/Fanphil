@@ -2,7 +2,7 @@ import HapticButton from "@/components/HapticsButton";
 import { COLORS } from "@/utils/colors";
 import React from "react";
 import { Text } from "react-native";
-import { useSellItemFormProvider } from "../hooks/SellItemFormProvider";
+import { useSellItemFormProvider } from "../providers/sellForm/SellItemFormProvider";
 import styles from "../styles/styles";
 
 const PrintBtn = () => {

@@ -9,8 +9,8 @@ import {
   useEffect,
   useState,
 } from "react";
+import useRemoveItemsHooks from "../hooks/removeItems.hooks";
 import { useMenuProvider } from "./MenuProvider";
-import useRemoveItemsHooks from "./removeItems.hooks";
 
 const RemoveItemsProviderContext = createContext<
   RemoveItemsProviderContextTypes | undefined

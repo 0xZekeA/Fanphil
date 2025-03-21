@@ -10,7 +10,7 @@ import {
 } from "react";
 import getMenuItems from "../constants/menuItems";
 import { useSalesDataProvider } from "./SalesDataProvider";
-import { useSellItemFormProvider } from "./SellItemFormProvider";
+import { useSellItemFormProvider } from "./sellForm/SellItemFormProvider";
 
 const MenuProviderContext = createContext<MenuProviderContextTypes | undefined>(
   undefined,

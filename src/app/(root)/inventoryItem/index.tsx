@@ -1,7 +1,7 @@
 import React from "react";
-import InventoryFormProvider from "./hooks/InventoryFormProvider";
-import ItemProvider from "./hooks/ItemProvider";
 import MainScreen from "./mainScreen";
+import InventoryFormProvider from "./providers/InventoryFormProvider";
+import ItemProvider from "./providers/ItemProvider";
 
 const InventoryItem = () => {
   return (

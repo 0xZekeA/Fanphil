@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
-import { useInventorySearchProvider } from "../hooks/InventorySearchProvider";
+import { useInventorySearchProvider } from "../providers/InventorySearchProvider";
 import styles from "../styles/styles";
 
 const ListItem = ({ item }: { item: Inventory }) => {

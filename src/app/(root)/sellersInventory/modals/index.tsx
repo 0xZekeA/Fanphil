@@ -2,7 +2,7 @@ import Modal from "@/components/Modal";
 import React from "react";
 import { View } from "react-native";
 
-import { useSellersInventoryListProvider } from "../hooks/SellersInventoryListProvider";
+import { useSellersInventoryListProvider } from "../providers/SellersInventoryListProvider";
 import styles from "../styles/styles";
 import ConfirmAction from "./ConfirmAction";
 

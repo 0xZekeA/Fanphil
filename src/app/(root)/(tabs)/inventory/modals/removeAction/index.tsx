@@ -2,8 +2,8 @@ import LongPressButton from "@/components/longPressButton";
 import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useMenuProvider } from "../../hooks/MenuProvider";
-import { useRemoveItemsProvider } from "../../hooks/RemoveItemsProvider";
+import { useMenuProvider } from "../../providers/MenuProvider";
+import { useRemoveItemsProvider } from "../../providers/RemoveItemsProvider";
 import styles from "../../styles/styles";
 import RemoveComp from "./RemoveComp";
 

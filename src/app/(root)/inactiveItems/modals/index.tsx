@@ -1,7 +1,7 @@
 import Modal from "@/components/Modal";
 import React from "react";
 import { View } from "react-native";
-import { usePopUpsProvider } from "../hooks/PopUpsProvider";
+import { usePopUpsProvider } from "../providers/PopUpsProvider";
 import styles from "../styles/styles";
 import ConfirmAction from "./ConfirmAction";
 

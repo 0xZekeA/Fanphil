@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { useInactiveHooksProvider } from "../hooks/InactiveHooksProvider";
+import { useInactiveHooksProvider } from "../providers/InactiveHooksProvider";
 import styles from "../styles/styles";
 
 const TopSection = ({ item }: { item: Inventory }) => {

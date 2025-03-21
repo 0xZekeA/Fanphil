@@ -3,7 +3,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useTransferFormProvider } from "../hooks/TransferFormProvider";
+import { useTransferFormProvider } from "../providers/TransferFormProvider";
 import styles from "../styles/styles";
 
 const ItemsTitle = () => {

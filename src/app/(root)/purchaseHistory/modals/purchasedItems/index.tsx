@@ -1,7 +1,7 @@
 import CustomButton from "@/components/customButton";
 import { Scale } from "@/utils/scaling";
 import { Text, View } from "react-native";
-import { useHistoryListProvider } from "../../hooks/HistoryListProvider";
+import { useHistoryListProvider } from "../../providers/HistoryListProvider";
 import styles from "../../styles/styles";
 import PurchasedListItem from "./PurchasedListItem";
 

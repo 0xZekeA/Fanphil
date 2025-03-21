@@ -2,7 +2,7 @@ import HapticButton from "@/components/HapticsButton";
 import { COLORS } from "@/utils/colors";
 import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useInventorySearchProvider } from "../hooks/InventorySearchProvider";
+import { useInventorySearchProvider } from "../providers/InventorySearchProvider";
 
 const CloseButton = () => {
   const { deactivateSearch } = useInventorySearchProvider();
