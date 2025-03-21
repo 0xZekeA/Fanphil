@@ -9,6 +9,8 @@ const getMenuItems = (
   openSheet: () => void,
   setIsOwingFiltered: Dispatch<SetStateAction<boolean>>,
   isOwingFiltered: boolean,
+  isItem: boolean,
+  setIsReceiptShown: Dispatch<SetStateAction<boolean>>,
 ) => {
   if (isSalesInterface) {
     if (!customers)
@@ -25,23 +27,31 @@ const getMenuItems = (
     }));
   }
 
-  const menuItems = [
-    {
-      name: "Make sale",
-      onPress: () => {
-        setIsSalesInterface(true);
-        openSheet();
+  const menuItems = [];
+  if (isItem) {
+    menuItems.push({
+      name: "Save receipt",
+      onPress: () => setIsReceiptShown(true),
+    });
+  } else {
+    menuItems.push(
+      {
+        name: "Make sale",
+        onPress: () => {
+          setIsSalesInterface(true);
+          openSheet();
+        },
       },
-    },
-    {
-      name: "Customers",
-      onPress: () => router.push("/(root)/customers"),
-    },
-    {
-      name: isOwingFiltered ? "Back to Sales" : "Owing Customers",
-      onPress: () => setIsOwingFiltered(!isOwingFiltered),
-    },
-  ];
+      {
+        name: "Customers",
+        onPress: () => router.push("/(root)/customers"),
+      },
+      {
+        name: isOwingFiltered ? "Back to Sales" : "Owing Customers",
+        onPress: () => setIsOwingFiltered(!isOwingFiltered),
+      },
+    );
+  }
 
   return menuItems;
 };

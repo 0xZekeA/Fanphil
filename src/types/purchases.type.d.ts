@@ -24,6 +24,7 @@ interface PurchasesFormProviderContextTypes {
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
   openSheet: () => void;
   closeSheet: () => void;
+  handleSheetChange: (index: number) => void;
   selectedInventoryItems: Inventory[];
   isSheetOpen: boolean;
   submitPurchase: () => void;

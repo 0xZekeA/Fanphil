@@ -18,7 +18,7 @@ const List = () => {
       ListEmptyComponent={
         <ListEmptyComp message="There seems to be no available inventory item" />
       }
-      ListFooterComponent={<View style={{ paddingBottom: 24 }} />}
+      ListFooterComponent={<View style={{ paddingBottom: 120 }} />}
     />
   );
 };

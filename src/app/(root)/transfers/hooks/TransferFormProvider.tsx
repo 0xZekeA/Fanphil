@@ -14,6 +14,7 @@ import {
   createContext,
   PropsWithChildren,
   Reducer,
+  useCallback,
   useContext,
   useReducer,
   useRef,
@@ -97,6 +98,12 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
     bottomSheetRef.current?.close();
   };
 
+  const handleSheetChange = useCallback((index: number) => {
+    if (index === -1) {
+      setIsSheetOpen(false);
+    }
+  }, []);
+
   const handleRemoveItem = (id: string) => {
     dispatch({ type: "REMOVE_ITEM", id });
   };
@@ -171,6 +178,7 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
         selectedInventoryItems,
         submitTransfer,
         handleRemoveItem,
+        handleSheetChange,
       }}
     >
       {children}

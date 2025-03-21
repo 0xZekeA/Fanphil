@@ -6,13 +6,15 @@ import { usePurchasesFormProvider } from "../hooks/PurchasesFormProvider";
 import List from "./List";
 
 const BottomSheet = () => {
-  const { closeSheet, bottomSheetRef } = usePurchasesFormProvider();
+  const { closeSheet, bottomSheetRef, handleSheetChange } =
+    usePurchasesFormProvider();
 
   return (
     <CustomBottomSheet
       ref={bottomSheetRef}
       snapPoints={["40%", "80%"]}
       onClose={closeSheet}
+      onChange={handleSheetChange}
     >
       <View style={{ rowGap: Scale.moderate(8), zIndex: 89 }}>
         <List />

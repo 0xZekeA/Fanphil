@@ -9,10 +9,11 @@ interface CustomBottomSheetProps {
   children: React.ReactNode;
   snapPoints?: (string | number)[];
   onClose?: () => void;
+  onChange?: (index: number) => void;
 }
 
 const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
-  ({ children, snapPoints = ["25%", "50%"], onClose }, ref) => {
+  ({ children, snapPoints = ["25%", "50%"], onClose, onChange }, ref) => {
     const memoizedSnapPoints = useMemo(() => snapPoints, [snapPoints]);
 
     return (
@@ -29,6 +30,7 @@ const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
           shadowOpacity: 0.8,
           shadowOffset: { height: 5, width: 0 },
         }}
+        onChange={onChange}
         enablePanDownToClose
       >
         <BottomSheetView
@@ -41,7 +43,7 @@ const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
               right: 4,
               top: 4,
               padding: Scale.moderate(8),
-              backgroundColor: COLORS.gray50,
+              backgroundColor: COLORS.softCoral200,
               borderRadius: 360,
             }}
             className="absolute"

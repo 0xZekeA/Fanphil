@@ -17,11 +17,13 @@ const ItemsTitle = () => {
       <Text style={styles.textBase} className="font-JakartaSemiBold">
         Items to be sold
       </Text>
-      {!isSheetOpen && (
-        <TouchableOpacity onPress={openSheet}>
-          <Icon name="chevron-down-outline" size={24} color={COLORS.gray700} />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity onPress={openSheet}>
+        <Icon
+          name={!isSheetOpen ? "chevron-down-outline" : "chevron-up-outline"}
+          size={24}
+          color={COLORS.gray700}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

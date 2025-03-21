@@ -11,7 +11,9 @@ import {
   createContext,
   PropsWithChildren,
   Reducer,
+  useCallback,
   useContext,
+  useEffect,
   useReducer,
   useRef,
   useState,
@@ -35,7 +37,9 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     reducer,
     [],
   );
-
+  const [salesId, setSalesId] = useState<string | null>(null);
+  const [isSaleCompleted, setIsSaleCompleted] = useState(false);
+  const [isReceiptShown, setIsReceiptShown] = useState(false);
   const [depositedAmount, setDepositedAmount] = useState("0");
   const [selectedCustomer, setSelectedCustomer] = useState(customers[0]);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +102,12 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     bottomSheetRef.current?.close();
   };
 
+  const handleSheetChange = useCallback((index: number) => {
+    if (index === -1) {
+      setIsSheetOpen(false);
+    }
+  }, []);
+
   const handleRemoveItem = (id: string) => {
     dispatch({ type: "REMOVE_ITEM", id });
   };
@@ -134,6 +144,10 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  useEffect(() => {
+    if (isSaleCompleted) setTimeout(() => setIsSaleCompleted(false), 30000);
+  }, [isSaleCompleted]);
+
   const submitSale = async () => {
     if (!selectedCustomer) {
       showToast("error", "Please add a driver from the Staff screen");
@@ -159,7 +173,7 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     }, 0);
 
     try {
-      const salesId = await addSale(
+      const sId = await addSale(
         selectedItems.length || 1,
         user.id,
         selectedCustomer.id,
@@ -179,13 +193,16 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
         user.role === "Manager" ||
         user.role === "Owner";
 
+      if (!sId) return;
+      setSalesId(sId);
+
       const id = await Promise.all(
         selectedItems
           .filter((item) => item.quantity > 0)
           .map((item) =>
             addSoldItem(
               isAdminOrMgr,
-              salesId,
+              sId,
               item.id,
               item.quantity,
               totalItemPrice(item),
@@ -202,6 +219,11 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
         "success",
         `Sale to ${selectedCustomer.name} completed successfully`,
       );
+      setTimeout(() => {
+        setDepositedAmount("0");
+        setIsReceiptShown(true);
+        setIsSaleCompleted(true);
+      }, 1000);
       dispatch({ type: "CLEAR_ITEMS" });
     } catch (error: any) {
       console.error(error);
@@ -241,6 +263,12 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
         depositedAmount,
         handleChange,
         total,
+        isSaleCompleted,
+        isReceiptShown,
+        setIsReceiptShown,
+        salesId,
+        setIsSaleCompleted,
+        handleSheetChange,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ interface MenuProviderContextTypes {
   setContextMenu: Dispatch<SetStateAction<ContextMenuTypes>>;
   menuItems: any;
   onOpenMenuOptions: (event: any) => void;
+  onOpenItemsMenu: (event: any, item: Sale) => void;
   isSalesInterface: boolean;
   setIsSalesInterface: Dispatch<SetStateAction<boolean>>;
 }
@@ -32,6 +33,12 @@ interface SellItemFormProviderContextTypes {
   depositedAmount: string;
   handleChange: (value: string, isAddDeposit?: boolean, item?: Sale) => void;
   total: number;
+  isSaleCompleted: boolean;
+  isReceiptShown: boolean;
+  setIsReceiptShown: Dispatch<SetStateAction<boolean>>;
+  setIsSaleCompleted: Dispatch<SetStateAction<boolean>>;
+  handleSheetChange: (index: number) => void;
+  salesId: string | null;
 }
 
 interface SalesInfo {

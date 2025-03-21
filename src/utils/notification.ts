@@ -15,4 +15,5 @@ export const showToast = (
     autoHide: true,
     swipeable: true,
   });
+  console.log(`[${type}] ${text1}${text2 ? `: ${text2}` : ""}`);
 };

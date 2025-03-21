@@ -3,19 +3,28 @@ import { COLORS } from "@/utils/colors";
 import { Scale } from "@/utils/scaling";
 import { router } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import HapticButton from "./HapticsButton";
 
 const BackButton = ({
   title,
   onPress,
+  styling,
 }: {
   title: string;
   onPress?: () => void;
+  styling?: StyleProp<ViewStyle>;
 }) => {
   return (
     <View
-      style={{ paddingHorizontal: Scale.moderate(8) }}
+      style={[{ paddingHorizontal: Scale.moderate(8) }, styling]}
       className="flex flex-row items-center"
     >
       <HapticButton onPress={onPress ?? (() => router.back())}>

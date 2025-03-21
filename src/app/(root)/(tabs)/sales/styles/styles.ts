@@ -19,6 +19,14 @@ const styles = StyleSheet.create({
     marginVertical: Scale.moderate(12),
     paddingHorizontal: Scale.moderate(16),
   },
+  printBtn: {
+    width: "100%",
+    paddingVertical: Scale.moderate(20),
+    borderWidth: 0.5,
+    backgroundColor: COLORS.white,
+    borderColor: COLORS.sky800,
+    borderRadius: 10,
+  },
   optionsBtn: {
     width: Scale.moderate(32),
     height: Scale.moderate(32),
