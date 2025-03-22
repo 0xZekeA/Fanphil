@@ -1,6 +1,5 @@
 import { supabase } from "$root/lib/supabase";
 import { getDb } from "@/database/database";
-import { addUser } from "@/database/users";
 import { showToast } from "@/utils/notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
@@ -55,7 +54,7 @@ const useUserRealtimeData = (
     const userId = await AsyncStorage.getItem("user_id");
     if (!userId) {
       setData(null);
-      return;
+      return null;
     }
     const user: User | null = await db.getFirstAsync(
       "SELECT * FROM users WHERE id = ?",
@@ -65,7 +64,7 @@ const useUserRealtimeData = (
     if (user) {
       setData(user);
       setLoading(false);
-      return;
+      return user;
     }
 
     setLoading(true);
@@ -82,32 +81,12 @@ const useUserRealtimeData = (
         `Error details: ${error.message}`,
       );
       setLoading(false);
-      return;
+      throw error;
     }
 
-    console.log("Adding user to local database...");
-
-    const id = await addUser(
-      userId,
-      data.full_name,
-      data.email,
-      data.phone_number,
-      data.role,
-      data.pfp,
-      data.address,
-      data.created_by,
-    );
-
-    if (!id) {
-      showToast(
-        "error",
-        "Failed to store your details locally",
-        "Contact developer",
-      );
-    }
     setData(data);
     setLoading(false);
-    return;
+    return data as User;
   }, []);
 
   useEffect(() => {

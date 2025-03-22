@@ -5,6 +5,7 @@ import { getDb } from "./database";
 export const downloadDataFromSupabase = async () => {
   console.log("Downloading all data from Supabase on sign in...");
   const db = await getDb();
+  const now = new Date();
 
   // List of all tables to download
   const tables = [
@@ -18,6 +19,8 @@ export const downloadDataFromSupabase = async () => {
     "expenses",
     "sold_items",
     "transfer_items",
+    "purchases",
+    "purchased_items",
   ];
 
   try {
@@ -46,9 +49,8 @@ export const downloadDataFromSupabase = async () => {
 
       // Insert each record into local database
       for (const record of data) {
-        // Remove synced_at
-        const recordToInsert = { ...record };
-        delete recordToInsert.synced_at; // Remove if it doesn't exist in Supabase
+        // Add synced_at prop
+        const recordToInsert = { ...record, synced_at: now };
 
         const columns = Object.keys(recordToInsert).join(", ");
         const placeholders = Object.keys(recordToInsert)
@@ -83,11 +85,7 @@ export const downloadDataFromSupabase = async () => {
     await db.execAsync("COMMIT");
 
     console.log("All data downloaded successfully");
-    showToast(
-      "success",
-      "Data Sync Complete",
-      "All data has been downloaded from the server.",
-    );
+    showToast("success", "Data Sync Complete");
 
     return true;
   } catch (error: any) {

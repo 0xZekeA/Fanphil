@@ -9,6 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 
 const useSignoutHooks = (
   setSession: Dispatch<SetStateAction<Session | null>>,
+  setSessionToken: Dispatch<SetStateAction<string | null>>,
 ) => {
   const signOut = async () => {
     try {
@@ -21,6 +22,7 @@ const useSignoutHooks = (
       await wipeTablesOnSignOut();
 
       setSession(null);
+      setSessionToken(null);
       router.push("/(auth)/signIn");
     } catch (error: any) {
       showToast(

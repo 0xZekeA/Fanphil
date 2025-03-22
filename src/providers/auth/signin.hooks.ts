@@ -14,7 +14,8 @@ import { LoginFormData } from "./authpro.types";
 const useSigninHooks = (
   setSession: Dispatch<SetStateAction<Session | null>>,
   setSessionToken: Dispatch<SetStateAction<string | null>>,
-  getUser: () => Promise<void>,
+  getUser: () => Promise<User | null>,
+  setIsSigningIn: Dispatch<SetStateAction<boolean>>,
 ) => {
   const loginSchema = z.object({
     email: z
@@ -41,6 +42,7 @@ const useSigninHooks = (
 
   const signIn = useCallback(async (data: LoginFormData) => {
     try {
+      setIsSigningIn(true);
       const {
         error,
         data: { session },
@@ -55,21 +57,30 @@ const useSigninHooks = (
         await SecureStore.setItemAsync("session_token", session.access_token);
         await AsyncStorage.setItem("user_id", session.user.id);
         await downloadDataFromSupabase();
-        await getUser();
+        const user = await getUser();
+        if (user) {
+          console.log("Sending user in...");
+          router.push("/");
+        }
 
         setSession(session);
         setSessionToken(session.access_token);
 
-        router.push("/");
+        setIsSigningIn(false);
 
         showToast(
           "success",
-          `Welcome ${(session.user.email || "").split("@")[0]}`,
+          `Welcome ${
+            user
+              ? (user.full_name || "").split(" ")[0]
+              : (session.user.email || "").split("@")[0]
+          }`,
           "We've logged you in successfully",
         );
       }
     } catch (error: any) {
       console.error("Failed to sign in", error);
+      setIsSigningIn(false);
       showToast(
         "error",
         "Error while attempting to sign you in",

@@ -24,7 +24,7 @@ const SYNC_FULL_INTERVAL = 240 * 1000;
 let isSyncing = false;
 let lastFullSync = 0;
 
-const DEBUG_MODE = __DEV__; // Log only in development mode
+const DEBUG_MODE = __DEV__; // Log only in dev mode
 
 const log = (...args: any[]) => {
   if (!DEBUG_MODE) return;

@@ -25,22 +25,25 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const [sessionToken, setSessionToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loaded, setLoaded] = useState(false);
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const {
     data: user,
     updateUser,
     getUser,
   } = useUserRealtimeData(session, setLoading, loaded);
-  const { signOut } = useSignoutHooks(setSession);
+  const { signOut } = useSignoutHooks(setSession, setSessionToken);
   const { resetPassword } = useResetPasswordHooks(user);
   const { control, onSubmit, errors, isSubmitting } = useSigninHooks(
     setSession,
     setSessionToken,
     getUser,
+    setIsSigningIn,
   );
 
   const isAdmin = user?.role === "Creator" || user?.role === "Owner";
 
   useEffect(() => {
+    if (isSigningIn) return;
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       setSession(data?.session || null);
@@ -55,6 +58,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     checkSession();
 
+    console.log("attempting...");
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);
@@ -67,6 +71,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   useEffect(() => {
+    if (isSigningIn) return;
     const getToken = async () => {
       try {
         const storedToken = await SecureStore.getItemAsync("session_token");
