@@ -1,6 +1,9 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
+
+const TABLE_NAME = "sales";
 
 export const addSale = async (
   quantity: number,
@@ -35,6 +38,8 @@ export const addSale = async (
   } catch (error: any) {
     showToast("error", "Failed to add sale", `Error details: ${error.message}`);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:${TABLE_NAME}`);
   }
 };
 
@@ -64,6 +69,8 @@ export const updateSale = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:${TABLE_NAME}`);
   }
 };
 
@@ -122,6 +129,8 @@ export const deleteSale = async (id: string) => {
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -147,5 +156,7 @@ export const addDeposit = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:${TABLE_NAME}`);
   }
 };

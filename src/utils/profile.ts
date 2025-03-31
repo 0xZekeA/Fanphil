@@ -1,7 +1,10 @@
 import { getDb } from "@/database/database";
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import { Dispatch, SetStateAction } from "react";
 import { pickImage, uploadImage } from "./staff/imageUpload";
+
+const TABLE_NAME = "users";
 
 export const editImage = async (
   user: User,
@@ -44,6 +47,7 @@ export const editImage = async (
       `Error details: ${error.message}`,
     );
   } finally {
+    eventBus.emit(`refresh:${TABLE_NAME}}`);
     setLoading(false);
   }
 };

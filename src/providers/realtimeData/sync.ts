@@ -1,5 +1,6 @@
 import { supabase } from "$root/lib/supabase";
 import { getDb } from "@/database/database";
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -33,6 +34,38 @@ const log = (...args: any[]) => {
   }
 };
 
+// Parse stringified fields
+const parseStringifiedFields = (record: any) => {
+  const parsed: any = {};
+  for (const key in record) {
+    const value = record[key];
+    if (typeof value === "string") {
+      try {
+        const maybeParsed = JSON.parse(value);
+        parsed[key] = maybeParsed;
+      } catch {
+        parsed[key] = value;
+      }
+    } else {
+      parsed[key] = value;
+    }
+  }
+  return parsed;
+};
+
+// Stringify arraylike fields
+const stringifyComplexFields = (record: any) => {
+  const result: any = {};
+  for (const key in record) {
+    const value = record[key];
+    result[key] =
+      typeof value === "object" && value !== null
+        ? JSON.stringify(value)
+        : value;
+  }
+  return result;
+};
+
 /**
  * Push local changes to Supabase
  */
@@ -42,28 +75,45 @@ const pushLocalChanges = async (db: any) => {
   for (const table of TABLES_TO_SYNC) {
     try {
       const unsyncedRecords: any[] = await db.getAllAsync(
-        `SELECT * FROM ${table} WHERE synced_at IS NULL AND deleted = 0`,
+        `SELECT * FROM ${table} WHERE synced_at IS NULL`,
       );
 
-      const deletedRecords: any[] = await db.getAllAsync(
-        `SELECT id FROM ${table} WHERE deleted = 1`,
-      );
-
-      log(
-        `${table}: ${unsyncedRecords.length} to update, ${deletedRecords.length} to delete`,
-      );
+      log(`${table}: ${unsyncedRecords.length} to update`);
 
       if (unsyncedRecords.length > 0) {
-        const cleanRecords = unsyncedRecords.map(
-          ({ synced_at, deleted, ...rest }) => rest,
+        const cleanRecords = unsyncedRecords.map(({ synced_at, ...rest }) =>
+          parseStringifiedFields(rest),
         );
 
-        const { error } = await supabase.from(table).upsert(cleanRecords);
+        let successfulChunks = 0;
 
-        if (error) {
-          console.error(`Error upserting ${table}:`, error.message);
-          continue;
+        // Upload chunk to supabase with retries
+        const uploadChunk = async (chunk: any[]) => {
+          let attempts = 0;
+          while (attempts < 3) {
+            const { error } = await supabase.from(table).upsert(chunk);
+            if (!error) {
+              successfulChunks++;
+              return;
+            }
+            console.error(`Failed to sync chunk after 3 retries`, chunk);
+            await new Promise((res) =>
+              setTimeout(res, 1000 * Math.pow(2, attempts)),
+            );
+            attempts++;
+          }
+        };
+
+        for (let i = 0; i < cleanRecords.length; i += 500) {
+          const chunk = cleanRecords.slice(i, i + 500);
+          await uploadChunk(chunk);
         }
+
+        log(
+          `${successfulChunks} / ${Math.ceil(
+            cleanRecords.length / 500,
+          )} chunks synced`,
+        );
 
         // Mark as synced in local DB
         const ids = unsyncedRecords.map((record) => record.id);
@@ -73,31 +123,17 @@ const pushLocalChanges = async (db: any) => {
           ids,
         );
       }
-
-      // Delete records from Supabase
-      if (deletedRecords.length > 0) {
-        const ids = deletedRecords.map((record) => record.id);
-
-        const { error } = await supabase.from(table).delete().in("id", ids);
-
-        if (error) {
-          console.error(`Error deleting from ${table}:`, error.message);
-          continue;
-        }
-
-        // Remove deleted records locally
-        const placeholders = ids.map(() => "?").join(",");
-        await db.runAsync(
-          `DELETE FROM ${table} WHERE id IN (${placeholders})`,
-          ids,
-        );
-      }
     } catch (err) {
       console.error(`Error processing ${table}:`, err);
+    } finally {
+      eventBus.emit(`refresh:${table}`);
     }
   }
 };
 
+/**
+ * Pull remote changes from Supabase
+ */
 /**
  * Pull remote changes from Supabase
  */
@@ -106,18 +142,25 @@ const pullRemoteChanges = async (db: any) => {
 
   for (const table of TABLES_TO_SYNC) {
     try {
-      // Get the latest sync timestamp for this table
-      const result = await db.getAllAsync(
-        `SELECT MAX(synced_at) as last_sync FROM ${table} WHERE synced_at IS NOT NULL`,
+      // Add table name to last_pulled if it doesn't exist
+      await db.runAsync(
+        `INSERT OR IGNORE INTO last_pulled (table_name) VALUES (?)`,
+        [table],
       );
 
-      const lastSync = result?.last_sync || "1970-01-01T00:00:00Z";
+      // Get the latest sync timestamp for this table
+      const result = await db.getFirstAsync(
+        `SELECT last_pulled_at FROM last_pulled WHERE table_name = ?`,
+        [table],
+      );
+
+      const lastPulledAt = result?.last_pulled_at || "2025-01-01T00:00:00Z";
 
       // Fetch records updated after the last sync
       const { data, error } = await supabase
         .from(table)
         .select("*")
-        .gt("updated_at", lastSync);
+        .gt("updated_at", lastPulledAt);
 
       if (error) {
         console.error(`Error fetching from ${table}:`, error.message);
@@ -131,12 +174,26 @@ const pullRemoteChanges = async (db: any) => {
 
       log(`Received ${data.length} updates for ${table}`);
 
+      // Reorder data from supabase to put latest update on top
+      const reorderedData = data.sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+      );
+
+      // Update the last_pulled table with the lastest timestamp
+      const lastest = reorderedData[0].updated_at;
+
+      await db.runAsync(
+        `UPDATE last_pulled SET last_pulled_at = ? WHERE table_name = ?`,
+        [new Date(lastest).toISOString(), table],
+      );
+
       // Update local database with remote changes
       for (const record of data) {
         if (!record.id) continue;
 
         // Check if this record exists locally and if local version is newer
-        const localRecord = await db.getAllAsync(
+        const localRecord = await db.getFirstAsync(
           `SELECT updated_at FROM ${table} WHERE id = ?`,
           [record.id],
         );
@@ -144,7 +201,7 @@ const pullRemoteChanges = async (db: any) => {
         // If local record exists and is more recent, skip this update
         if (
           localRecord &&
-          new Date(localRecord.updated_at) > new Date(record.updated_at)
+          new Date(localRecord.updated_at) >= new Date(record.updated_at)
         ) {
           log(`Skipping ${table}:${record.id} - local is newer`);
           continue;
@@ -152,7 +209,7 @@ const pullRemoteChanges = async (db: any) => {
 
         // Add sync metadata
         const recordToSave = {
-          ...record,
+          ...stringifyComplexFields(record),
           synced_at: new Date().toISOString(),
         };
 
@@ -169,7 +226,7 @@ const pullRemoteChanges = async (db: any) => {
           .map((key) => recordToSave[key]);
 
         // Upsert
-        const existsQuery = await db.getAllAsync(
+        const existsQuery = await db.getFirstAsync(
           `SELECT id FROM ${table} WHERE id = ?`,
           [record.id],
         );
@@ -192,6 +249,8 @@ const pullRemoteChanges = async (db: any) => {
       }
     } catch (err) {
       console.error(`Error processing ${table}:`, err);
+    } finally {
+      eventBus.emit(`refresh:${table}`);
     }
   }
 };
@@ -208,7 +267,7 @@ export const syncWithSupabase = async (force = false) => {
     return;
   }
 
-  // Stop is something else is syncing
+  // Stop if something else is syncing
   if (isSyncing) {
     log("Sync already in progress, skipping");
     return;

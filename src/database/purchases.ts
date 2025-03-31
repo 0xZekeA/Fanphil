@@ -1,3 +1,4 @@
+import { eventBus } from "@/events/events";
 import { Item } from "@/types/purchases.type";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
@@ -29,6 +30,8 @@ export const addPurchase = async (
   } catch (error: any) {
     showToast("error", "Something went wrong", `Error: ${error.message}`);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -75,6 +78,8 @@ export const addPurchaseItem = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 

@@ -1,3 +1,4 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
@@ -41,6 +42,8 @@ export const addSoldItem = async (
     );
     console.error("Error in addSoldItem:", error);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all}`);
   }
 };
 
@@ -135,6 +138,8 @@ export const updateSoldItem = async (
     );
     console.error("Error in updateSoldItem:", error);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all}`);
   }
 };
 
@@ -187,5 +192,7 @@ export const deleteSoldItem = async (id: string) => {
     );
     console.error("Error in deleteSoldItem:", error);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all}`);
   }
 };

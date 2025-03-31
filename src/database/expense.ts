@@ -1,6 +1,9 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
+
+const TABLE_NAME = "expenses";
 
 export const addExpense = async (
   reason: string,
@@ -16,6 +19,8 @@ export const addExpense = async (
       "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [id, reason, cost, created_by, created_by, now, now],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return id;
   } catch (error: any) {
@@ -44,6 +49,8 @@ export const updateExpense = async (
       WHERE id = ?`,
       [reason, cost, last_edited_by, now, id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return id;
   } catch (error: any) {
@@ -79,6 +86,8 @@ export const deleteExpense = async (id: string) => {
       "UPDATE expenses SET deleted = 1, synced_at = NULL WHERE id = ?",
       [id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
     return id;
   } catch (error: any) {
     showToast(

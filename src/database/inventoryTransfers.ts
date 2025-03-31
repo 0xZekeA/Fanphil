@@ -1,6 +1,9 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
+
+const TABLE_NAME = "inventory_transfers";
 
 export const addInventoryTransfer = async (
   transferred_by: string,
@@ -15,6 +18,8 @@ export const addInventoryTransfer = async (
       "INSERT INTO inventory_transfers (id, transferred_by, received_by, created_at) VALUES (?, ?, ?, ?)",
       [id, transferred_by, received_by, now],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return id;
   } catch (error: any) {
@@ -80,6 +85,8 @@ export const deleteInventoryItemTransfer = async (id: string) => {
   } catch (error: any) {
     showToast("error", "Action failed", `Error: ${error.message}`);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -131,5 +138,7 @@ export const updateSellersInventory = async (
   } catch (error: any) {
     showToast("error", "Something went wrong", `Error: ${error.message}`);
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };

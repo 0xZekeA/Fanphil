@@ -1,6 +1,9 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
+
+const TABLE_NAME = "customers";
 
 export const addCustomer = async (
   name: string,
@@ -19,6 +22,7 @@ export const addCustomer = async (
       [id, name, phone, address, now, now],
     );
 
+    eventBus.emit(`refresh:${TABLE_NAME}`);
     return id;
   } catch (error: any) {
     showToast(
@@ -47,6 +51,7 @@ export const updateCustomer = async (
       [name, phone, address, now, id],
     );
 
+    eventBus.emit(`refresh:${TABLE_NAME}`);
     return id;
   } catch (error: any) {
     showToast(
@@ -82,6 +87,8 @@ export const deleteCustomer = async (id: string) => {
       "UPDATE sales SET is_active = 0, synced_at = NULL WHERE id = ?",
       [id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return id;
   } catch (error: any) {

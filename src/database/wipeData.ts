@@ -18,6 +18,8 @@ export const wipeTablesOnSignOut = async () => {
       "expenses",
       "sold_items",
       "transfer_items",
+      "purchases",
+      "purchased_items",
     ];
 
     // Begin transaction

@@ -1,5 +1,8 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import { getDb } from "./database";
+
+const TABLE_NAME = "users";
 
 export const addUser = async (
   id: string,
@@ -37,6 +40,8 @@ export const addUser = async (
       ],
     );
 
+    eventBus.emit(`refresh:${TABLE_NAME}`);
+
     return id;
   } catch (error: any) {
     showToast("error", "Failed to add user", `Error details: ${error.message}`);
@@ -62,6 +67,8 @@ export const updateUser = async (
       "UPDATE users SET full_name = ?, email = ?, phone_number = ?, role = ?, pfp = ?, address = ?, updated_at = ?, synced_at = 0 WHERE id = ?",
       [full_name, email, phone_number, role, pfp, address, now, user_id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return user_id;
   } catch (error: any) {
@@ -97,6 +104,8 @@ export const deleteUser = async (user_id: string) => {
       "UPDATE users SET is_active = 0, synced_at = NULL WHERE id = ?",
       [user_id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
     return user_id;
   } catch (error: any) {
     showToast(
@@ -116,6 +125,8 @@ export const reinstateUser = async (user_id: string) => {
       "UPDATE users SET is_active = 1, synced_at = NULL WHERE id = ?",
       [user_id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
     return user_id;
   } catch (error: any) {
     showToast(

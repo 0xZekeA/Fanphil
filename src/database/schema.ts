@@ -195,19 +195,26 @@ export const setupDatabase = async () => {
 
     await db.execAsync(`
     CREATE TABLE IF NOT EXISTS purchased_items (
-    id TEXT PRIMARY KEY,
-    inventory_id TEXT,
-    purchase_id TEXT,
-    quantity INTEGER DEFAULT 0,
-    last_edited_by TEXT,
-    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted INTEGER NOT NULL DEFAULT 0,
-    synced_at TEXT DEFAULT NULL,
-    FOREIGN KEY (inventory_id) REFERENCES inventory(id) ON DELETE CASCADE,
-    FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE,
-    FOREIGN KEY (last_edited_by) REFERENCES users(id) ON DELETE CASCADE
-  );
+      id TEXT PRIMARY KEY,
+      inventory_id TEXT,
+      purchase_id TEXT,
+      quantity INTEGER DEFAULT 0,
+      last_edited_by TEXT,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      deleted INTEGER NOT NULL DEFAULT 0,
+      synced_at TEXT DEFAULT NULL,
+      FOREIGN KEY (inventory_id) REFERENCES inventory(id) ON DELETE CASCADE,
+      FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE,
+      FOREIGN KEY (last_edited_by) REFERENCES users(id) ON DELETE CASCADE
+    );
+  `);
+
+    await db.execAsync(`
+     CREATE TABLE IF NOT EXISTS last_pulled (
+          table_name TEXT PRIMARY KEY,
+          last_pulled_at TEXT DEFAULT NULL
+        );
   `);
 
     console.log("Tables created successfully");

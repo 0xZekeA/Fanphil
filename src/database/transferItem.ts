@@ -1,3 +1,4 @@
+import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
@@ -73,6 +74,8 @@ export const addTransferItem = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -152,7 +155,10 @@ export const updateTransferItem = async (
       "Error updating transfer item",
       `Error details: ${error.message}`,
     );
+
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -239,6 +245,8 @@ export const deleteTransferItem = async (id: string) => {
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 

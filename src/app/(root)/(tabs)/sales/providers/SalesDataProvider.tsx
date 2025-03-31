@@ -75,11 +75,16 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     assumedProfit,
   };
   // Format Customer name
-  const formatName = useCallback((item: Sale) => {
-    const name =
-      customers.find((c) => item.customer_id === c.id)?.name ?? "Customer461";
-    return capitalizeItem(name.slice(0, 15)) + (name.length > 15 ? "..." : "");
-  }, []);
+  const formatName = useCallback(
+    (item: Sale) => {
+      const name =
+        customers.find((c) => item.customer_id === c.id)?.name ?? "Customer461";
+      return (
+        capitalizeItem(name.slice(0, 15)) + (name.length > 15 ? "..." : "")
+      );
+    },
+    [customers],
+  );
 
   const onPress = (item: Sale) => {
     if (!isAdmin || item.sold_by !== user?.id) {

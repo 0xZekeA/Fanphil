@@ -1,9 +1,12 @@
+import { eventBus } from "@/events/events";
 import { Item } from "@/types/purchases.type";
 import { capitalizeItem } from "@/utils/capitalize";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
 import { getDb } from "./database";
 import { addPurchase } from "./purchases";
+
+const TABLE_NAME = "inventory";
 
 export const addInventory = async (
   name: string,
@@ -55,6 +58,8 @@ export const addInventory = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
 
@@ -94,6 +99,8 @@ export const updateInventory = async (
       ],
     );
 
+    eventBus.emit(`refresh:${TABLE_NAME}`);
+
     return id;
   } catch (error: any) {
     showToast(
@@ -130,6 +137,8 @@ export const deleteInventoryItem = async (id: string) => {
       [id],
     );
 
+    eventBus.emit(`refresh:${TABLE_NAME}`);
+
     return id;
   } catch (error: any) {
     showToast(
@@ -149,6 +158,8 @@ export const reactivateInventoryItem = async (id: string) => {
       "UPDATE inventory SET is_active = 1, synced_at = NULL WHERE id = ?",
       [id],
     );
+
+    eventBus.emit(`refresh:${TABLE_NAME}`);
 
     return id;
   } catch (error: any) {
@@ -204,5 +215,7 @@ export const removeItem = async (
       `Error details: ${error.message}`,
     );
     throw error;
+  } finally {
+    eventBus.emit(`refresh:all`);
   }
 };
