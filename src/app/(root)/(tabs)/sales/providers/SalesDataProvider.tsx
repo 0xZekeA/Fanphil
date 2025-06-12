@@ -11,6 +11,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useMemo,
   useState,
 } from "react";
 
@@ -24,32 +25,51 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   const [addedDeposit, setAddedDeposit] = useState("0");
   const [isOwingFiltered, setIsOwingFiltered] = useState(false);
 
-  const { sales, customers } = useSalesProvider();
+  const { sales: salesItems, customers } = useSalesProvider();
   const { isAdmin, user } = useAuthProvider();
 
   // Sort sales according to most recent
-  sales.sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  const sales = useMemo(
+    () =>
+      salesItems?.sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      ),
+    [salesItems],
   );
 
   // Filter todays sales
-  const otherStaffSales = sales.filter(
-    (s) =>
-      new Date(s.created_at).getDate() === new Date().getDate() ||
-      s.total_price > s.deposit,
+  const otherStaffSales = useMemo(
+    () =>
+      sales.filter(
+        (s) =>
+          new Date(s.created_at).getDate() === new Date().getDate() ||
+          s.total_price > s.deposit,
+      ),
+    [sales],
   );
-  const todaysSales = sales.filter(
-    (s) => new Date(s.created_at).getDate() === new Date().getDate(),
+  const todaysSales = useMemo(
+    () =>
+      sales.filter(
+        (s) => new Date(s.created_at).getDate() === new Date().getDate(),
+      ),
+    [sales],
   );
 
   const filteredSales = isAdmin ? sales : otherStaffSales;
-  const owing = sales.filter((s) => s.total_price > s.deposit);
-  const salesData = isOwingFiltered
-    ? owing
-    : isEightShown
-    ? filteredSales.slice(0, 8)
-    : filteredSales;
+  const owing = useMemo(
+    () => sales.filter((s) => s.total_price > s.deposit),
+    [sales],
+  );
+  const salesData = useMemo(
+    () =>
+      isOwingFiltered
+        ? owing
+        : isEightShown
+        ? filteredSales.slice(0, 8)
+        : filteredSales,
+    [isOwingFiltered, isEightShown, filteredSales, owing],
+  );
 
   const getStatus = useCallback(
     (item: Sale) => ({
@@ -61,19 +81,29 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   );
 
   // Sale overview calculations
-  const dayDeposits =
-    todaysSales?.reduce((a, b) => a + (b.deposit || 0), 0) ?? 0;
-  const loans =
-    (todaysSales?.reduce((a, b) => a + (b.total_price || 0), 0) ?? 0) -
-    dayDeposits;
-  const assumedProfit =
-    todaysSales?.reduce((a, b) => a + (b.profit || 0), 0) ?? 0;
+  const dayDeposits = useMemo(
+    () => todaysSales?.reduce((a, b) => a + (b.deposit || 0), 0) ?? 0,
+    [todaysSales],
+  );
+  const loans = useMemo(
+    () =>
+      (todaysSales?.reduce((a, b) => a + (b.total_price || 0), 0) ?? 0) -
+      dayDeposits,
+    [todaysSales, dayDeposits],
+  );
+  const assumedProfit = useMemo(
+    () => todaysSales?.reduce((a, b) => a + (b.profit || 0), 0) ?? 0,
+    [todaysSales],
+  );
 
-  const salesInfo = {
-    dayDeposits,
-    loans,
-    assumedProfit,
-  };
+  const salesInfo = useMemo(
+    () => ({
+      dayDeposits,
+      loans,
+      assumedProfit,
+    }),
+    [dayDeposits, loans, assumedProfit],
+  );
   // Format Customer name
   const formatName = useCallback(
     (item: Sale) => {

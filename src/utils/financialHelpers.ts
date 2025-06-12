@@ -4,7 +4,7 @@ export const getLast30DaysData = (
   if (!data || data.length < 1) {
     return [];
   }
-  data.filter((d) => !d.deleted);
+  data.filter((d) => d.deleted_at === null);
 
   const now = new Date();
   const dateLast30Days = new Date(now);

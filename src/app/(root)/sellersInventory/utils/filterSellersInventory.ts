@@ -2,17 +2,17 @@ import { FilteredInventory } from "@/types/sellersInventory";
 
 const getFilteredSellersInventory = (
   sellersInventory: SellersInventory[],
-  inventory: Inventory[],
+  inventoryMap: Map<string, Inventory>,
   selectedSellerId: UUID | null,
 ): FilteredInventory[] => {
   if (!selectedSellerId) return [];
 
   return sellersInventory
-    .filter((item) => item.seller === selectedSellerId && item.deleted === 0)
+    .filter(
+      (item) => item.seller === selectedSellerId && item.deleted_at === null,
+    )
     .map((sellerItem) => {
-      const inventoryItem = inventory.find(
-        (inv) => inv.id === sellerItem.item_id,
-      );
+      const inventoryItem = inventoryMap.get(sellerItem.item_id || "");
 
       if (!inventoryItem) return null;
 
@@ -29,7 +29,7 @@ const getFilteredSellersInventory = (
         created_by: inventoryItem.created_by,
         created_at: inventoryItem.created_at,
         updated_at: inventoryItem.updated_at,
-        deleted: inventoryItem.deleted,
+        deleted_at: inventoryItem.deleted_at,
       };
     })
     .filter((item): item is FilteredInventory => item !== null);

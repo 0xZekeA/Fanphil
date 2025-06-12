@@ -14,14 +14,13 @@ const PurchasesProviderContext = createContext<
 >(undefined);
 
 const PurchasesProvider = ({ children }: PropsWithChildren) => {
-  const { filteredInventory } = useInventoryProvider();
+  const { inventoryMap } = useInventoryProvider();
   const [items, setItems] = useState<string[]>([]);
 
   const addItem = (id: string) => setItems((prev) => [...prev, id]);
   const emptyItems = () => setItems([]);
 
-  const getName = (id: string) =>
-    filteredInventory.find((i) => i.id === id)?.name || "Item";
+  const getName = (id: string) => inventoryMap.get(id)?.name || "Item";
 
   const formatName = useCallback(
     (item: Inventory) =>

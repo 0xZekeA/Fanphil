@@ -11,9 +11,9 @@ const ItemProviderContext = createContext<ItemProviderContextTypes | undefined>(
 
 const ItemProvider = ({ children }: PropsWithChildren) => {
   const { id } = useLocalSearchParams();
-  const { inventory } = useInventoryProvider();
+  const { inventoryMap } = useInventoryProvider();
 
-  const item = inventory.find((i) => i.id === id);
+  const item = inventoryMap.get(id as string);
 
   return (
     <ItemProviderContext.Provider value={{ item }}>

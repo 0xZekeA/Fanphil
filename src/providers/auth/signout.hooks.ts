@@ -5,13 +5,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session } from "@supabase/supabase-js";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 
 const useSignoutHooks = (
   setSession: Dispatch<SetStateAction<Session | null>>,
   setSessionToken: Dispatch<SetStateAction<string | null>>,
 ) => {
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       const { error } = await supabase.auth.signOut();
 
@@ -31,7 +31,7 @@ const useSignoutHooks = (
         `Error details: ${error.message}`,
       );
     }
-  };
+  }, [setSession, setSessionToken]);
 
   return { signOut };
 };

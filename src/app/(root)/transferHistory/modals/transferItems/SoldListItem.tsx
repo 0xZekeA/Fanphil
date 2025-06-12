@@ -5,9 +5,8 @@ import { Text, View } from "react-native";
 import styles from "../../styles/styles";
 
 const SoldListItems = ({ item }: { item: TransferItem | ReturnItem }) => {
-  const { inventory } = useInventoryProvider();
-  const name =
-    inventory?.find((i) => i.id === item.inventory_id)?.name || "Item";
+  const { inventoryMap } = useInventoryProvider();
+  const name = inventoryMap.get(item.inventory_id || "")?.name || "Item";
 
   return (
     <View className="justify-between items-center flex-row">

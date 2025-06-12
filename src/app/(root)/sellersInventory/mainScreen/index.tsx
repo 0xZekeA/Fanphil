@@ -20,7 +20,7 @@ const MainScreen = () => {
       <FlatList
         data={filteredSellersInventory}
         renderItem={({ item }) => <ListItem item={item} />}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <ListEmptyComp message="You add items to this seller from the Transfer screen" />
         }

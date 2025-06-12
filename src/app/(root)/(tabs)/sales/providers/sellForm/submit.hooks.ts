@@ -14,7 +14,7 @@ const useSubmitHooks = (
   dispatch: Dispatch<Action>,
 ) => {
   const { user } = useAuthProvider();
-  const { filteredInventory } = useInventoryProvider();
+  const { inventoryMap } = useInventoryProvider();
   const { setAddedDeposit } = useSalesDataProvider();
 
   const [salesId, setSalesId] = useState<string | null>(null);
@@ -49,8 +49,7 @@ const useSubmitHooks = (
   };
 
   const total = selectedItems.reduce((a, b) => {
-    const price =
-      filteredInventory?.find((item) => item.id === b.id)?.selling_price ?? 0;
+    const price = inventoryMap.get(b.id)?.selling_price ?? 0;
     return a + b.quantity * price;
   }, 0);
 
@@ -70,10 +69,8 @@ const useSubmitHooks = (
     }
 
     const profit = selectedItems.reduce((a, b) => {
-      const sp =
-        filteredInventory?.find((item) => item.id === b.id)?.selling_price ?? 0;
-      const cp =
-        filteredInventory?.find((item) => item.id === b.id)?.cost_price ?? 0;
+      const sp = inventoryMap.get(b.id)?.selling_price ?? 0;
+      const cp = inventoryMap.get(b.id)?.cost_price ?? 0;
       const difference = sp - cp;
       return a + b.quantity * difference;
     }, 0);
@@ -89,8 +86,7 @@ const useSubmitHooks = (
       );
 
       const totalItemPrice = (item: Item) => {
-        const price =
-          filteredInventory?.find((i) => i.id === item.id)?.selling_price ?? 0;
+        const price = inventoryMap.get(item.id)?.selling_price ?? 0;
         return item.quantity * price;
       };
 

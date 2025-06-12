@@ -29,6 +29,7 @@ const MainScreen = () => {
             <Header />
           </View>
         }
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={<ListEmptyComp message="No recent sales" />}
         ListFooterComponent={<View style={{ paddingBottom: insets.top * 2 }} />}
       />

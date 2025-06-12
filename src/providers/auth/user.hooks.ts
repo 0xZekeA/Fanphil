@@ -1,5 +1,4 @@
 import { supabase } from "$root/lib/supabase";
-import { getDb } from "@/database/database";
 import { showToast } from "@/utils/notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
@@ -10,6 +9,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { supastash } from "supastash";
 
 const useUserRealtimeData = (
   session: any,
@@ -18,48 +18,52 @@ const useUserRealtimeData = (
 ) => {
   const [data, setData] = useState<User | null>(null);
 
-  const updateUser = async (
-    full_name: string,
-    email: string,
-    phone_number: string,
-    role: string,
-    pfp: string,
-    address: string,
-    user_id: string,
-  ) => {
-    const db = await getDb();
-    const now = new Date().toISOString();
+  const updateUser = useCallback(
+    async (
+      full_name: string,
+      email: string,
+      phone_number: string,
+      role: string,
+      pfp: string,
+      address: string,
+      user_id: string,
+    ) => {
+      const { data: updatedUser }: { data: User | null } = await supastash
+        .from("users")
+        .update({
+          full_name,
+          email,
+          phone_number,
+          role,
+          pfp,
+          address,
+        })
+        .eq("id", user_id)
+        .single()
+        .run();
 
-    await db.runAsync(
-      "UPDATE users SET full_name = ?, email = ?, phone_number = ?, role = ?, pfp = ?, address = ?, updated_at = ?, synced_at = NULL WHERE id = ?",
-      [full_name, email, phone_number, role, pfp, address, now, user_id],
-    );
+      setData(updatedUser);
+    },
+    [],
+  );
 
-    const updatedUser: User | null = await db.getFirstAsync(
-      "SELECT * FROM users WHERE id = ?",
-      [user_id],
-    );
-
-    setData(updatedUser);
-  };
-
-  const clearSessionFromSecureStore = async () => {
+  const clearSessionFromSecureStore = useCallback(async () => {
     await SecureStore.deleteItemAsync("session_token");
     await AsyncStorage.removeItem("user_id");
-  };
+  }, []);
 
   const getUser = useCallback(async () => {
-    console.log("fetching locally..");
-    const db = await getDb();
     const userId = await AsyncStorage.getItem("user_id");
     if (!userId) {
       setData(null);
       return null;
     }
-    const user: User | null = await db.getFirstAsync(
-      "SELECT * FROM users WHERE id = ?",
-      [userId],
-    );
+    const { data: user }: { data: User | null } = await supastash
+      .from("users")
+      .select("*")
+      .eq("id", userId)
+      .single()
+      .run();
 
     if (user) {
       setData(user);
@@ -97,7 +101,7 @@ const useUserRealtimeData = (
     }
 
     getUser();
-  }, [session, loaded, getUser, setLoading]);
+  }, [session, loaded]);
 
   return { data, updateUser, getUser };
 };

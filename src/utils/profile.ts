@@ -1,7 +1,7 @@
-import { getDb } from "@/database/database";
 import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import { Dispatch, SetStateAction } from "react";
+import { supastash } from "supastash";
 import { pickImage, uploadImage } from "./staff/imageUpload";
 
 const TABLE_NAME = "users";
@@ -31,13 +31,13 @@ export const editImage = async (
 
     setPubId(uploadResponse);
 
-    const db = await getDb();
-    const now = new Date().toISOString();
-
-    await db.runAsync(
-      "UPDATE users SET pfp = ?, updated_at = ?, synced_at = NULL WHERE id = ?",
-      [uploadResponse, now, user.id],
-    );
+    await supastash
+      .from("users")
+      .update({
+        pfp: uploadResponse,
+      })
+      .eq("id", user.id)
+      .run();
 
     showToast("success", "Profile image was changed successfully");
   } catch (error: any) {

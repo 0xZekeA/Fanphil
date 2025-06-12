@@ -1,26 +1,27 @@
-import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
-import { getDb } from "./database";
+import { supastash } from "supastash";
 
 const TABLE_NAME = "expenses";
 
-export const addExpense = async (
+export async function addExpense(
   reason: string,
   cost: number,
   created_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const id = uuid.v4() as string;
-    const now = new Date().toISOString();
+    const id = uuid.v4().toString();
 
-    await db.runAsync(
-      "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [id, reason, cost, created_by, created_by, now, now],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from(TABLE_NAME)
+      .insert({
+        id,
+        reason,
+        cost,
+        created_by,
+        last_edited_by: created_by,
+      })
+      .run();
 
     return id;
   } catch (error: any) {
@@ -31,26 +32,24 @@ export const addExpense = async (
     );
     throw error;
   }
-};
+}
 
-export const updateExpense = async (
+export async function updateExpense(
   reason: string,
   cost: number,
   last_edited_by: string,
   id: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-
-    await db.runAsync(
-      `UPDATE expenses 
-      SET reason = ?, cost = ?, last_edited_by = ?, updated_at = ?, synced_at = NULL
-      WHERE id = ?`,
-      [reason, cost, last_edited_by, now, id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        reason,
+        cost,
+        last_edited_by,
+      })
+      .eq("id", id)
+      .run();
 
     return id;
   } catch (error: any) {
@@ -61,33 +60,12 @@ export const updateExpense = async (
     );
     throw error;
   }
-};
+}
 
-export const getExpenses = async (): Promise<Expense[]> => {
+export async function deleteExpense(id: string): Promise<string> {
   try {
-    const db = await getDb();
-    return await db.getAllAsync(
-      "SELECT * FROM expenses ORDER BY created_at DESC",
-    );
-  } catch (error: any) {
-    showToast(
-      "error",
-      "Error in getExpenses:",
-      `Error details: ${error.message}`,
-    );
-    throw error;
-  }
-};
+    await supastash.from(TABLE_NAME).delete().eq("id", id).run();
 
-export const deleteExpense = async (id: string) => {
-  try {
-    const db = await getDb();
-    await db.runAsync(
-      "UPDATE expenses SET deleted = 1, synced_at = NULL WHERE id = ?",
-      [id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
     return id;
   } catch (error: any) {
     showToast(
@@ -97,4 +75,4 @@ export const deleteExpense = async (id: string) => {
     );
     throw error;
   }
-};
+}

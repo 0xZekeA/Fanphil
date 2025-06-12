@@ -5,6 +5,7 @@ import { Scale } from "@/utils/scaling";
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import { useOnboardingScreenProvider } from "../../providers/OnboardingScreenProvider";
 
 const Fields = ({
   control,
@@ -13,6 +14,8 @@ const Fields = ({
   control: Control<LoginFormData>;
   errors: FieldErrors<LoginFormData>;
 }) => {
+  const { setIsPasswordResetModalShown, setEmail, emailString } =
+    useOnboardingScreenProvider();
   return (
     <View style={styles.container}>
       <InputField
@@ -32,6 +35,10 @@ const Fields = ({
         icon={icons.lock}
         iconRight={icons.eyecross}
         showForgotPassword
+        onForgotPasswordPress={() => {
+          setIsPasswordResetModalShown(true);
+          setEmail(emailString);
+        }}
         secureTextEntry
         error={errors.password?.message}
       />

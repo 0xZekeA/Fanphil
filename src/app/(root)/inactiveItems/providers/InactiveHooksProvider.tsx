@@ -20,8 +20,12 @@ const InactiveHooksProvider = ({ children }: PropsWithChildren) => {
 
   const [search, setSearch] = useState("");
 
-  const inactiveItems = inventory.filter(
-    (item) => item.deleted !== 1 && item.is_active === 0,
+  const inactiveItems = useMemo(
+    () =>
+      inventory.filter(
+        (item) => item.deleted_at === null && item.is_active === 0,
+      ),
+    [inventory],
   );
 
   const getSyncedIndicatorColor = useCallback(

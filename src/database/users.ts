@@ -1,10 +1,7 @@
-import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
-import { getDb } from "./database";
+import { supastash } from "supastash";
 
-const TABLE_NAME = "users";
-
-export const addUser = async (
+export async function addUser(
   id: string,
   full_name: string,
   email: string,
@@ -13,20 +10,20 @@ export const addUser = async (
   pfp: string,
   address: string,
   created_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
+    const { data: user }: { data: User | null } = await supastash
+      .from("users")
+      .select("*")
+      .eq("id", id)
+      .single()
+      .run();
 
-    const data = await db.getFirstAsync("SELECT * FROM users WHERE id = ?", [
-      id,
-    ]);
+    if (user) return;
 
-    if (data) return;
-
-    await db.runAsync(
-      "INSERT INTO users (id, full_name, email, phone_number, role, pfp, address, created_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
+    await supastash
+      .from("users")
+      .insert({
         id,
         full_name,
         email,
@@ -35,12 +32,8 @@ export const addUser = async (
         pfp,
         address,
         created_by,
-        now,
-        now,
-      ],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+      })
+      .run();
 
     return id;
   } catch (error: any) {
@@ -48,7 +41,7 @@ export const addUser = async (
     console.error("Error in addUser:", error);
     throw error;
   }
-};
+}
 
 export const updateUser = async (
   full_name: string,
@@ -60,15 +53,18 @@ export const updateUser = async (
   user_id: string,
 ) => {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-
-    await db.runAsync(
-      "UPDATE users SET full_name = ?, email = ?, phone_number = ?, role = ?, pfp = ?, address = ?, updated_at = ?, synced_at = 0 WHERE id = ?",
-      [full_name, email, phone_number, role, pfp, address, now, user_id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from("users")
+      .update({
+        full_name,
+        email,
+        phone_number,
+        role,
+        pfp,
+        address,
+      })
+      .eq("id", user_id)
+      .run();
 
     return user_id;
   } catch (error: any) {
@@ -82,10 +78,14 @@ export const updateUser = async (
   }
 };
 
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<User[] | null> => {
   try {
-    const db = await getDb();
-    return await db.getAllAsync("SELECT * FROM users ORDER BY created_at DESC");
+    const { data: users }: { data: User[] | null } = await supastash
+      .from("users")
+      .select("*")
+      .run();
+
+    return users;
   } catch (error: any) {
     showToast(
       "error",
@@ -99,13 +99,14 @@ export const getUsers = async (): Promise<User[]> => {
 
 export const deleteUser = async (user_id: string) => {
   try {
-    const db = await getDb();
-    await db.runAsync(
-      "UPDATE users SET is_active = 0, synced_at = NULL WHERE id = ?",
-      [user_id],
-    );
+    await supastash
+      .from("users")
+      .update({
+        is_active: 0,
+      })
+      .eq("id", user_id)
+      .run();
 
-    eventBus.emit(`refresh:${TABLE_NAME}`);
     return user_id;
   } catch (error: any) {
     showToast(
@@ -120,13 +121,14 @@ export const deleteUser = async (user_id: string) => {
 
 export const reinstateUser = async (user_id: string) => {
   try {
-    const db = await getDb();
-    await db.runAsync(
-      "UPDATE users SET is_active = 1, synced_at = NULL WHERE id = ?",
-      [user_id],
-    );
+    await supastash
+      .from("users")
+      .update({
+        is_active: 1,
+      })
+      .eq("id", user_id)
+      .run();
 
-    eventBus.emit(`refresh:${TABLE_NAME}`);
     return user_id;
   } catch (error: any) {
     showToast(

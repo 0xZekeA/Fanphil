@@ -40,54 +40,57 @@ const useSigninHooks = (
     mode: "onChange",
   });
 
-  const signIn = useCallback(async (data: LoginFormData) => {
-    try {
-      setIsSigningIn(true);
-      const {
-        error,
-        data: { session },
-      } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
+  const signIn = useCallback(
+    async (data: LoginFormData) => {
+      try {
+        setIsSigningIn(true);
+        const {
+          error,
+          data: { session },
+        } = await supabase.auth.signInWithPassword({
+          email: data.email,
+          password: data.password,
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      if (session) {
-        await SecureStore.setItemAsync("session_token", session.access_token);
-        await AsyncStorage.setItem("user_id", session.user.id);
-        await downloadDataFromSupabase();
-        const user = await getUser();
-        if (user) {
-          console.log("Sending user in...");
-          router.push("/");
+        if (session) {
+          await SecureStore.setItemAsync("session_token", session.access_token);
+          await AsyncStorage.setItem("user_id", session.user.id);
+          await downloadDataFromSupabase();
+          const user = await getUser();
+          if (user) {
+            console.log("Sending user in...");
+            router.push("/");
+          }
+
+          setSession(session);
+          setSessionToken(session.access_token);
+
+          setIsSigningIn(false);
+
+          showToast(
+            "success",
+            `Welcome ${
+              user
+                ? (user.full_name || "").split(" ")[0]
+                : (session.user.email || "").split("@")[0]
+            }`,
+            "We've logged you in successfully",
+          );
         }
-
-        setSession(session);
-        setSessionToken(session.access_token);
-
+      } catch (error: any) {
+        console.error("Failed to sign in", error);
         setIsSigningIn(false);
-
         showToast(
-          "success",
-          `Welcome ${
-            user
-              ? (user.full_name || "").split(" ")[0]
-              : (session.user.email || "").split("@")[0]
-          }`,
-          "We've logged you in successfully",
+          "error",
+          "Error while attempting to sign you in",
+          `Error details: ${error.message}`,
         );
       }
-    } catch (error: any) {
-      console.error("Failed to sign in", error);
-      setIsSigningIn(false);
-      showToast(
-        "error",
-        "Error while attempting to sign you in",
-        `Error details: ${error.message}`,
-      );
-    }
-  }, []);
+    },
+    [getUser, setIsSigningIn, setSession, setSessionToken],
+  );
 
   const onSubmit = handleSubmit(signIn);
 

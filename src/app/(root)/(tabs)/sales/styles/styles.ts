@@ -7,7 +7,8 @@ const { width } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: Scale.moderate(16),
+    paddingVertical: Scale.moderate(16),
+    paddingHorizontal: Scale.moderate(8),
     backgroundColor: COLORS.white,
   },
   icons: {

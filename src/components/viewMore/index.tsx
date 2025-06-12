@@ -29,7 +29,7 @@ const ViewMore = ({
       <Pressable style={styles.container}>
         <FlatList
           data={displayedData}
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()}
           scrollEnabled={true}
           renderItem={({ item }) => {
             const [key, value] = item;

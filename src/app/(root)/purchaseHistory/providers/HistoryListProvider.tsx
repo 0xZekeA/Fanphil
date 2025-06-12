@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -20,9 +21,13 @@ const HistoryListProvider = ({ children }: PropsWithChildren) => {
   const [selectedItem, setSelectedItem] = useState<Purchase | null>(null);
   const [items, setItems] = useState<PurchasedItem[] | null>(null);
 
-  const data: Purchase[] = [...purchases].sort(
-    (a, b) =>
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  const data: Purchase[] = useMemo(
+    () =>
+      [...purchases].sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      ),
+    [purchases],
   );
 
   const purchasedItems = useCallback(async () => {

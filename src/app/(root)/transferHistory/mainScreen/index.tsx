@@ -26,6 +26,7 @@ const MainScreen = () => {
             <BackButton title="Transfer History" />
           </View>
         }
+        keyExtractor={(item) => item.id}
       />
       <TransferItems />
     </View>

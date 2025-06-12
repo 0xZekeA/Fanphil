@@ -36,6 +36,9 @@ const MainScreen = () => {
             <Settings item={item} />
           );
         }}
+        keyExtractor={(item, index) =>
+          isUserDetailsShown ? item.id : index.toString()
+        }
         refreshing={refreshing}
         onRefresh={onRefresh}
         ListHeaderComponent={<DetailsSection />}

@@ -1,4 +1,3 @@
-import env from "$root/config/env";
 import { cld } from "$root/services/cloudinary";
 import { useAuthProvider } from "@/providers/auth";
 
@@ -25,15 +24,17 @@ const PfpProvider = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(false);
 
   const cloudinaryUrl = useMemo(() => {
-    const cloudName = env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const cloudName = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME ?? "";
     return `https://res.cloudinary.com/${cloudName}/image/upload/w_600/${pubId}`;
   }, [pubId]);
 
-  const image: CloudinaryImage = cld.image(pubId);
-  image.resize(
-    thumbnail().width(300).height(300).gravity(focusOn(FocusOn.face())),
-  );
-  const imagePubID = pubId;
+  const image: CloudinaryImage = useMemo(() => {
+    const image = cld.image(pubId);
+    image.resize(
+      thumbnail().width(300).height(300).gravity(focusOn(FocusOn.face())),
+    );
+    return image;
+  }, [pubId]);
 
   const editPfp = useCallback(async () => {
     if (!user) return;
@@ -47,7 +48,7 @@ const PfpProvider = ({ children }: PropsWithChildren) => {
         viewPfp,
         setViewPfp,
         editPfp,
-        imagePubID,
+        imagePubID: pubId,
         loading,
         cloudinaryUrl,
       }}

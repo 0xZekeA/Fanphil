@@ -22,7 +22,6 @@ const MainScreen = () => {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <FlatList
         data={inventoryData}
-        keyExtractor={(_, index) => index.toString()}
         renderItem={({ item }) => <ListItem item={item} />}
         ListHeaderComponent={
           <View style={{ marginBottom: Scale.moderate(24) }}>
@@ -30,6 +29,7 @@ const MainScreen = () => {
             <SearchComponent />
           </View>
         }
+        keyExtractor={(item) => item.id}
         ListFooterComponent={
           <View
             style={{

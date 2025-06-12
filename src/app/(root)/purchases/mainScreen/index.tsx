@@ -29,7 +29,7 @@ const MainScreen = () => {
         <FlatList
           data={selectedInventoryItems}
           renderItem={({ item }) => <ListItemMain item={item} />}
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item) => item.id}
           ListEmptyComponent={
             <ListEmptyComp message="Select an item with the chevron button above" />
           }

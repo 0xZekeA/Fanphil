@@ -29,7 +29,6 @@ const InventoryFormProvider = ({ children }: PropsWithChildren) => {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<InventoryFormSchemaData>({
     defaultValues: {

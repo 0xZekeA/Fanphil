@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import getMenuItems from "../constants/menuItems";
@@ -24,15 +25,19 @@ const MenuOptionsProvider = ({ children }: PropsWithChildren) => {
     selectedItem: null,
   });
 
-  const menuItems = contextMenu.selectedItem
-    ? getMenuItems(
-        contextMenu.selectedItem,
-        isAdmin,
-        setIsConfirmOption,
-        setIsLoading,
-        setAction,
-      )
-    : null;
+  const menuItems = useMemo(
+    () =>
+      contextMenu.selectedItem
+        ? getMenuItems(
+            contextMenu.selectedItem,
+            isAdmin,
+            setIsConfirmOption,
+            setIsLoading,
+            setAction,
+          )
+        : null,
+    [contextMenu.selectedItem, isAdmin],
+  );
 
   const onModalClose = () => {
     setIsConfirmOption(false);

@@ -1,5 +1,4 @@
 import { addCustomer } from "@/database/customer";
-import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { showToast } from "@/utils/notification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
@@ -12,8 +11,6 @@ const CustomerFormContext = createContext<CustomerFormContextProps | undefined>(
 );
 
 const CustomerFormProvider = ({ children }: PropsWithChildren) => {
-  const { createUser } = useUsersProvider();
-
   const [isFormDisplayed, setIsFormDisplayed] = useState(false);
 
   const form = customerFormSchema;

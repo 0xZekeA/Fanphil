@@ -1,5 +1,6 @@
 import { supabase } from "$root/lib/supabase";
 import { showToast } from "@/utils/notification";
+import { getAllTables } from "supastash";
 import { getDb } from "./database";
 
 export const downloadDataFromSupabase = async () => {
@@ -7,25 +8,15 @@ export const downloadDataFromSupabase = async () => {
   const db = await getDb();
   const now = new Date();
 
-  // List of all tables to download
-  const tables = [
-    "users",
-    "customers",
-    "sales",
-    "inventory",
-    "sellers_inventory",
-    "inventory_transfers",
-    "returns",
-    "expenses",
-    "sold_items",
-    "transfer_items",
-    "purchases",
-    "purchased_items",
-  ];
-
   try {
     // Begin transaction
     await db.execAsync("BEGIN TRANSACTION");
+
+    const tables = await getAllTables();
+
+    if (!tables) {
+      throw new Error("No tables found");
+    }
 
     for (const tableName of tables) {
       console.log(`Downloading ${tableName} data...`);

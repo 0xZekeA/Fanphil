@@ -31,7 +31,7 @@ const Finances = () => {
       <FlatList
         data={financialData}
         renderItem={({ item }) => <FinancesData item={item} />}
-        keyExtractor={(_, index) => `general-${index}`}
+        keyExtractor={(item) => item.initial}
         refreshing={isRefreshing}
         onRefresh={refresh}
         ListHeaderComponent={

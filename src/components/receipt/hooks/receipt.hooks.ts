@@ -1,13 +1,13 @@
-import { getDb } from "@/database/database";
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { useSalesProvider } from "@/providers/sales/SalesProvider";
 import { showToast } from "@/utils/notification";
 import * as MediaLibrary from "expo-media-library";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { captureRef } from "react-native-view-shot";
+import { supastash } from "supastash";
 
 const useReceiptHooks = (salesId: string) => {
-  const { inventory } = useInventoryProvider();
+  const { inventory, inventoryMap } = useInventoryProvider();
   const { customers } = useSalesProvider();
 
   const [totalAmount, setTotalAmount] = useState(0);
@@ -21,22 +21,23 @@ const useReceiptHooks = (salesId: string) => {
   const receiptRef = useRef(null);
 
   const findSoldItems = useCallback(async () => {
-    const db = await getDb();
+    const { data: items } = await supastash
+      .from("sold_items")
+      .select()
+      .eq("sales_id", salesId)
+      .run();
 
-    const items: SoldItem[] | null = await db.getAllAsync(
-      "SELECT * FROM sold_items WHERE sales_id = ?",
-      [salesId],
-    );
-    console.log("now");
     if (items) setSelectedItems(items);
   }, [salesId]);
 
   const findSale = useCallback(async () => {
-    const db = await getDb();
-    const s: Sale | null = await db.getFirstAsync(
-      "SELECT * FROM sales WHERE id = ?",
-      [salesId],
-    );
+    const { data: s } = await supastash
+      .from("sales")
+      .select()
+      .eq("id", salesId)
+      .single()
+      .run();
+
     if (s) setSale(s);
   }, [salesId]);
 
@@ -88,7 +89,7 @@ const useReceiptHooks = (salesId: string) => {
     // Total
     const total =
       validItems?.reduce((sum, item) => {
-        const inventoryItem = inventory.find((inv) => inv.id === item.item_id);
+        const inventoryItem = inventoryMap.get(item.item_id || "");
         const itemPrice = inventoryItem
           ? inventoryItem.selling_price * item.quantity
           : 0;
@@ -100,7 +101,7 @@ const useReceiptHooks = (salesId: string) => {
     // Credit calc
     const depositNum = Number(depositedAmount) || 0;
     setCreditTotal(depositNum < total ? total - depositNum : 0);
-  }, [selectedItems, depositedAmount, inventory]);
+  }, [selectedItems, depositedAmount, inventoryMap]);
 
   return {
     totalAmount,

@@ -1,12 +1,12 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import useRealtimeData from "../realtimeData";
+import { useSupastashData } from "supastash";
 
 const FinanceProviderContext = createContext<
   FinanceProviderContextTypes | undefined
 >(undefined);
 
 const FinanceProvider = ({ children }: PropsWithChildren) => {
-  const expenses = useRealtimeData("expenses");
+  const { data: expenses } = useSupastashData<Expense>("expenses");
 
   return (
     <FinanceProviderContext.Provider value={{ expenses }}>

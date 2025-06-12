@@ -1,28 +1,27 @@
-import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
-import { getDb } from "./database";
+import { supastash } from "supastash";
 
 const TABLE_NAME = "customers";
 
-export const addCustomer = async (
+export async function addCustomer(
   name: string,
   phone: string,
   address: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-    const id = uuid.v4() as string;
+    const id = uuid.v4().toString();
 
-    await db.runAsync(
-      `INSERT INTO customers 
-      (id, name, phone, address, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?)`,
-      [id, name, phone, address, now, now],
-    );
+    await supastash
+      .from(TABLE_NAME)
+      .insert({
+        id,
+        name,
+        phone,
+        address,
+      })
+      .run();
 
-    eventBus.emit(`refresh:${TABLE_NAME}`);
     return id;
   } catch (error: any) {
     showToast(
@@ -32,26 +31,24 @@ export const addCustomer = async (
     );
     throw error;
   }
-};
+}
 
-export const updateCustomer = async (
+export async function updateCustomer(
   id: string,
   name: string,
-  phone: string,
-  address: string,
-) => {
+  phone?: string,
+  address?: string,
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-
-    await db.runAsync(
-      `UPDATE customers 
-      SET name = ?, phone = ?, address = ?, updated_at = ?, synced_at = NULL
-      WHERE id = ?`,
-      [name, phone, address, now, id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        name,
+        phone,
+        address,
+      })
+      .eq("id", id)
+      .run();
     return id;
   } catch (error: any) {
     showToast(
@@ -61,34 +58,11 @@ export const updateCustomer = async (
     );
     throw error;
   }
-};
+}
 
-export const getCustomers = async () => {
+export async function deleteCustomer(id: string): Promise<string> {
   try {
-    const db = await getDb();
-    return await db.getAllAsync(
-      "SELECT * FROM customers WHERE deleted = 0 ORDER BY created_at DESC",
-    );
-  } catch (error: any) {
-    showToast(
-      "error",
-      "Failed to fetch customers",
-      `Error details: ${error.message}`,
-    );
-    throw error;
-  }
-};
-
-export const deleteCustomer = async (id: string) => {
-  try {
-    const db = await getDb();
-
-    await db.runAsync(
-      "UPDATE sales SET is_active = 0, synced_at = NULL WHERE id = ?",
-      [id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash.from(TABLE_NAME).delete().eq("id", id).run();
 
     return id;
   } catch (error: any) {
@@ -99,4 +73,4 @@ export const deleteCustomer = async (id: string) => {
     );
     throw error;
   }
-};
+}

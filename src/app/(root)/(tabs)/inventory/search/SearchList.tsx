@@ -13,7 +13,7 @@ const SearchList = () => {
       <FlatList
         data={filteredInventoryItems}
         renderItem={({ item }) => <ListItem item={item} />}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <ListEmptyComp message="There seems to be nothing to search for" />
         }

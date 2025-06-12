@@ -27,7 +27,7 @@ const MainScreen = () => {
             onLongPress={handleLongPress}
           />
         )}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListHeaderComponent={<Header />}
         ListEmptyComponent={
           <ListEmptyComp message="You can try adding a user" />

@@ -1,6 +1,6 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import { useSupastashData } from "supastash";
 import { useAuthProvider } from "../auth";
-import useRealtimeData from "../realtimeData";
 import useCreateUserHooks from "./createUser.hooks";
 
 const UsersProviderContext = createContext<
@@ -8,12 +8,13 @@ const UsersProviderContext = createContext<
 >(undefined);
 
 const UsersProvider = ({ children }: PropsWithChildren) => {
-  const users = useRealtimeData("users");
+  const { data: users } = useSupastashData<User>("users");
   const { user } = useAuthProvider();
   const { createUser } = useCreateUserHooks(user);
 
-  const sellers: User[] = useRealtimeData("users").filter(
-    (user) => user.role === "Driver",
+  const sellers = useMemo(
+    () => users?.filter((user) => user.role === "Driver"),
+    [users],
   );
 
   return (

@@ -17,7 +17,7 @@ const MainScreen = () => {
       <FlatList
         data={customers}
         renderItem={({ item }) => <ListItem item={item} />}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListHeaderComponent={<Header />}
         ListEmptyComponent={<ListEmptyComp message="Add a customer" />}
       />

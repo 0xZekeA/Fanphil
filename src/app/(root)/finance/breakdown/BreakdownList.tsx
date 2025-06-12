@@ -16,7 +16,7 @@ const BreakdownList = () => {
       <FlatList
         data={breakDown}
         renderItem={({ item }) => <FinancesData item={item} />}
-        keyExtractor={(_, index) => `general-${index}`}
+        keyExtractor={(item) => item.initial}
         ListHeaderComponent={<Header />}
         ListEmptyComponent={<ListEmptyComp message="No recent expenses" />}
         ListFooterComponent={

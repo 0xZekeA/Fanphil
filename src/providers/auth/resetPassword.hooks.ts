@@ -1,26 +1,38 @@
 import { supabase } from "$root/lib/supabase";
 import { showToast } from "@/utils/notification";
+import { useCallback } from "react";
 
-const useResetPasswordHooks = (user: User | null) => {
-  const resetPassword = async () => {
-    if (!user) return;
-    const { error } = await supabase.auth.resetPasswordForEmail(user.email);
+const useResetPasswordHooks = () => {
+  const resetPassword = useCallback(async (emailAddress: string) => {
+    if (!emailAddress) {
+      showToast("error", "Can't find an email address");
+      return;
+    }
+    const targetEmail = emailAddress.trim();
 
-    if (error) {
+    if (!targetEmail) {
       showToast(
         "error",
-        "We encoutered an error while requesting the paswword reset",
-        `Error details: ${error.message}`,
+        "Email not found",
+        "Please provide a valid email address.",
       );
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(targetEmail);
+
+    if (error) {
+      showToast("error", "Password reset failed", `Error: ${error.message}`);
       return;
     }
 
     showToast(
       "success",
-      "A password reset link was sent to your email",
-      `Please follow the link to change your password`,
+      "Reset link sent",
+      `Check your inbox ${targetEmail} for a password reset link.`,
     );
-  };
+  }, []);
+
   return { resetPassword };
 };
 

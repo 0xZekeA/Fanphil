@@ -8,6 +8,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -73,8 +74,12 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     if (isSaleCompleted) setTimeout(() => setIsSaleCompleted(false), 30000);
   }, [isSaleCompleted]);
 
-  const selectedInventoryItems = filteredInventory.filter((item) =>
-    selectedItems.some((s) => s.id === item.id),
+  const selectedInventoryItems = useMemo(
+    () =>
+      filteredInventory.filter((item) =>
+        selectedItems.some((s) => s.id === item.id),
+      ),
+    [filteredInventory, selectedItems],
   );
 
   return (

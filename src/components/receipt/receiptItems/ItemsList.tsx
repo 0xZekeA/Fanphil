@@ -4,12 +4,12 @@ import { Text, View } from "react-native";
 import styles from "../styles";
 
 const ItemsList = ({ selectedItems }: { selectedItems: SoldItem[] }) => {
-  const { inventory } = useInventoryProvider();
+  const { inventoryMap } = useInventoryProvider();
 
   return selectedItems
     .filter((item) => item.quantity > 0)
     .map((item) => {
-      const inventoryItem = inventory?.find((inv) => inv.id === item.item_id);
+      const inventoryItem = inventoryMap.get(item.item_id || "");
       const itemPrice = inventoryItem ? inventoryItem.selling_price : 0;
       const itemTotal = itemPrice * item.quantity;
       if (!inventoryItem) return;

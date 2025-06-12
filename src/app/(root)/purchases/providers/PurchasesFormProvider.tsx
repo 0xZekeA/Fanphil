@@ -14,6 +14,7 @@ import {
   Reducer,
   useCallback,
   useContext,
+  useMemo,
   useReducer,
   useRef,
   useState,
@@ -25,7 +26,7 @@ const PurchasesFormProviderContext = createContext<
 >(undefined);
 
 const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
-  const { filteredInventory } = useInventoryProvider();
+  const { filteredInventory, inventoryMap } = useInventoryProvider();
   const { user } = useAuthProvider();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -35,33 +36,36 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
     [],
   );
   const [error, setError] = useState<string | null>(null);
-  const [holdInterval, setHoldInterval] = useState<number | null>(null);
+  const [holdInterval, setHoldInterval] = useState<NodeJS.Timeout | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleIncrease = (id: string, amount = 1) => {
-    const inventoryItem = filteredInventory.find((i) => i.id === id);
-    const item = selectedItems.find((i) => i.id === id);
+  const handleIncrease = useCallback(
+    (id: string, amount = 1) => {
+      const inventoryItem = inventoryMap.get(id);
+      const item = selectedItems.find((i) => i.id === id);
 
-    if (!inventoryItem) return;
+      if (!inventoryItem) return;
 
-    if (!item) {
-      dispatch({
-        type: "ADD_ITEM",
-        item: {
-          id: inventoryItem.id,
-          name: inventoryItem.name,
-          stock: inventoryItem.quantity,
-          quantity: 1,
-        },
-      });
-    }
-    if (item && item.quantity + amount > item.stock) {
-      setError(`Cannot exceed stock (${item.quantity})`);
-      return;
-    }
-    setError(null);
-    dispatch({ type: "INCREASE", id, amount });
-  };
+      if (!item) {
+        dispatch({
+          type: "ADD_ITEM",
+          item: {
+            id: inventoryItem.id,
+            name: inventoryItem.name,
+            stock: inventoryItem.quantity,
+            quantity: 1,
+          },
+        });
+      }
+      if (item && item.quantity + amount > item.stock) {
+        setError(`Cannot exceed stock (${item.quantity})`);
+        return;
+      }
+      setError(null);
+      dispatch({ type: "INCREASE", id, amount });
+    },
+    [inventoryMap, selectedItems, dispatch, setError],
+  );
 
   const handleDecrease = (id: string, amount = 1) => {
     dispatch({ type: "DECREASE", id, amount });
@@ -139,8 +143,12 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const selectedInventoryItems = filteredInventory.filter((item) =>
-    selectedItems.some((s) => s.id === item.id),
+  const selectedInventoryItems = useMemo(
+    () =>
+      filteredInventory.filter((item) =>
+        selectedItems.some((s) => s.id === item.id),
+      ),
+    [filteredInventory, selectedItems],
   );
 
   return (

@@ -29,6 +29,7 @@
         <data android:scheme="myapp"/>
         <data android:scheme="com.x0xzeke.Fanphil"/>
         <data android:scheme="exp+fanphil"/>
+        <data android:scheme="Fanphil"/>
       </intent-filter>
     </activity>
   </application>

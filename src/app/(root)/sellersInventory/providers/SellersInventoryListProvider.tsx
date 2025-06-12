@@ -15,6 +15,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import getFilteredSellersInventory from "../utils/filterSellersInventory";
@@ -26,7 +27,7 @@ const SellersInventoryListProviderContext = createContext<
 const SellersInventoryListProvider = ({ children }: PropsWithChildren) => {
   const { sellers } = useUsersProvider();
   const { user } = useAuthProvider();
-  const { sellersInventory, inventory } = useInventoryProvider();
+  const { sellersInventory, inventoryMap } = useInventoryProvider();
 
   const [loading, setLoading] = useState(false);
 
@@ -52,10 +53,14 @@ const SellersInventoryListProvider = ({ children }: PropsWithChildren) => {
     }
   }, [currentItem, quantity]);
 
-  const filteredInventory = getFilteredSellersInventory(
-    sellersInventory,
-    inventory,
-    selectedSeller.id,
+  const filteredInventory = useMemo(
+    () =>
+      getFilteredSellersInventory(
+        sellersInventory,
+        inventoryMap,
+        selectedSeller.id,
+      ),
+    [sellersInventory, inventoryMap, selectedSeller.id],
   );
 
   const formatName = useCallback(

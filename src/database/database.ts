@@ -1,10 +1,10 @@
-import * as SQLite from "expo-sqlite";
+import { getSupastashDb, SupastashSQLiteDatabase } from "supastash";
 
-let db: SQLite.SQLiteDatabase | null = null;
+let db: SupastashSQLiteDatabase | null = null;
 
 export const getDb = async () => {
   if (!db) {
-    db = await SQLite.openDatabaseAsync("fanphil_pos_database.db");
+    db = await getSupastashDb();
   }
   return db;
 };

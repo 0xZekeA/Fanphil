@@ -3,7 +3,6 @@ import ListEmptyComp from "@/components/ListEmptyComp";
 import { Scale } from "@/utils/scaling";
 import React from "react";
 import { FlatList, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import BottomSheet from "../inventoryBottomSheet";
 import SalesInfo from "../mainSalesScreenItems/SalesInfo";
@@ -27,9 +26,7 @@ const MainScreen = () => {
 
   const data: any[] = isSalesInterface ? selectedInventoryItems : salesData;
   return (
-    <GestureHandlerRootView
-      style={[styles.container, { paddingTop: insets.top }]}
-    >
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View
         className="flex-1"
         style={{ paddingHorizontal: Scale.moderate(16) }}
@@ -43,7 +40,7 @@ const MainScreen = () => {
               <ListItem item={item} index={index} />
             )
           }
-          keyExtractor={(_, index) => index.toString()}
+          keyExtractor={(item) => item.id}
           ListEmptyComponent={
             <ListEmptyComp
               message={
@@ -79,7 +76,7 @@ const MainScreen = () => {
       />
       {isSheetOpen && isSalesInterface && <BottomSheet />}
       <ModalForm />
-    </GestureHandlerRootView>
+    </View>
   );
 };
 

@@ -18,6 +18,7 @@ const MainScreen = () => {
       <FlatList
         data={data}
         renderItem={({ item }) => <ListItem item={item} />}
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={
           <ListEmptyComp message="There is no recent transfer or return" />
         }

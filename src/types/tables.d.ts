@@ -9,7 +9,7 @@ type Expense = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type Inventory = {
@@ -29,7 +29,7 @@ type Inventory = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 0 | 1;
+  deleted_at: string | null;
 };
 
 type InventoryTransfer = {
@@ -38,7 +38,7 @@ type InventoryTransfer = {
   received_by: UUID;
   created_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type Sale = {
@@ -53,7 +53,7 @@ type Sale = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type SoldItem = {
@@ -66,7 +66,7 @@ type SoldItem = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type SellersInventory = {
@@ -77,7 +77,7 @@ type SellersInventory = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type TransferItem = {
@@ -89,7 +89,7 @@ type TransferItem = {
   created_at: string;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type User = {
@@ -105,7 +105,7 @@ type User = {
   created_by: UUID;
   updated_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type Return = {
@@ -127,7 +127,7 @@ type Customer = {
   updated_at: string;
   is_active: 1 | 0;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type Purchase = {
@@ -136,7 +136,7 @@ type Purchase = {
   created_at: string;
   updated_at?: string | null;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };
 
 type PurchasedItem = {
@@ -148,5 +148,5 @@ type PurchasedItem = {
   updated_at?: string | null;
   created_at: string;
   synced_at: string | null;
-  deleted: 1 | 0;
+  deleted_at: string | null;
 };

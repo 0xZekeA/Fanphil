@@ -7,7 +7,7 @@ const useSalesInfoHooks = () => {
 
   const todaysSales = useMemo(() => {
     return sales.filter(
-      (sale) => !sale.deleted && isToday(sale.created_at || ""),
+      (sale) => sale.deleted_at === null && isToday(sale.created_at || ""),
     );
   }, [sales]);
 
@@ -17,10 +17,14 @@ const useSalesInfoHooks = () => {
     return new Date(date).getTime();
   };
 
-  const sortedSales = sales
-    .filter((sale) => !sale.deleted)
-    .sort((a, b) => toISO(a.created_at) - toISO(b.created_at))
-    .slice(0, 4);
+  const sortedSales = useMemo(
+    () =>
+      sales
+        .filter((sale) => sale.deleted_at === null)
+        .sort((a, b) => toISO(a.created_at) - toISO(b.created_at))
+        .slice(0, 4),
+    [sales],
+  );
 
   const salesTotal = (todaysSales || []).length;
 

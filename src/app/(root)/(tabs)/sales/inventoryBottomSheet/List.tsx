@@ -13,7 +13,7 @@ const List = () => {
     <FlatList
       data={filteredInventory}
       renderItem={({ item }) => <ListItem item={item} />}
-      keyExtractor={(_, index) => index.toString()}
+      keyExtractor={(item) => item.id}
       ListHeaderComponent={<BottomSheetHeader />}
       ListEmptyComponent={
         <ListEmptyComp message="There seems to be no available inventory item" />

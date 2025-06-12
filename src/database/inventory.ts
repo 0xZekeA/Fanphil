@@ -1,14 +1,13 @@
-import { eventBus } from "@/events/events";
 import { Item } from "@/types/purchases.type";
 import { capitalizeItem } from "@/utils/capitalize";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
-import { getDb } from "./database";
+import { supastash } from "supastash";
 import { addPurchase } from "./purchases";
 
 const TABLE_NAME = "inventory";
 
-export const addInventory = async (
+export async function addInventory(
   name: string,
   quantity: string,
   cost_price: string,
@@ -19,32 +18,26 @@ export const addInventory = async (
   unit: string,
   last_edited_by: string,
   created_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const id = uuid.v4() as string;
-    const now = new Date().toISOString();
+    const id = uuid.v4().toString();
 
-    await db.runAsync(
-      `INSERT INTO inventory 
-      (id, name, quantity, cost_price, original_selling_price, selling_price, increment, size, unit, last_edited_by, created_by, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
+    await supastash
+      .from(TABLE_NAME)
+      .insert({
         id,
-        capitalizeItem(name),
-        0,
-        Number(cost_price),
-        Number(original_selling_price),
-        Number(selling_price),
-        Number(increment),
-        Number(size),
-        unit.toLowerCase() ?? "",
+        name: capitalizeItem(name),
+        quantity: 0,
+        cost_price: Number(cost_price),
+        original_selling_price: Number(original_selling_price),
+        selling_price: Number(selling_price),
+        increment: Number(increment),
+        size: Number(size),
+        unit: unit.toLowerCase(),
         last_edited_by,
         created_by,
-        now,
-        now,
-      ],
-    );
+      })
+      .run();
 
     const item: Item[] = [{ id, name, quantity: Number(quantity), stock: 0 }];
 
@@ -58,12 +51,10 @@ export const addInventory = async (
       `Error details: ${error.message}`,
     );
     throw error;
-  } finally {
-    eventBus.emit(`refresh:all`);
   }
-};
+}
 
-export const updateInventory = async (
+export async function updateInventory(
   id: string,
   name: string,
   quantity: string,
@@ -74,32 +65,23 @@ export const updateInventory = async (
   size: string,
   unit: string,
   last_edited_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-    console.log("started....");
-
-    await db.runAsync(
-      `UPDATE inventory 
-      SET name = ?, quantity = ?, cost_price = ?, original_selling_price = ?, selling_price = ?, increment = ?, size = ?, unit = ?, last_edited_by = ?, updated_at = ?, synced_at = NULL
-      WHERE id = ?`,
-      [
-        capitalizeItem(name),
-        Number(quantity),
-        Number(cost_price),
-        Number(original_selling_price),
-        Number(selling_price),
-        Number(increment),
-        Number(size),
-        unit.toLowerCase(),
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        name: capitalizeItem(name),
+        quantity: Number(quantity),
+        cost_price: Number(cost_price),
+        original_selling_price: Number(original_selling_price),
+        selling_price: Number(selling_price),
+        increment: Number(increment),
+        size: Number(size),
+        unit: unit.toLowerCase(),
         last_edited_by,
-        now,
-        id,
-      ],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+      })
+      .eq("id", id)
+      .run();
 
     return id;
   } catch (error: any) {
@@ -110,34 +92,17 @@ export const updateInventory = async (
     );
     throw error;
   }
-};
+}
 
-export const getInventory = async (): Promise<Inventory[]> => {
+export async function deleteInventoryItem(id: string): Promise<string> {
   try {
-    const db = await getDb();
-    return await db.getAllAsync(
-      "SELECT * FROM inventory WHERE deleted = 0 ORDER BY created_at DESC",
-    );
-  } catch (error: any) {
-    showToast(
-      "error",
-      "Failed to fetch inventory",
-      `Error details: ${error.message}`,
-    );
-    throw error;
-  }
-};
-
-export const deleteInventoryItem = async (id: string) => {
-  try {
-    const db = await getDb();
-
-    await db.runAsync(
-      "UPDATE inventory SET is_active = 0, synced_at = NULL WHERE id = ?",
-      [id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        is_active: 0,
+      })
+      .eq("id", id)
+      .run();
 
     return id;
   } catch (error: any) {
@@ -148,18 +113,17 @@ export const deleteInventoryItem = async (id: string) => {
     );
     throw error;
   }
-};
+}
 
-export const reactivateInventoryItem = async (id: string) => {
+export async function reactivateInventoryItem(id: string): Promise<string> {
   try {
-    const db = await getDb();
-
-    await db.runAsync(
-      "UPDATE inventory SET is_active = 1, synced_at = NULL WHERE id = ?",
-      [id],
-    );
-
-    eventBus.emit(`refresh:${TABLE_NAME}`);
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        is_active: 1,
+      })
+      .eq("id", id)
+      .run();
 
     return id;
   } catch (error: any) {
@@ -170,35 +134,46 @@ export const reactivateInventoryItem = async (id: string) => {
     );
     throw error;
   }
-};
+}
 
-export const removeItem = async (
+export async function removeItem(
   name: string,
   cost_price: number,
   item_id: string,
   quantity: number,
   last_edited_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const now = new Date().toISOString();
-    console.log("started....");
+    const { data: inventoryItem } = await supastash
+      .from(TABLE_NAME)
+      .select("*")
+      .eq("id", item_id)
+      .single()
+      .run();
 
-    await db.runAsync(
-      `UPDATE inventory 
-      SET quantity = quantity - ?, last_edited_by = ?, updated_at = ?, synced_at = NULL
-      WHERE id = ?`,
-      [Number(quantity), last_edited_by, now, item_id],
-    );
+    await supastash
+      .from(TABLE_NAME)
+      .update({
+        quantity: (inventoryItem.quantity || 0) - quantity,
+        last_edited_by,
+      })
+      .eq("id", item_id)
+      .run();
 
-    const expenseId = uuid.v4() as string;
+    const expenseId = uuid.v4().toString();
     const reason = `Removed items ${name.slice(0, 12)} x${quantity}`;
     const cost = Number(cost_price) * Number(quantity);
 
-    await db.runAsync(
-      "INSERT INTO expenses (id, reason, cost, created_by, last_edited_by, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [expenseId, reason, cost, last_edited_by, last_edited_by, now, now],
-    );
+    await supastash
+      .from(TABLE_NAME)
+      .insert({
+        id: expenseId,
+        reason,
+        cost,
+        created_by: last_edited_by,
+        last_edited_by,
+      })
+      .run();
 
     showToast(
       "success",
@@ -215,7 +190,5 @@ export const removeItem = async (
       `Error details: ${error.message}`,
     );
     throw error;
-  } finally {
-    eventBus.emit(`refresh:all`);
   }
-};
+}

@@ -13,7 +13,7 @@ type FilteredInventory = {
   created_by: UUID;
   created_at: string;
   updated_at: string;
-  deleted: 0 | 1;
+  deleted_at: string | null;
 };
 
 interface SellersInventoryListProviderContextTypes {

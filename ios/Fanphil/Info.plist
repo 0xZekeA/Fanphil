@@ -27,7 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>myapp</string>
+          <string>Fanphil</string>
           <string>com.x0xzeke.Fanphil</string>
         </array>
       </dict>

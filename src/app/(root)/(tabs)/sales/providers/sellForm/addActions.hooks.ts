@@ -6,16 +6,16 @@ import reducer from "../../utils/reducer";
 const useAddActionsHooks = (
   setError: Dispatch<SetStateAction<string | null>>,
 ) => {
-  const { filteredInventory } = useInventoryProvider();
+  const { inventoryMap } = useInventoryProvider();
 
   const [selectedItems, dispatch] = useReducer<Reducer<Item[], Action>>(
     reducer,
     [],
   );
-  const [holdInterval, setHoldInterval] = useState<number | null>(null);
+  const [holdInterval, setHoldInterval] = useState<NodeJS.Timeout | null>(null);
 
   const handleIncrease = (id: string, amount = 1) => {
-    const inventoryItem = filteredInventory.find((i) => i.id === id);
+    const inventoryItem = inventoryMap.get(id);
     const item = selectedItems.find((i) => i.id === id);
 
     if (!inventoryItem) return;

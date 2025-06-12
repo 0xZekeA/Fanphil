@@ -32,7 +32,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     getUser,
   } = useUserRealtimeData(session, setLoading, loaded);
   const { signOut } = useSignoutHooks(setSession, setSessionToken);
-  const { resetPassword } = useResetPasswordHooks(user);
+  const { resetPassword } = useResetPasswordHooks();
   const { control, onSubmit, errors, isSubmitting } = useSigninHooks(
     setSession,
     setSessionToken,
@@ -58,7 +58,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     checkSession();
 
-    console.log("attempting...");
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, newSession) => {
         setSession(newSession);

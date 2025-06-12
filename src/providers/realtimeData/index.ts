@@ -1,8 +1,8 @@
 import { supabase } from "$root/lib/supabase";
-import { getDb } from "@/database/database";
 import { eventBus } from "@/events/events";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { supastash } from "supastash";
 import { syncWithSupabase } from "./sync";
 
 const useRealtimeData = (table: string, pollInterval = 3000) => {
@@ -10,11 +10,12 @@ const useRealtimeData = (table: string, pollInterval = 3000) => {
 
   const fetchLocalData = useCallback(async () => {
     try {
-      const db = await getDb();
-      const localData = await db.getAllAsync(
-        `SELECT * FROM ${table} WHERE deleted = 0`,
-      );
-      setData(localData);
+      const { data: localData }: { data: any[] | null } = await supastash
+        .from(table)
+        .select("*")
+        .is("deleted_at", null)
+        .run();
+      if (localData) setData(localData);
     } catch (error) {
       console.error(`Error fetching local data for ${table}:`, error);
     }
@@ -55,8 +56,8 @@ const useRealtimeData = (table: string, pollInterval = 3000) => {
       .subscribe();
 
     return () => {
-      eventBus.off(`refresh:${table}`, handler);
-      eventBus.off("refresh:all", handler);
+      eventBus?.off(`refresh:${table}`, handler);
+      eventBus?.off("refresh:all", handler);
       debouncedFetch.cancel();
       supabase.removeChannel(subscription);
     };

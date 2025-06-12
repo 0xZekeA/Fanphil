@@ -17,7 +17,7 @@ interface PurchasesFormProviderContextTypes {
   handleIncrease: (id: string, amount?: number) => void;
   filteredInventory: Inventory[];
   error: string | null;
-  holdInterval: number | null;
+  holdInterval: NodeJS.Timeout | null;
   selectedItems: Item[];
   getItemQuantity: (id: string) => number;
   stopHoldAction: () => void;

@@ -1,14 +1,14 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import useRealtimeData from "../realtimeData";
+import { useSupastashData } from "supastash";
 
 const SalesProviderContext = createContext<
   SalesProviderContextTypes | undefined
 >(undefined);
 
 const SalesProvider = ({ children }: PropsWithChildren) => {
-  const sales = useRealtimeData("sales");
-  const soldItems = useRealtimeData("sold_items");
-  const customers = useRealtimeData("customers");
+  const { data: sales } = useSupastashData<Sale>("sales");
+  const { data: soldItems } = useSupastashData<SoldItem>("sold_items");
+  const { data: customers } = useSupastashData<Customer>("customers");
 
   return (
     <SalesProviderContext.Provider value={{ sales, soldItems, customers }}>

@@ -18,7 +18,7 @@ interface AuthProviderContextTypes {
   isSubmitting: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
-  resetPassword: () => Promise<void>;
+  resetPassword: (emailAddress: string) => Promise<void>;
   getUserId: () => Promise<string | null>;
   updateUser: (
     full_name: string,

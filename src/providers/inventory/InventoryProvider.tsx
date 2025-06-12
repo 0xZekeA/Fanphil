@@ -1,25 +1,32 @@
-import { createContext, PropsWithChildren, useContext } from "react";
-import useRealtimeData from "../realtimeData";
+import { createContext, PropsWithChildren, useContext, useMemo } from "react";
+import { useSupastashData } from "supastash";
 
 const InventoryProviderContext = createContext<
   InventoryProviderContextTypes | undefined
 >(undefined);
 
 const InventoryProvider = ({ children }: PropsWithChildren) => {
-  const inventory = useRealtimeData("inventory");
-  const returns = useRealtimeData("returns");
-  const inventoryTransfer = useRealtimeData("inventory_transfers");
-  const sellersInventory = useRealtimeData("sellers_inventory");
-  const purchases = useRealtimeData("purchases");
-  const transferItems = useRealtimeData("transfer_items");
-  const filteredInventory = inventory.filter(
-    (i) => i.deleted !== 1 && i.is_active !== 0,
+  const { data: inventory, dataMap: inventoryMap } =
+    useSupastashData<Inventory>("inventory");
+  const { data: returns } = useSupastashData<Return>("returns");
+  const { data: inventoryTransfer } = useSupastashData<InventoryTransfer>(
+    "inventory_transfers",
+  );
+  const { data: sellersInventory } =
+    useSupastashData<SellersInventory>("sellers_inventory");
+  const { data: purchases } = useSupastashData<Purchase>("purchases");
+  const { data: transferItems } =
+    useSupastashData<TransferItem>("transfer_items");
+  const filteredInventory = useMemo(
+    () => inventory?.filter((i) => i.deleted_at === null && i.is_active !== 0),
+    [inventory],
   );
 
   return (
     <InventoryProviderContext.Provider
       value={{
         inventory,
+        inventoryMap,
         filteredInventory,
         inventoryTransfer,
         returns,

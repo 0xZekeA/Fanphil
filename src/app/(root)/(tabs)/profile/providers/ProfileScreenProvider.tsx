@@ -11,10 +11,9 @@ const ProfileScreenContext = createContext<
 >(undefined);
 
 const ProfileScreenProvider = ({ children }: PropsWithChildren) => {
-  const { signOut, resetPassword } = useAuthProvider();
+  const { signOut, resetPassword, user } = useAuthProvider();
   const { isMessageShown, message, onClose, showMessage, position } =
     useMessagePopUpHooks();
-  const { user } = useAuthProvider();
   const [isUserDetailsShown, setIsUserDetailsShown] = useState(false);
 
   const onPress = (event: any, item: string) => {
@@ -36,7 +35,7 @@ const ProfileScreenProvider = ({ children }: PropsWithChildren) => {
         return await signOut();
 
       case "Change Password":
-        return await resetPassword();
+        return await resetPassword(user?.email || "");
 
       default:
         return null;

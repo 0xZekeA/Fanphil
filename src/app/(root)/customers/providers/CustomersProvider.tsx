@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 interface CustomersProviderContextTypes {
   customers: Customer[];
@@ -16,9 +17,12 @@ const CustomersProviderContext = createContext<
 >(undefined);
 
 const CustomersProvider = ({ children }: PropsWithChildren) => {
-  const { customers } = useSalesProvider();
+  const { customers: customersData } = useSalesProvider();
 
-  customers.filter((c) => c.is_active === 1);
+  const customers = useMemo(
+    () => customersData.filter((c) => c.is_active === 1),
+    [customersData],
+  );
 
   const getSyncedIndicatorColor = useCallback(
     (item: Customer) =>

@@ -1,27 +1,33 @@
-import { eventBus } from "@/events/events";
 import { showToast } from "@/utils/notification";
 import uuid from "react-native-uuid";
-import { getDb } from "./database";
+import { supastash } from "supastash";
 
-export const addTransferItem = async (
+export async function addTransferItem(
   inventory_id: string,
   transfer_id: string,
   quantity_moved: number,
   last_edited_by: string,
-) => {
+) {
   try {
-    const db = await getDb();
-    const id = uuid.v4() as string;
+    const id = uuid.v4().toString();
 
-    await db.runAsync(
-      "INSERT INTO transfer_items (id, inventory_id, transfer_id, quantity_moved, last_edited_by) VALUES (?, ?, ?, ?, ?)",
-      [id, inventory_id, transfer_id, quantity_moved, last_edited_by],
-    );
+    await supastash
+      .from("transfer_items")
+      .insert({
+        id,
+        inventory_id,
+        transfer_id,
+        quantity_moved,
+        last_edited_by,
+      })
+      .run();
 
-    const inventoryItem: Inventory | null = await db.getFirstAsync(
-      "SELECT * FROM inventory WHERE id = ?",
-      [inventory_id],
-    );
+    const { data: inventoryItem }: { data: Inventory | null } = await supastash
+      .from("inventory")
+      .select("*")
+      .eq("id", inventory_id)
+      .single()
+      .run();
 
     if (!inventoryItem) throw new Error("Inventory item not found");
 
@@ -33,37 +39,57 @@ export const addTransferItem = async (
 
     const newInventoryQuantity = inventoryItem.quantity - quantity_moved;
 
-    await db.runAsync(
-      "UPDATE inventory SET quantity = ?, synced_at = NULL WHERE id = ?",
-      [newInventoryQuantity, inventory_id],
-    );
+    await supastash
+      .from("inventory")
+      .update({
+        quantity: newInventoryQuantity,
+      })
+      .eq("id", inventory_id)
+      .run();
 
-    const transfer: InventoryTransfer | null = await db.getFirstAsync(
-      "SELECT * FROM inventory_transfers WHERE id = ?",
-      [transfer_id],
-    );
+    const { data: transfer }: { data: InventoryTransfer | null } =
+      await supastash
+        .from("inventory_transfers")
+        .select("*")
+        .eq("id", transfer_id)
+        .single()
+        .run();
 
     const sellerId = transfer?.received_by;
     if (!sellerId)
       throw new Error("Transfer record not found or missing seller");
 
-    const sellerInventoryItem: SellersInventory | null = await db.getFirstAsync(
-      "SELECT * FROM sellers_inventory WHERE item_id = ? AND seller = ?",
-      [inventory_id, sellerId],
-    );
+    const { data: sellerInventoryItem }: { data: SellersInventory | null } =
+      await supastash
+        .from("sellers_inventory")
+        .select("*")
+        .eq("item_id", inventory_id)
+        .eq("seller", sellerId)
+        .single()
+        .run();
 
     if (sellerInventoryItem) {
       const newSellerQuantity =
         sellerInventoryItem.quantity_at_hand + quantity_moved;
-      await db.runAsync(
-        "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
-        [newSellerQuantity, inventory_id, sellerId],
-      );
+
+      await supastash
+        .from("sellers_inventory")
+        .update({
+          quantity_at_hand: newSellerQuantity,
+        })
+        .eq("item_id", inventory_id)
+        .eq("seller", sellerId)
+        .run();
     } else {
-      await db.runAsync(
-        "INSERT INTO sellers_inventory (id, item_id, seller, quantity_at_hand) VALUES (?, ?, ?, ?)",
-        [uuid.v4(), inventory_id, sellerId, quantity_moved],
-      );
+      await supastash
+        .from("sellers_inventory")
+        .insert({
+          id: uuid.v4().toString(),
+          item_id: inventory_id,
+          seller: sellerId,
+          quantity_at_hand: quantity_moved,
+        })
+        .run();
     }
 
     return id;
@@ -74,22 +100,21 @@ export const addTransferItem = async (
       `Error details: ${error.message}`,
     );
     throw error;
-  } finally {
-    eventBus.emit(`refresh:all`);
   }
-};
+}
 
-export const updateTransferItem = async (
+export async function updateTransferItem(
   id: string,
   new_quantity_moved: number,
-) => {
+) {
   try {
-    const db = await getDb();
-
-    const existingItem: TransferItem | null = await db.getFirstAsync(
-      "SELECT * FROM transfer_items WHERE id = ?",
-      [id],
-    );
+    const { data: existingItem }: { data: TransferItem | null } =
+      await supastash
+        .from("transfer_items")
+        .select("*")
+        .eq("id", id)
+        .single()
+        .run();
 
     if (!existingItem) throw new Error("Transfer item not found");
 
@@ -101,51 +126,76 @@ export const updateTransferItem = async (
 
     const quantity_difference = new_quantity_moved - old_quantity_moved;
 
-    await db.runAsync(
-      "UPDATE transfer_items SET quantity_moved = ?, synced_at = NULL WHERE id = ?",
-      [new_quantity_moved, id],
-    );
+    await supastash
+      .from("transfer_items")
+      .update({
+        quantity_moved: new_quantity_moved,
+      })
+      .eq("id", id)
+      .run();
 
-    const inventoryItem: Inventory | null = await db.getFirstAsync(
-      "SELECT * FROM inventory WHERE id = ?",
-      [inventory_id],
-    );
+    const { data: inventoryItem }: { data: Inventory | null } = await supastash
+      .from("inventory")
+      .select("*")
+      .eq("id", inventory_id)
+      .single()
+      .run();
 
     if (!inventoryItem) throw new Error("Inventory item not found");
 
     const newInventoryQuantity = inventoryItem.quantity - quantity_difference;
 
-    await db.runAsync(
-      "UPDATE inventory SET quantity = ?, synced_at = NULL WHERE id = ?",
-      [newInventoryQuantity, inventory_id],
-    );
+    await supastash
+      .from("inventory")
+      .update({
+        quantity: newInventoryQuantity,
+      })
+      .eq("id", inventory_id)
+      .run();
 
-    const transfer: InventoryTransfer | null = await db.getFirstAsync(
-      "SELECT * FROM inventory_transfers WHERE id = ?",
-      [transfer_id],
-    );
+    const { data: transfer }: { data: InventoryTransfer | null } =
+      await supastash
+        .from("inventory_transfers")
+        .select("*")
+        .eq("id", transfer_id)
+        .single()
+        .run();
 
     const sellerId = transfer?.received_by;
     if (!sellerId)
       throw new Error("Transfer record not found or missing seller");
 
-    const sellerInventoryItem: SellersInventory | null = await db.getFirstAsync(
-      "SELECT * FROM sellers_inventory WHERE item_id = ? AND seller = ?",
-      [inventory_id, sellerId],
-    );
+    const { data: sellerInventoryItem }: { data: SellersInventory | null } =
+      await supastash
+        .from("sellers_inventory")
+        .select("*")
+        .eq("item_id", inventory_id)
+        .eq("seller", sellerId)
+        .single()
+        .run();
 
     if (sellerInventoryItem) {
       const newSellerQuantity =
         sellerInventoryItem.quantity_at_hand + quantity_difference;
-      await db.runAsync(
-        "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
-        [newSellerQuantity, inventory_id, sellerId],
-      );
+
+      await supastash
+        .from("sellers_inventory")
+        .update({
+          quantity_at_hand: newSellerQuantity,
+        })
+        .eq("item_id", inventory_id)
+        .eq("seller", sellerId)
+        .run();
     } else if (quantity_difference > 0) {
-      await db.runAsync(
-        "INSERT INTO sellers_inventory (id, item_id, seller, quantity_at_hand) VALUES (?, ?, ?, ?)",
-        [uuid.v4(), inventory_id, sellerId, new_quantity_moved],
-      );
+      await supastash
+        .from("sellers_inventory")
+        .insert({
+          id: uuid.v4().toString(),
+          item_id: inventory_id,
+          seller: sellerId,
+          quantity_at_hand: new_quantity_moved,
+        })
+        .run();
     }
 
     return id;
@@ -157,15 +207,15 @@ export const updateTransferItem = async (
     );
 
     throw error;
-  } finally {
-    eventBus.emit(`refresh:all`);
   }
-};
+}
 
-export const getTransferItems = async (): Promise<TransferItem[]> => {
+export async function getTransferItems(): Promise<TransferItem[] | null> {
   try {
-    const db = await getDb();
-    return await db.getAllAsync("SELECT * FROM transfer_items");
+    const { data: transferItems }: { data: TransferItem[] | null } =
+      await supastash.from("transfer_items").select("*").run();
+
+    return transferItems;
   } catch (error: any) {
     showToast(
       "error",
@@ -174,23 +224,20 @@ export const getTransferItems = async (): Promise<TransferItem[]> => {
     );
     throw error;
   }
-};
+}
 
 export const deleteTransferItem = async (id: string) => {
   try {
-    const db = await getDb();
-
-    await db.runAsync(
-      "UPDATE transfer_items SET deleted = 1, synced_at = 0 WHERE id = ?",
-      [id],
-    );
-
-    const item: TransferItem | null = await db.getFirstAsync(
-      "SELECT * FROM transfer_items WHERE id = ?",
-      [id],
-    );
+    const { data: item }: { data: TransferItem | null } = await supastash
+      .from("transfer_items")
+      .select("*")
+      .eq("id", id)
+      .single()
+      .run();
 
     if (!item) return;
+
+    await supastash.from("transfer_items").delete().eq("id", id).run();
 
     const {
       inventory_id: inventoryId,
@@ -200,44 +247,62 @@ export const deleteTransferItem = async (id: string) => {
 
     if (!inventoryId) return;
 
-    const itemInInventory: Inventory | null = await db.getFirstAsync(
-      "SELECT * FROM inventory WHERE id = ? AND deleted = 0",
-      [inventoryId],
-    );
+    const { data: itemInInventory }: { data: Inventory | null } =
+      await supastash
+        .from("inventory")
+        .select("*")
+        .eq("id", inventoryId)
+        .is("deleted_at", null)
+        .single()
+        .run();
 
-    const transfer: InventoryTransfer | null = await db.getFirstAsync(
-      "SELECT * FROM inventory_transfers WHERE id = ?",
-      [transferId],
-    );
+    const { data: transfer }: { data: InventoryTransfer | null } =
+      await supastash
+        .from("inventory_transfers")
+        .select("*")
+        .eq("id", transferId)
+        .single()
+        .run();
 
     if (!itemInInventory) return;
 
     const itemQuantityInInventory = itemInInventory.quantity || 0;
     const newQuantity = itemQuantity + itemQuantityInInventory;
 
-    await db.runAsync(
-      "UPDATE inventory SET quantity = ?, synced_at = NULL WHERE id = ?",
-      [newQuantity, inventoryId],
-    );
+    await supastash
+      .from("inventory")
+      .update({
+        quantity: newQuantity,
+      })
+      .eq("id", inventoryId)
+      .run();
 
     const sellerId = transfer?.received_by;
     if (!sellerId) return;
 
-    const itemInSellersInventory: SellersInventory | null =
-      await db.getFirstAsync(
-        "SELECT * FROM sellers_inventory WHERE item_id = ? AND seller = ? AND deleted = 0",
-        [inventoryId, sellerId],
-      );
+    const { data: itemInSellersInventory }: { data: SellersInventory | null } =
+      await supastash
+        .from("sellers_inventory")
+        .select("*")
+        .eq("item_id", inventoryId)
+        .eq("seller", sellerId)
+        .is("deleted_at", null)
+        .single()
+        .run();
 
     const sellersInventoryItemQuantity =
       itemInSellersInventory?.quantity_at_hand || 0;
     const newSellersInventoryItemQuantity =
       sellersInventoryItemQuantity - itemQuantity;
 
-    await db.runAsync(
-      "UPDATE sellers_inventory SET quantity_at_hand = ?, synced_at = NULL WHERE item_id = ? AND seller = ?",
-      [newSellersInventoryItemQuantity, inventoryId, sellerId],
-    );
+    await supastash
+      .from("sellers_inventory")
+      .update({
+        quantity_at_hand: newSellersInventoryItemQuantity,
+      })
+      .eq("item_id", inventoryId)
+      .eq("seller", sellerId)
+      .run();
   } catch (error: any) {
     showToast(
       "error",
@@ -245,20 +310,21 @@ export const deleteTransferItem = async (id: string) => {
       `Error details: ${error.message}`,
     );
     throw error;
-  } finally {
-    eventBus.emit(`refresh:all`);
   }
 };
 
 export const getSpecificTransferItems = async (
   id: string,
-): Promise<TransferItem[]> => {
+): Promise<TransferItem[] | null> => {
   try {
-    const db = await getDb();
-    return await db.getAllAsync(
-      "SELECT * FROM transfer_items WHERE transfer_id = ? ",
-      [id],
-    );
+    const { data: transferItems }: { data: TransferItem[] | null } =
+      await supastash
+        .from("transfer_items")
+        .select("*")
+        .eq("transfer_id", id)
+        .run();
+
+    return transferItems;
   } catch (error: any) {
     showToast(
       "error",

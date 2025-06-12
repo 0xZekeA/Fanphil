@@ -13,7 +13,10 @@ export default function Index() {
       } else router.push("/(auth)/signIn");
     };
 
-    if (!loading) redirect();
+    if (!loading) {
+      const timeout = setTimeout(() => redirect(), 200);
+      return () => clearTimeout(timeout);
+    }
   }, [loading, sessionToken]);
 
   return <LoadingComponent loading={loading} />;

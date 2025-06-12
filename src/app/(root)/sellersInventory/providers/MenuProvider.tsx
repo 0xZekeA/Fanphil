@@ -1,7 +1,13 @@
 import { useUsersProvider } from "@/providers/users/UsersProvider";
 import { ContextMenuTypes } from "@/types/inventory.type";
 import { MenuProviderContextTypes } from "@/types/transfer.type";
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import getMenuItems from "../constants/menuItems";
 import { useSellersInventoryListProvider } from "./SellersInventoryListProvider";
 
@@ -19,8 +25,10 @@ const MenuProvider = ({ children }: PropsWithChildren) => {
 
   const { sellers } = useUsersProvider();
 
-  const menuItems =
-    contextMenu.selectedItem && getMenuItems(sellers, setSelectedSeller);
+  const menuItems = useMemo(
+    () => contextMenu.selectedItem && getMenuItems(sellers, setSelectedSeller),
+    [contextMenu.selectedItem, sellers, setSelectedSeller],
+  );
 
   const onOpen = (event: any) => {
     const { pageX, pageY } = event.nativeEvent;

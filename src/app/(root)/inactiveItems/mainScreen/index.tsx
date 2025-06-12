@@ -31,7 +31,7 @@ const MainScreen = () => {
       <FlatList
         data={filteredInactiveItems}
         renderItem={({ item }) => <ListItem item={item} />}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View
             style={{

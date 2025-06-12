@@ -25,7 +25,6 @@ const Field: React.FC<BaseInputProps & TextInputProps> = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isHidden, setIsHidden] = useState(secureTextEntry);
-  const [height, setHeight] = useState(Scale.moderate(50));
 
   return (
     <View
@@ -39,9 +38,7 @@ const Field: React.FC<BaseInputProps & TextInputProps> = ({
             ? COLORS.softCoral900
             : "transparent",
           borderWidth: isFocused ? 1 : 0.3,
-        },
-        {
-          borderRadius: 16,
+          borderRadius: multiline ? 24 : 360,
         },
       ]}
     >
@@ -55,18 +52,15 @@ const Field: React.FC<BaseInputProps & TextInputProps> = ({
         className="items-center justify-center font-Jakarta flex-1 text-left"
         style={[
           {
-            fontSize: Scale.font(isFocused ? 18 : 16),
-            lineHeight: Scale.lineHeight(isFocused ? 16 : 14),
+            fontSize: Scale.font(16),
+            lineHeight: Scale.lineHeight(16, 1.2),
             textAlignVertical: "center",
           },
           styles.textField,
           styling,
         ]}
         multiline={multiline}
-        onContentSizeChange={(event: any) =>
-          setHeight(event.nativeEvent.contentSize.height)
-        }
-        placeholderTextColor={COLORS.gray200}
+        placeholderTextColor={COLORS.gray300}
         secureTextEntry={isHidden}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
@@ -76,14 +70,14 @@ const Field: React.FC<BaseInputProps & TextInputProps> = ({
         placeholder={placeholder}
         {...props}
       />
-      {iconRight && (
+      {iconRight ? (
         <TouchableOpacity onPress={() => setIsHidden(!isHidden)}>
           <Image
             source={isHidden ? icons.eyecross : icons.eye}
             style={[styles.iconStyle, { marginRight: Scale.moderate(16) }]}
           />
         </TouchableOpacity>
-      )}
+      ) : null}
     </View>
   );
 };

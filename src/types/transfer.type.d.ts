@@ -25,7 +25,7 @@ interface TransferFormProviderContextTypes {
   handleIncrease: (id: string, amount?: number) => void;
   filteredInventory: Inventory[];
   error: string | null;
-  holdInterval: number | null;
+  holdInterval: NodeJS.Timeout | null;
   selectedDriver: User;
   selectedItems: Item[];
   setSelectedDriver: Dispatch<SetStateAction<User>>;
