@@ -28,9 +28,9 @@ const useUserRealtimeData = (
       address: string,
       user_id: string,
     ) => {
-      const { data: updatedUser }: { data: User | null } = await supastash
+      const { data: updatedUser } = await supastash
         .from("users")
-        .update({
+        .update<User>({
           full_name,
           email,
           phone_number,
@@ -42,7 +42,7 @@ const useUserRealtimeData = (
         .single()
         .run();
 
-      setData(updatedUser);
+      if (updatedUser) setData(updatedUser);
     },
     [],
   );
@@ -58,9 +58,9 @@ const useUserRealtimeData = (
       setData(null);
       return null;
     }
-    const { data: user }: { data: User | null } = await supastash
+    const { data: user } = await supastash
       .from("users")
-      .select("*")
+      .select<User>("*")
       .eq("id", userId)
       .single()
       .run();

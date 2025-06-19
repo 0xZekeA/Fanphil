@@ -10,7 +10,9 @@ export default function Index() {
     const redirect = () => {
       if (sessionToken) {
         router.push("/(root)/(tabs)/home");
-      } else router.push("/(auth)/signIn");
+      } else if (sessionToken === null) {
+        router.push("/(auth)/signIn");
+      }
     };
 
     if (!loading) {

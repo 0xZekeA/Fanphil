@@ -31,7 +31,7 @@ export async function deleteInventoryItemTransfer(id: string) {
   try {
     const { data: transferItems } = await supastash
       .from(TABLE_NAME)
-      .select("*")
+      .select<TransferItem>("*")
       .eq("transfer_id", id)
       .is("deleted_at", null)
       .run();
@@ -45,7 +45,7 @@ export async function deleteInventoryItemTransfer(id: string) {
 
       const { data: inventoryItem } = await supastash
         .from("inventory")
-        .select("*")
+        .select<Inventory>("*")
         .eq("id", inventory_id)
         .single()
         .run();
@@ -53,14 +53,14 @@ export async function deleteInventoryItemTransfer(id: string) {
       await supastash
         .from("inventory")
         .update({
-          quantity: (inventoryItem.quantity || 0) + quantity_moved,
+          quantity: (inventoryItem?.quantity || 0) + quantity_moved,
         })
         .eq("id", inventory_id)
         .run();
 
       const { data: transfer } = await supastash
         .from(TABLE_NAME)
-        .select("received_by")
+        .select<InventoryTransfer>("received_by")
         .eq("id", id)
         .single()
         .run();
@@ -74,7 +74,7 @@ export async function deleteInventoryItemTransfer(id: string) {
 
         const { data: sellerInventory } = await supastash
           .from("sellers_inventory")
-          .select("*")
+          .select<SellersInventory>("*")
           .eq("item_id", inventory_id)
           .eq("seller", sellerId)
           .single()
@@ -117,7 +117,7 @@ export async function updateSellersInventory(
     // Get current quantity_at_hand
     const { data: sellerInventory } = await supastash
       .from("sellers_inventory")
-      .select("*")
+      .select<SellersInventory>("*")
       .eq("seller", seller_id)
       .eq("item_id", inventory_id)
       .single()
@@ -143,7 +143,7 @@ export async function updateSellersInventory(
     // Add difference to inventory
     const { data: inventoryItem } = await supastash
       .from("inventory")
-      .select("*")
+      .select<Inventory>("*")
       .eq("id", inventory_id)
       .single()
       .run();
@@ -151,7 +151,7 @@ export async function updateSellersInventory(
     await supastash
       .from("inventory")
       .update({
-        quantity: (inventoryItem.quantity || 0) + difference,
+        quantity: (inventoryItem?.quantity || 0) + difference,
       })
       .eq("id", inventory_id)
       .run();

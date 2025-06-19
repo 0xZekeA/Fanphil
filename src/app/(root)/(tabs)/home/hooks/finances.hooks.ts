@@ -1,7 +1,7 @@
 import { useFinanceProvider } from "@/providers/finances/FinanceProvider";
 import { useSalesProvider } from "@/providers/sales/SalesProvider";
 import { getLast30DaysData } from "@/utils/financialHelpers";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 const useFinancesHooks = () => {
   const { expenses } = useFinanceProvider();
@@ -22,12 +22,21 @@ const useFinancesHooks = () => {
 
   const total = (transactions30Days ?? 0) + (expenses30Days ?? 0);
 
-  const calculation = useCallback((amount: number) => {
-    return (amount / total) * 100 || (!transactions30Days ? 1 : 0);
-  }, []);
+  const calculation = useCallback(
+    (amount: number) => {
+      return (amount / total) * 100 || (!transactions30Days ? 1 : 0);
+    },
+    [total, transactions30Days],
+  );
 
-  const expensePercentage = calculation(expenses30Days);
-  const incomePercentage = calculation(transactions30Days);
+  const expensePercentage = useMemo(() => {
+    const result = expenses30Days ? calculation(expenses30Days) : 0;
+    return result ?? 0;
+  }, [calculation, expenses30Days]);
+  const incomePercentage = useMemo(() => {
+    const result = transactions30Days ? calculation(transactions30Days) : 0;
+    return result ?? 0;
+  }, [calculation, transactions30Days]);
 
   return { expensePercentage, incomePercentage };
 };

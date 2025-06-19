@@ -11,20 +11,7 @@ const useSalesInfoHooks = () => {
     );
   }, [sales]);
 
-  const toISO = (date: string | null) => {
-    if (!date) return 0;
-
-    return new Date(date).getTime();
-  };
-
-  const sortedSales = useMemo(
-    () =>
-      sales
-        .filter((sale) => sale.deleted_at === null)
-        .sort((a, b) => toISO(a.created_at) - toISO(b.created_at))
-        .slice(0, 4),
-    [sales],
-  );
+  const sortedSales = useMemo(() => sales?.slice(0, 4), [sales]);
 
   const salesTotal = (todaysSales || []).length;
 

@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "supastash": {
-      "signature": "80a7b6d1e6afabc5e287856fb215c4c3",
-      "file": true
-    }
-  }
-}

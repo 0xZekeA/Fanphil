@@ -6,17 +6,13 @@ const getFilteredSellersInventory = (
   selectedSellerId: UUID | null,
 ): FilteredInventory[] => {
   if (!selectedSellerId) return [];
+  const filteredSellersInventory = [];
 
-  return sellersInventory
-    .filter(
-      (item) => item.seller === selectedSellerId && item.deleted_at === null,
-    )
-    .map((sellerItem) => {
+  for (const sellerItem of sellersInventory) {
+    if (sellerItem.seller === selectedSellerId) {
       const inventoryItem = inventoryMap.get(sellerItem.item_id || "");
-
-      if (!inventoryItem) return null;
-
-      return {
+      if (!inventoryItem) continue;
+      filteredSellersInventory.push({
         id: inventoryItem.id,
         name: inventoryItem.name,
         size: inventoryItem.size,
@@ -30,9 +26,11 @@ const getFilteredSellersInventory = (
         created_at: inventoryItem.created_at,
         updated_at: inventoryItem.updated_at,
         deleted_at: inventoryItem.deleted_at,
-      };
-    })
-    .filter((item): item is FilteredInventory => item !== null);
+      });
+    }
+  }
+
+  return filteredSellersInventory;
 };
 
 export default getFilteredSellersInventory;

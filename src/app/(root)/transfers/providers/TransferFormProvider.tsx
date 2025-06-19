@@ -34,19 +34,21 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [selectedItems, dispatch] = useReducer<Reducer<Item[], Action>>(
-    reducer,
-    [],
-  );
+  const [selectedItems, dispatch] = useReducer<
+    Reducer<Map<string, Item>, Action>
+  >(reducer, new Map());
+
   const [selectedDriver, setSelectedDriver] = useState(sellers[0]);
   const [error, setError] = useState<string | null>(null);
-  const [holdInterval, setHoldInterval] = useState<NodeJS.Timeout | null>(null);
+  const [holdInterval, setHoldInterval] = useState<
+    NodeJS.Timeout | number | null
+  >(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleIncrease = useCallback(
     (id: string, amount = 1) => {
       const inventoryItem = inventoryMap.get(id);
-      const item = selectedItems.find((i) => i.id === id);
+      const item = selectedItems.get(id);
 
       if (!inventoryItem) return;
 
@@ -89,7 +91,7 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
   };
 
   const getItemQuantity = (id: string) => {
-    const item = selectedItems.find((item) => item.id === id);
+    const item = selectedItems.get(id);
     return item ? item.quantity : 0;
   };
 
@@ -127,14 +129,16 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
+    const selectedItemsArray = Array.from(selectedItems.values());
+
     try {
       const transferId = await addInventoryTransfer(user.id, selectedDriver.id);
 
       const id = await Promise.all(
-        selectedItems
+        selectedItemsArray
           .filter((item) => item.quantity > 0)
           .map((item) =>
-            addTransferItem(item.id, transferId, item.quantity, user.id),
+            addTransferItem(item.id, transferId, item.quantity || 0, user.id),
           ),
       );
 
@@ -157,13 +161,17 @@ const TransferFormProvider = ({ children }: PropsWithChildren) => {
     }
   }, [selectedDriver, selectedItems, user, dispatch]);
 
-  const selectedInventoryItems = useMemo(
-    () =>
-      filteredInventory.filter((item) =>
-        selectedItems.some((s) => s.id === item.id),
-      ),
-    [filteredInventory, selectedItems],
-  );
+  const selectedInventoryItems = useMemo(() => {
+    const selectedItemsArray = Array.from(selectedItems.values());
+    const selectedItemsData = [];
+    for (const item of selectedItemsArray) {
+      const inventoryItem = inventoryMap.get(item.id);
+      if (inventoryItem) {
+        selectedItemsData.push(inventoryItem);
+      }
+    }
+    return selectedItemsData;
+  }, [inventoryMap, selectedItems]);
 
   return (
     <TransferFormProviderContext.Provider

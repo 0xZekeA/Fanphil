@@ -12,9 +12,9 @@ export async function addUser(
   created_by: string,
 ) {
   try {
-    const { data: user }: { data: User | null } = await supastash
+    const { data: user } = await supastash
       .from("users")
-      .select("*")
+      .select<User>("*")
       .eq("id", id)
       .single()
       .run();
@@ -80,9 +80,9 @@ export const updateUser = async (
 
 export const getUsers = async (): Promise<User[] | null> => {
   try {
-    const { data: users }: { data: User[] | null } = await supastash
+    const { data: users } = await supastash
       .from("users")
-      .select("*")
+      .select<User>("*")
       .run();
 
     return users;
@@ -99,6 +99,7 @@ export const getUsers = async (): Promise<User[] | null> => {
 
 export const deleteUser = async (user_id: string) => {
   try {
+    console.log("user_id", user_id);
     await supastash
       .from("users")
       .update({

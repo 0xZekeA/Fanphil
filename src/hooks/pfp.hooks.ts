@@ -12,11 +12,11 @@ const usePfp = () => {
     return user.is_active === 0
       ? image
           .resize(
-            thumbnail().width(300).height(300).gravity(focusOn(FocusOn.face())),
+            thumbnail().width(150).height(150).gravity(focusOn(FocusOn.face())),
           )
           .effect(grayscale())
       : image.resize(
-          thumbnail().width(300).height(300).gravity(focusOn(FocusOn.face())),
+          thumbnail().width(150).height(150).gravity(focusOn(FocusOn.face())),
         );
   }, []);
 

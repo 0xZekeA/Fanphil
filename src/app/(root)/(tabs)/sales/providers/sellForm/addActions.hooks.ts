@@ -8,15 +8,16 @@ const useAddActionsHooks = (
 ) => {
   const { inventoryMap } = useInventoryProvider();
 
-  const [selectedItems, dispatch] = useReducer<Reducer<Item[], Action>>(
-    reducer,
-    [],
-  );
-  const [holdInterval, setHoldInterval] = useState<NodeJS.Timeout | null>(null);
+  const [selectedItems, dispatch] = useReducer<
+    Reducer<Map<string, Item>, Action>
+  >(reducer, new Map());
+  const [holdInterval, setHoldInterval] = useState<
+    NodeJS.Timeout | number | null
+  >(null);
 
   const handleIncrease = (id: string, amount = 1) => {
     const inventoryItem = inventoryMap.get(id);
-    const item = selectedItems.find((i) => i.id === id);
+    const item = selectedItems.get(id);
 
     if (!inventoryItem) return;
 
@@ -57,7 +58,7 @@ const useAddActionsHooks = (
   };
 
   const getItemQuantity = (id: string) => {
-    const item = selectedItems.find((item) => item.id === id);
+    const item = selectedItems.get(id);
     return item ? item.quantity : 0;
   };
 

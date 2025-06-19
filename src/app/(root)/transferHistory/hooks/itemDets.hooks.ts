@@ -4,7 +4,7 @@ import { getUsersName } from "@/utils/getUsersName";
 import { useCallback } from "react";
 
 const useItemDetsHooks = () => {
-  const { users } = useUsersProvider();
+  const { usersMap } = useUsersProvider();
   const isReturn = useCallback(
     (item: InventoryTransfer | Return): item is Return => {
       return (
@@ -28,21 +28,21 @@ const useItemDetsHooks = () => {
   const getCreator = useCallback(
     (item: InventoryTransfer | Return) => {
       if (isReturn(item)) {
-        return getUsersName(item.returned_by, users);
+        return getUsersName(item.returned_by, usersMap);
       }
-      return getUsersName(item.transferred_by, users);
+      return getUsersName(item.transferred_by, usersMap);
     },
-    [isReturn, users],
+    [isReturn, usersMap],
   );
 
   const getCreatee = useCallback(
     (item: InventoryTransfer | Return) => {
       if (isReturn(item)) {
-        return getUsersName(item.seller, users);
+        return getUsersName(item.seller, usersMap);
       }
-      return getUsersName(item.received_by, users);
+      return getUsersName(item.received_by, usersMap);
     },
-    [isReturn, users],
+    [isReturn, usersMap],
   );
 
   const getColor = useCallback(

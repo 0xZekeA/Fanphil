@@ -27,13 +27,12 @@ export async function addSoldItem(
       .run();
 
     if (isAdminOrMgr) {
-      const { data: inventoryItem }: { data: Inventory | null } =
-        await supastash
-          .from("inventory")
-          .select("*")
-          .eq("id", item_id)
-          .single()
-          .run();
+      const { data: inventoryItem } = await supastash
+        .from("inventory")
+        .select<Inventory>("*")
+        .eq("id", item_id)
+        .single()
+        .run();
 
       if (!inventoryItem) return;
 
@@ -45,14 +44,13 @@ export async function addSoldItem(
         .eq("id", item_id)
         .run();
     } else {
-      const { data: sellerInventory }: { data: SellersInventory | null } =
-        await supastash
-          .from("sellers_inventory")
-          .select("*")
-          .single()
-          .eq("item_id", item_id)
-          .eq("seller", sold_by)
-          .run();
+      const { data: sellerInventory } = await supastash
+        .from("sellers_inventory")
+        .select<SellersInventory>("*")
+        .single()
+        .eq("item_id", item_id)
+        .eq("seller", sold_by)
+        .run();
 
       if (!sellerInventory) return;
 
@@ -82,9 +80,9 @@ export async function getSalesSoldItems(
   sales_id: string,
 ): Promise<SoldItem[] | null> {
   try {
-    const { data: soldItems }: { data: SoldItem[] | null } = await supastash
+    const { data: soldItems } = await supastash
       .from("sold_items")
-      .select("*")
+      .select<SoldItem>("*")
       .eq("sales_id", sales_id)
       .is("deleted_at", null)
       .run();
@@ -118,9 +116,9 @@ export const updateSoldItem = async (
 ) => {
   try {
     // Get the original sold item
-    const { data: originalItem }: { data: SoldItem | null } = await supastash
+    const { data: originalItem } = await supastash
       .from("sold_items")
-      .select("*")
+      .select<SoldItem>("*")
       .eq("id", id)
       .single()
       .run();
@@ -144,13 +142,12 @@ export const updateSoldItem = async (
 
     // If quantity was reduced, return the difference
     if (quantityDifference > 0) {
-      const { data: inventoryItem }: { data: Inventory | null } =
-        await supastash
-          .from("inventory")
-          .select("*")
-          .eq("id", originalItem.item_id)
-          .single()
-          .run();
+      const { data: inventoryItem } = await supastash
+        .from("inventory")
+        .select<Inventory>("*")
+        .eq("id", originalItem.item_id)
+        .single()
+        .run();
 
       if (!inventoryItem) return;
 
@@ -178,9 +175,9 @@ export const updateSoldItem = async (
 export async function deleteSoldItem(id: string) {
   try {
     // Get the sold item details
-    const { data: item }: { data: SoldItem | null } = await supastash
+    const { data: item } = await supastash
       .from("sold_items")
-      .select("*")
+      .select<SoldItem>("*")
       .eq("id", id)
       .single()
       .run();
@@ -195,9 +192,9 @@ export async function deleteSoldItem(id: string) {
     await supastash.from("sold_items").delete().eq("id", id).run();
 
     // Return inventory to main inventory
-    const { data: inventoryItem }: { data: Inventory | null } = await supastash
+    const { data: inventoryItem } = await supastash
       .from("inventory")
-      .select("*")
+      .select<Inventory>("*")
       .eq("id", inventoryId)
       .single()
       .run();
@@ -213,14 +210,13 @@ export async function deleteSoldItem(id: string) {
       .run();
 
     // Update the quantity in the sales record
-    const { data: distinctItemCount }: { data: { item_count: number } | null } =
-      await supastash
-        .from("sold_items")
-        .select("COUNT(DISTINCT item_id) AS item_count")
-        .eq("sales_id", salesId)
-        .is("deleted_at", null)
-        .single()
-        .run();
+    const { data: distinctItemCount } = await supastash
+      .from("sold_items")
+      .select<{ item_count: number }>("COUNT(DISTINCT item_id) AS item_count")
+      .eq("sales_id", salesId)
+      .is("deleted_at", null)
+      .single()
+      .run();
 
     if (!distinctItemCount) return;
 

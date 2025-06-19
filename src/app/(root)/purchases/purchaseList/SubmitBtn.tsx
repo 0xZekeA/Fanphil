@@ -7,7 +7,7 @@ import { usePurchasesFormProvider } from "../providers/PurchasesFormProvider";
 const SubmitBtn = () => {
   const { submitPurchase, selectedItems } = usePurchasesFormProvider();
   return (
-    (selectedItems || []).length > 0 && (
+    selectedItems.size > 0 && (
       <View className="items-center" style={{ marginTop: Scale.moderate(80) }}>
         <CustomButton
           styling={{ width: "60%" }}

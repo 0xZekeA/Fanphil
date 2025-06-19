@@ -1,5 +1,5 @@
-export const getUsersName = (userId: string, users: User[]) => {
-  const name = users.find((u) => u.id === userId)?.full_name || "User";
+export const getUsersName = (userId: string, usersMap: Map<string, User>) => {
+  const name = usersMap.get(userId)?.full_name || "User";
 
   return name.split(" ")[0];
 };

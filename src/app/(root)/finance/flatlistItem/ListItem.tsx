@@ -12,7 +12,7 @@ const FinancesData = ({ item }: { item: ListItemProps }) => {
     : COLORS.softCoral700;
   const amount = item.notCash
     ? item.later
-    : item.later.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    : item.later?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") ?? "0";
 
   return (
     <View style={styles.listItemContainer} className="flex-row justify-between">

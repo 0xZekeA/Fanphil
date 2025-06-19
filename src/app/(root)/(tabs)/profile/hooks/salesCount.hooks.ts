@@ -4,11 +4,10 @@ import { useMemo } from "react";
 
 const useSalesCountHooks = () => {
   const { isAdmin, user } = useAuthProvider();
-  const { sales } = useSalesProvider();
+  const { salesMapBySoldId, sales } = useSalesProvider();
 
-  const filteredSalesAmount = (
-    sales.filter((s) => s.sold_by === user?.id) || []
-  ).length;
+  const filteredSalesAmount = (salesMapBySoldId.get(user?.id || "") || [])
+    .length;
 
   const salesCount = useMemo(() => {
     if (isAdmin || user?.role === "Manager")

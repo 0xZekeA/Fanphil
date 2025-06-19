@@ -18,9 +18,9 @@ interface SellItemFormProviderContextTypes {
   handleIncrease: (id: string, amount?: number) => void;
   filteredInventory: Inventory[];
   error: string | null;
-  holdInterval: NodeJS.Timeout | null;
+  holdInterval: NodeJS.Timeout | number | null;
   selectedCustomer: Customer;
-  selectedItems: Item[];
+  selectedItems: Map<string, Item>;
   setSelectedCustomer: Dispatch<SetStateAction<Customer>>;
   getItemQuantity: (id: string) => number;
   stopHoldAction: () => void;

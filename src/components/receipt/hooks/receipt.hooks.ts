@@ -2,54 +2,47 @@ import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { useSalesProvider } from "@/providers/sales/SalesProvider";
 import { showToast } from "@/utils/notification";
 import * as MediaLibrary from "expo-media-library";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { captureRef } from "react-native-view-shot";
-import { supastash } from "supastash";
 
 const useReceiptHooks = (salesId: string) => {
-  const { inventory, inventoryMap } = useInventoryProvider();
-  const { customers } = useSalesProvider();
+  const { inventoryMap } = useInventoryProvider();
+  const { customersMap, soldItemsMapBySalesId, salesMap } = useSalesProvider();
 
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [creditTotal, setCreditTotal] = useState(0);
   const [receiptNumber] = useState(() =>
     Math.floor(1000 + Math.random() * 9000),
   );
-  const [sale, setSale] = useState<Sale | null>(null);
-  const [selectedItems, setSelectedItems] = useState<SoldItem[] | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const receiptRef = useRef(null);
 
-  const findSoldItems = useCallback(async () => {
-    const { data: items } = await supastash
-      .from("sold_items")
-      .select()
-      .eq("sales_id", salesId)
-      .run();
+  const selectedItems = useMemo(() => {
+    return soldItemsMapBySalesId.get(salesId) || [];
+  }, [soldItemsMapBySalesId, salesId]);
 
-    if (items) setSelectedItems(items);
-  }, [salesId]);
+  const sale = useMemo(() => {
+    return salesMap.get(salesId);
+  }, [salesMap, salesId]);
 
-  const findSale = useCallback(async () => {
-    const { data: s } = await supastash
-      .from("sales")
-      .select()
-      .eq("id", salesId)
-      .single()
-      .run();
+  const totalDetails = useMemo(() => {
+    let total = 0;
+    for (const item of selectedItems) {
+      if (item.quantity <= 0) continue;
+      const inventoryItem = inventoryMap.get(item.item_id || "");
+      const itemPrice = inventoryItem
+        ? inventoryItem.selling_price * item.quantity
+        : 0;
+      total += itemPrice;
+    }
+    const depositedAmount = ((sale as Sale) || {})?.deposit ?? 0;
+    const depositNum = Number(depositedAmount) || 0;
+    const credit = depositNum < total ? total - depositNum : 0;
+    return { total, credit, depositedAmount };
+  }, [selectedItems, inventoryMap, sale]);
 
-    if (s) setSale(s);
-  }, [salesId]);
-
-  const depositedAmount = ((sale as Sale) || {})?.deposit ?? 0;
-  const selectedCustomer = customers.find(
-    (c) => c.id === (sale?.customer_id ?? ""),
+  const selectedCustomer = useMemo(
+    () => customersMap.get(sale?.customer_id ?? ""),
+    [customersMap, sale],
   );
-
-  useEffect(() => {
-    if (!sale) findSale();
-    if (!selectedItems || selectedItems.length < 1) findSoldItems();
-  }, [findSale, findSoldItems, sale, selectedItems]);
 
   useEffect(() => {
     (async () => {
@@ -82,32 +75,11 @@ const useReceiptHooks = (salesId: string) => {
     }
   };
 
-  useEffect(() => {
-    // Filter items with no qty
-    const validItems = selectedItems?.filter((item) => item.quantity > 0) || [];
-
-    // Total
-    const total =
-      validItems?.reduce((sum, item) => {
-        const inventoryItem = inventoryMap.get(item.item_id || "");
-        const itemPrice = inventoryItem
-          ? inventoryItem.selling_price * item.quantity
-          : 0;
-        return sum + itemPrice;
-      }, 0) || 0;
-
-    setTotalAmount(total);
-
-    // Credit calc
-    const depositNum = Number(depositedAmount) || 0;
-    setCreditTotal(depositNum < total ? total - depositNum : 0);
-  }, [selectedItems, depositedAmount, inventoryMap]);
-
   return {
-    totalAmount,
-    creditTotal,
+    totalAmount: totalDetails.total,
+    creditTotal: totalDetails.credit,
     receiptNumber,
-    depositedAmount,
+    depositedAmount: totalDetails.depositedAmount,
     selectedCustomer,
     selectedItems,
     sale,

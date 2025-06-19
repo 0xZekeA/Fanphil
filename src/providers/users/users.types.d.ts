@@ -5,4 +5,5 @@ interface UsersProviderContextTypes {
     form: UserFormType,
     image: string | null,
   ) => Promise<{ success?: boolean | undefined } | undefined>;
+  usersMap: Map<string, User>;
 }

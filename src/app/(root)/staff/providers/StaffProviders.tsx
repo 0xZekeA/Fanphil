@@ -5,7 +5,6 @@ import {
   PropsWithChildren,
   SetStateAction,
   useContext,
-  useMemo,
   useState,
 } from "react";
 interface StaffProvidersContextTypes {
@@ -23,10 +22,6 @@ const StaffProvidersContext = createContext<
 
 const StaffProviders = ({ children }: PropsWithChildren) => {
   const { users } = useUsersProvider();
-  const filteredUsers = useMemo(
-    () => users.filter((u) => u.deleted_at === null),
-    [users],
-  );
   const [isViewMoreDisplayed, setIsViewMoreDisplayed] = useState(false);
   const [isSelected, setIsSelected] = useState<User | null>(null);
 
@@ -39,7 +34,7 @@ const StaffProviders = ({ children }: PropsWithChildren) => {
     <StaffProvidersContext.Provider
       value={{
         users,
-        filteredUsers,
+        filteredUsers: users,
         isViewMoreDisplayed,
         setIsViewMoreDisplayed,
         isSelected,

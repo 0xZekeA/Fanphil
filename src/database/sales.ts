@@ -77,32 +77,30 @@ export async function updateSale(
 
 export const deleteSale = async (id: string) => {
   try {
-    const { data: soldItems }: { data: SoldItem[] | null } = await supastash
+    const { data: soldItems } = await supastash
       .from("sold_items")
-      .select("*")
+      .select<SoldItem>("*")
       .eq("sales_id", id)
       .is("deleted_at", null)
       .run();
 
-    const { data: soldBy }: { data: { sold_by: string } | null } =
-      await supastash
-        .from("sales")
-        .select("sold_by")
-        .eq("id", id)
-        .single()
-        .run();
+    const { data: soldBy } = await supastash
+      .from("sales")
+      .select<Sale>("sold_by")
+      .eq("id", id)
+      .single()
+      .run();
 
     await supastash.from("sales").delete().eq("id", id).run();
 
     if (!soldBy || !soldItems) return;
 
     for (const item of soldItems) {
-      const { data: inventoryItems }: { data: Inventory[] | null } =
-        await supastash
-          .from("inventory")
-          .select("*")
-          .eq("id", item.item_id)
-          .run();
+      const { data: inventoryItems } = await supastash
+        .from("inventory")
+        .select<Inventory>("*")
+        .eq("id", item.item_id)
+        .run();
 
       if (!inventoryItems) return;
 

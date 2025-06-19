@@ -21,10 +21,7 @@ const InactiveHooksProvider = ({ children }: PropsWithChildren) => {
   const [search, setSearch] = useState("");
 
   const inactiveItems = useMemo(
-    () =>
-      inventory.filter(
-        (item) => item.deleted_at === null && item.is_active === 0,
-      ),
+    () => inventory.filter((item) => item.is_active === 0),
     [inventory],
   );
 
@@ -54,11 +51,16 @@ const InactiveHooksProvider = ({ children }: PropsWithChildren) => {
     if (searchTerm.length === 0) {
       return inactiveItems;
     }
-    const filtered = inactiveItems.filter((user) =>
-      Object.values(user)
-        .filter((value) => value !== null && value !== undefined)
-        .some((value) => String(value).toLowerCase().includes(searchTerm)),
-    );
+    const filtered = [];
+    for (const item of inactiveItems) {
+      if (
+        item.name?.toLowerCase().includes(searchTerm) ||
+        item.size?.toString().includes(searchTerm) ||
+        item.unit?.toLowerCase().includes(searchTerm)
+      ) {
+        filtered.push(item);
+      }
+    }
     return filtered;
   }, [search, inactiveItems]);
 

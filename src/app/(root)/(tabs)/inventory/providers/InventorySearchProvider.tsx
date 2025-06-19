@@ -72,11 +72,15 @@ const InventorySearchProvider = ({ children }: PropsWithChildren) => {
     if (searchTerm.length === 0) {
       return filteredInventory;
     }
-    const filtered = filteredInventory.filter((user) =>
-      Object.values(user)
-        .filter((value) => value !== null && value !== undefined)
-        .some((value) => String(value).toLowerCase().includes(searchTerm)),
-    );
+    const filtered: Inventory[] = [];
+    filteredInventory.forEach((item) => {
+      if (
+        item.name.toLowerCase().includes(searchTerm) ||
+        item.unit.toLowerCase().includes(searchTerm)
+      ) {
+        filtered.push(item);
+      }
+    });
     return filtered;
   }, [search, filteredInventory]);
 

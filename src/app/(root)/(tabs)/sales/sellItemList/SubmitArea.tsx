@@ -16,7 +16,7 @@ const SubmitArea = () => {
     total,
   } = useSellItemFormProvider();
   return (
-    (selectedItems || []).length > 0 && (
+    (selectedItems || new Map()).size > 0 && (
       <View
         style={{ rowGap: Scale.moderate(24), marginTop: Scale.moderate(80) }}
       >

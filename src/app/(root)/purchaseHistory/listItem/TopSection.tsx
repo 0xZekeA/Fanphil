@@ -6,9 +6,9 @@ import { Text, View } from "react-native";
 import styles from "../styles/styles";
 
 const TopSection = ({ item }: { item: Purchase }) => {
-  const { users } = useUsersProvider();
+  const { usersMap } = useUsersProvider();
 
-  const creator = getUsersName(item.purchased_by || "", users);
+  const creator = getUsersName(item.purchased_by || "", usersMap);
   const date = formatDate(item.created_at);
 
   return (

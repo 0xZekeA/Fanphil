@@ -6,8 +6,13 @@ const InventoryProviderContext = createContext<
 >(undefined);
 
 const InventoryProvider = ({ children }: PropsWithChildren) => {
-  const { data: inventory, dataMap: inventoryMap } =
-    useSupastashData<Inventory>("inventory");
+  const {
+    data: inventory,
+    dataMap: inventoryMap,
+    groupedBy: inventoryGroups,
+  } = useSupastashData<Inventory>("inventory", {
+    extraMapKeys: ["is_active"],
+  });
   const { data: returns } = useSupastashData<Return>("returns");
   const { data: inventoryTransfer } = useSupastashData<InventoryTransfer>(
     "inventory_transfers",
@@ -18,8 +23,8 @@ const InventoryProvider = ({ children }: PropsWithChildren) => {
   const { data: transferItems } =
     useSupastashData<TransferItem>("transfer_items");
   const filteredInventory = useMemo(
-    () => inventory?.filter((i) => i.deleted_at === null && i.is_active !== 0),
-    [inventory],
+    () => inventoryGroups?.is_active?.get(1) || [],
+    [inventoryGroups],
   );
 
   return (

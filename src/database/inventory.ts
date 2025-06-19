@@ -146,7 +146,7 @@ export async function removeItem(
   try {
     const { data: inventoryItem } = await supastash
       .from(TABLE_NAME)
-      .select("*")
+      .select<Inventory>("*")
       .eq("id", item_id)
       .single()
       .run();
@@ -154,7 +154,7 @@ export async function removeItem(
     await supastash
       .from(TABLE_NAME)
       .update({
-        quantity: (inventoryItem.quantity || 0) - quantity,
+        quantity: (inventoryItem?.quantity || 0) - quantity,
         last_edited_by,
       })
       .eq("id", item_id)

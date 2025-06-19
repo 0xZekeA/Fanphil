@@ -8,17 +8,25 @@ const UsersProviderContext = createContext<
 >(undefined);
 
 const UsersProvider = ({ children }: PropsWithChildren) => {
-  const { data: users } = useSupastashData<User>("users");
+  const {
+    data: users,
+    dataMap: usersMap,
+    groupedBy: usersGroups,
+  } = useSupastashData<User>("users", {
+    extraMapKeys: ["role"],
+  });
   const { user } = useAuthProvider();
   const { createUser } = useCreateUserHooks(user);
 
   const sellers = useMemo(
-    () => users?.filter((user) => user.role === "Driver"),
-    [users],
+    () => usersGroups?.role?.get("Driver") || [],
+    [usersGroups],
   );
 
   return (
-    <UsersProviderContext.Provider value={{ users, sellers, createUser }}>
+    <UsersProviderContext.Provider
+      value={{ users, usersMap, sellers, createUser }}
+    >
       {children}
     </UsersProviderContext.Provider>
   );

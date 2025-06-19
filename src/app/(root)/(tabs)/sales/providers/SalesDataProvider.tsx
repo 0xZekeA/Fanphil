@@ -25,50 +25,47 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
   const [addedDeposit, setAddedDeposit] = useState("0");
   const [isOwingFiltered, setIsOwingFiltered] = useState(false);
 
-  const { sales: salesItems, customers } = useSalesProvider();
+  const { sales, customersMap } = useSalesProvider();
   const { isAdmin, user } = useAuthProvider();
 
-  // Sort sales according to most recent
-  const sales = useMemo(
-    () =>
-      salesItems?.sort(
-        (a, b) =>
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      ),
-    [salesItems],
-  );
+  // Filter sales
+  const salesDetails = useMemo(() => {
+    const otherStaffSales: Sale[] = [];
+    const todaysSales: Sale[] = [];
+    const owing: Sale[] = [];
+    let dayDeposits = 0;
+    let dayTotal = 0;
+    let profit = 0;
 
-  // Filter todays sales
-  const otherStaffSales = useMemo(
-    () =>
-      sales.filter(
-        (s) =>
-          new Date(s.created_at).getDate() === new Date().getDate() ||
-          s.total_price > s.deposit,
-      ),
-    [sales],
-  );
-  const todaysSales = useMemo(
-    () =>
-      sales.filter(
-        (s) => new Date(s.created_at).getDate() === new Date().getDate(),
-      ),
-    [sales],
-  );
+    sales.forEach((s) => {
+      const isToday =
+        new Date(s.created_at).setHours(0, 0, 0, 0) ===
+        new Date().setHours(0, 0, 0, 0);
+      if ((s.sold_by === user?.id && isToday) || s.total_price > s.deposit) {
+        otherStaffSales.push(s);
+      } else if (isToday) {
+        todaysSales.push(s);
+        dayDeposits += s.deposit;
+        dayTotal += s.total_price;
+        profit += s.profit;
+      } else if (s.total_price > s.deposit) {
+        owing.push(s);
+      }
+    });
+    const loans = dayTotal - dayDeposits;
+    return { otherStaffSales, todaysSales, owing, dayDeposits, profit, loans };
+  }, [sales, user]);
 
-  const filteredSales = isAdmin ? sales : otherStaffSales;
-  const owing = useMemo(
-    () => sales.filter((s) => s.total_price > s.deposit),
-    [sales],
-  );
+  const filteredSales = isAdmin ? sales : salesDetails.otherStaffSales;
+
   const salesData = useMemo(
     () =>
       isOwingFiltered
-        ? owing
+        ? salesDetails.owing
         : isEightShown
         ? filteredSales.slice(0, 8)
         : filteredSales,
-    [isOwingFiltered, isEightShown, filteredSales, owing],
+    [isOwingFiltered, isEightShown, filteredSales, salesDetails],
   );
 
   const getStatus = useCallback(
@@ -79,41 +76,23 @@ const SalesDataProvider = ({ children }: PropsWithChildren) => {
     }),
     [],
   );
-
-  // Sale overview calculations
-  const dayDeposits = useMemo(
-    () => todaysSales?.reduce((a, b) => a + (b.deposit || 0), 0) ?? 0,
-    [todaysSales],
-  );
-  const loans = useMemo(
-    () =>
-      (todaysSales?.reduce((a, b) => a + (b.total_price || 0), 0) ?? 0) -
-      dayDeposits,
-    [todaysSales, dayDeposits],
-  );
-  const assumedProfit = useMemo(
-    () => todaysSales?.reduce((a, b) => a + (b.profit || 0), 0) ?? 0,
-    [todaysSales],
-  );
-
   const salesInfo = useMemo(
     () => ({
-      dayDeposits,
-      loans,
-      assumedProfit,
+      dayDeposits: salesDetails.dayDeposits,
+      loans: salesDetails.loans,
+      assumedProfit: salesDetails.profit,
     }),
-    [dayDeposits, loans, assumedProfit],
+    [salesDetails],
   );
   // Format Customer name
   const formatName = useCallback(
     (item: Sale) => {
-      const name =
-        customers.find((c) => item.customer_id === c.id)?.name ?? "Customer461";
+      const name = customersMap.get(item.customer_id)?.name ?? "Customer461";
       return (
         capitalizeItem(name.slice(0, 15)) + (name.length > 15 ? "..." : "")
       );
     },
-    [customers],
+    [customersMap],
   );
 
   const onPress = (item: Sale) => {

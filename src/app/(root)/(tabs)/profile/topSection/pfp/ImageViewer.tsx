@@ -1,3 +1,5 @@
+import useGetUsersPfp from "@/hooks/getUsersPfp.hooks";
+import { useAuthProvider } from "@/providers/auth";
 import React from "react";
 import {
   ActivityIndicator,
@@ -11,15 +13,22 @@ import { usePfpProvider } from "../../providers/PfpProvider";
 import styles from "../../styles/styles";
 
 const Viewer = () => {
+  const { user } = useAuthProvider();
   const { viewPfp, setViewPfp, editPfp, imagePubID, loading, cloudinaryUrl } =
     usePfpProvider();
+
+  const pfpUrl = useGetUsersPfp(user);
 
   return (
     <Modal visible={viewPfp} transparent>
       <View className="justify-between flex-row" />
       <ImageViewer
         imageUrls={[
-          { url: imagePubID.startsWith("http") ? imagePubID : cloudinaryUrl },
+          {
+            url:
+              pfpUrl ||
+              (imagePubID.startsWith("http") ? imagePubID : cloudinaryUrl),
+          },
         ]}
         renderHeader={() => (
           <View className="justify-between relative flex-row">

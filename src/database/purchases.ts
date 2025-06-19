@@ -58,7 +58,7 @@ export async function addPurchaseItem(
 
     const { data: inventoryItem } = await supastash
       .from("inventory")
-      .select("*")
+      .select<Inventory>("*")
       .eq("id", inventory_id)
       .single()
       .run();
@@ -107,12 +107,11 @@ export async function getSpecificPurchaseItems(
   id: string,
 ): Promise<PurchasedItem[] | null> {
   try {
-    const { data: purchasedItems }: { data: PurchasedItem[] | null } =
-      await supastash
-        .from("purchased_items")
-        .select("*")
-        .eq("purchase_id", id)
-        .run();
+    const { data: purchasedItems } = await supastash
+      .from("purchased_items")
+      .select<PurchasedItem>("*")
+      .eq("purchase_id", id)
+      .run();
 
     return purchasedItems;
   } catch (error: any) {

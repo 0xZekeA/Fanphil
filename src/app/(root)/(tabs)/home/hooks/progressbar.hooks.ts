@@ -9,11 +9,7 @@ const useProgressbarHooks = () => {
   const thirtyDaysTransferredItems = getLast30DaysData(transferItems || []);
 
   const inventoryQty = useMemo(() => {
-    return (
-      sellersInventory
-        .filter((d) => d.deleted_at === null)
-        .reduce((a, b) => a + b.quantity_at_hand, 0) || 0
-    );
+    return sellersInventory.reduce((a, b) => a + b.quantity_at_hand, 0) || 0;
   }, [sellersInventory]);
   const movedItemsQty = useMemo(
     () =>

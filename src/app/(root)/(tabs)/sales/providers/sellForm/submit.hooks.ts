@@ -4,12 +4,12 @@ import { useAuthProvider } from "@/providers/auth";
 import { useInventoryProvider } from "@/providers/inventory/InventoryProvider";
 import { Action, Item } from "@/types/transfer.type";
 import { showToast } from "@/utils/notification";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useSalesDataProvider } from "../SalesDataProvider";
 
 const useSubmitHooks = (
   selectedCustomer: Customer,
-  selectedItems: Item[],
+  selectedItems: Map<string, Item>,
   setError: Dispatch<SetStateAction<string | null>>,
   dispatch: Dispatch<Action>,
 ) => {
@@ -21,6 +21,27 @@ const useSubmitHooks = (
   const [isSaleCompleted, setIsSaleCompleted] = useState(false);
   const [isReceiptShown, setIsReceiptShown] = useState(false);
   const [depositedAmount, setDepositedAmount] = useState("0");
+
+  const details = useMemo(() => {
+    const selectedItemsArray = Array.from(selectedItems.values());
+    let totalSellingPrice = 0;
+    let totalCostPrice = 0;
+    let total = 0;
+    for (const item of selectedItemsArray) {
+      const sellingPrice = inventoryMap.get(item.id)?.selling_price ?? 0;
+      const costPrice = inventoryMap.get(item.id)?.cost_price ?? 0;
+      totalSellingPrice += item.quantity * sellingPrice;
+      totalCostPrice += item.quantity * costPrice;
+      total += item.quantity * sellingPrice;
+    }
+    const profit = totalSellingPrice - totalCostPrice;
+    return {
+      totalSellingPrice,
+      totalCostPrice,
+      total,
+      profit,
+    };
+  }, [inventoryMap, selectedItems]);
 
   const handleChange = (value: string, isAddDeposit?: boolean, item?: Sale) => {
     if (/^-?\d*$/.test(value)) {
@@ -36,7 +57,7 @@ const useSubmitHooks = (
         }
         setAddedDeposit(value);
       } else {
-        if (total < Number(value)) {
+        if (details.total < Number(value)) {
           showToast("error", "Deposit is higher than the total");
           return;
         }
@@ -47,11 +68,6 @@ const useSubmitHooks = (
       setError("Amount must contain only digits and an optional '-' sign");
     }
   };
-
-  const total = selectedItems.reduce((a, b) => {
-    const price = inventoryMap.get(b.id)?.selling_price ?? 0;
-    return a + b.quantity * price;
-  }, 0);
 
   const submitSale = async () => {
     if (!selectedCustomer) {
@@ -68,21 +84,14 @@ const useSubmitHooks = (
       return;
     }
 
-    const profit = selectedItems.reduce((a, b) => {
-      const sp = inventoryMap.get(b.id)?.selling_price ?? 0;
-      const cp = inventoryMap.get(b.id)?.cost_price ?? 0;
-      const difference = sp - cp;
-      return a + b.quantity * difference;
-    }, 0);
-
     try {
       const sId = await addSale(
-        selectedItems.length || 1,
+        selectedItems.size || 1,
         user.id,
         selectedCustomer.id,
-        total,
+        details.total,
         Number(depositedAmount),
-        profit,
+        details.profit,
       );
 
       const totalItemPrice = (item: Item) => {
@@ -98,8 +107,10 @@ const useSubmitHooks = (
       if (!sId) return;
       setSalesId(sId);
 
+      const selectedItemsArray = Array.from(selectedItems.values());
+
       const id = await Promise.all(
-        selectedItems
+        selectedItemsArray
           .filter((item) => item.quantity > 0)
           .map((item) =>
             addSoldItem(
@@ -138,7 +149,7 @@ const useSubmitHooks = (
   };
 
   return {
-    total,
+    total: details.total,
     submitSale,
     salesId,
     isSaleCompleted,

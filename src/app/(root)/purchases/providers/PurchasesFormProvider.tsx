@@ -31,18 +31,19 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [selectedItems, dispatch] = useReducer<Reducer<Item[], Action>>(
-    reducer,
-    [],
-  );
+  const [selectedItems, dispatch] = useReducer<
+    Reducer<Map<string, Item>, Action>
+  >(reducer, new Map());
   const [error, setError] = useState<string | null>(null);
-  const [holdInterval, setHoldInterval] = useState<NodeJS.Timeout | null>(null);
+  const [holdInterval, setHoldInterval] = useState<
+    NodeJS.Timeout | number | null
+  >(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const handleIncrease = useCallback(
     (id: string, amount = 1) => {
       const inventoryItem = inventoryMap.get(id);
-      const item = selectedItems.find((i) => i.id === id);
+      const item = selectedItems.get(id);
 
       if (!inventoryItem) return;
 
@@ -85,7 +86,7 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
   };
 
   const getItemQuantity = (id: string) => {
-    const item = selectedItems.find((item) => item.id === id);
+    const item = selectedItems.get(id);
     return item ? item.quantity : 0;
   };
 
@@ -119,15 +120,15 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
       return;
     }
 
+    const selectedItemsArray = Array.from(selectedItems.values());
+
     try {
-      const purchaseId = await addPurchase(user.id, selectedItems);
+      const purchaseId = await addPurchase(user.id, selectedItemsArray);
 
       if (purchaseId) {
         showToast(
           "success",
-          `Purchase of ${
-            (selectedItems || []).length
-          } items completed successfully`,
+          `Purchase of ${selectedItemsArray.length} items completed successfully`,
         );
 
         return;
@@ -143,13 +144,17 @@ const PurchasesFormProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const selectedInventoryItems = useMemo(
-    () =>
-      filteredInventory.filter((item) =>
-        selectedItems.some((s) => s.id === item.id),
-      ),
-    [filteredInventory, selectedItems],
-  );
+  const selectedInventoryItems = useMemo(() => {
+    const selectedItemsArray = Array.from(selectedItems.values());
+    const selectedItemsData = [];
+    for (const item of selectedItemsArray) {
+      const inventoryItem = inventoryMap.get(item.id);
+      if (inventoryItem) {
+        selectedItemsData.push(inventoryItem);
+      }
+    }
+    return selectedItemsData;
+  }, [inventoryMap, selectedItems]);
 
   return (
     <PurchasesFormProviderContext.Provider

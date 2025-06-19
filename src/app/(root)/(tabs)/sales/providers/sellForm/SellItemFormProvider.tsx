@@ -20,13 +20,19 @@ const SellItemFormProviderContext = createContext<
 >(undefined);
 
 const SellItemFormProvider = ({ children }: PropsWithChildren) => {
-  const { filteredInventory } = useInventoryProvider();
+  const { filteredInventory, inventoryMap } = useInventoryProvider();
   const { customers } = useSalesProvider();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const [selectedCustomer, setSelectedCustomer] = useState(customers[0]);
+  const [selectedCustomer, setSelectedCustomer] = useState(customers?.[0]);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (customers && (customers || []).length > 0 && !selectedCustomer) {
+      setSelectedCustomer(customers[0]);
+    }
+  }, [customers, selectedCustomer]);
 
   const {
     holdInterval,
@@ -74,13 +80,17 @@ const SellItemFormProvider = ({ children }: PropsWithChildren) => {
     if (isSaleCompleted) setTimeout(() => setIsSaleCompleted(false), 30000);
   }, [isSaleCompleted]);
 
-  const selectedInventoryItems = useMemo(
-    () =>
-      filteredInventory.filter((item) =>
-        selectedItems.some((s) => s.id === item.id),
-      ),
-    [filteredInventory, selectedItems],
-  );
+  const selectedInventoryItems = useMemo(() => {
+    const selectedItemsArray = Array.from(selectedItems.values());
+    const selectedInventoryItems: Inventory[] = [];
+    for (const item of selectedItemsArray) {
+      const inventoryItem = inventoryMap.get(item.id);
+      if (inventoryItem) {
+        selectedInventoryItems.push(inventoryItem);
+      }
+    }
+    return selectedInventoryItems;
+  }, [inventoryMap, selectedItems]);
 
   return (
     <SellItemFormProviderContext.Provider
